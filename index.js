@@ -5,6 +5,8 @@ const populateLog = require('./lib/populateLog')
 
 const log = new Map()
 
+// If in a development environment, populate the
+// in-memory log with the on-file log.
 if (process.env.NODE_ENV === 'development') {
   populateLog(log)
 }

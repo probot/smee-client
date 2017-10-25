@@ -23,4 +23,9 @@ module.exports = (robot) => {
   app.get('/', (req, res) => {
     res.end('Hello!')
   })
+
+  app.post('/grapple/redeliver', (req, res) => {
+    const event = log.get(req.body.id)
+    robot.receive(event)
+  })
 }

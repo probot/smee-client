@@ -1,13 +1,15 @@
 {
-  "name": "grapplehook",
+  "name": "webhooks",
   "version": "1.0.0",
   "description": "",
-  "author": "Jason Etcovitch <jasonetco@gmail.com> (https://github.com/jasonetco/grapplehook)",
+  "author": "Jason Etcovitch <jasonetco@gmail.com> (https://github.com/JasonEtco)",
   "license": "ISC",
-  "repository": "https://github.com/JasonEtco/grapplehook.git",
+  "repository": "https://github.com/probot/webhooks.git",
   "scripts": {
     "start": "probot run ./index.js",
     "build": "webpack",
+    "watch-ui": "webpack -w",
+    "socketTunnel": "lt --subdomain grapplesocket --port 8080",
     "test": "jest && standard"
   },
   "dependencies": {

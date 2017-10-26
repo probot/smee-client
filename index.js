@@ -9,13 +9,14 @@ const {mapToObj} = require('./lib/helpers')
 
 const log = new Map()
 
-// If in a development environment, populate the
-// in-memory log with the on-file log.
-if (process.env.NODE_ENV === 'development') {
-  populateLog(log)
-}
-
 module.exports = (robot) => {
+  // If in a development environment, populate the
+  // in-memory log with the on-file log.
+  if (process.env.NODE_ENV === 'development') {
+    robot.log('Populating in-memory log')
+    populateLog(log)
+  }
+
   const app = robot.route()
   const s = server(app)
   const io = socketio(s)

@@ -15,7 +15,7 @@ class App extends Component {
     })
 
     const socket = io('http://localhost:8080')
-    socket.on('new-log', log => this.setState({ log: Object.assign({}, this.state.log, log) }))
+    socket.on('new-log', log => this.setState({ log: Object.assign({}, this.state.log, { [log.id]: log }) }))
   }
 
   render () {

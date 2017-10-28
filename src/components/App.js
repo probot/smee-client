@@ -27,12 +27,19 @@ export default class App extends Component {
     const keys = Object.keys(log)
     const filtered = keys.filter(key => log[key].event.includes(filter))
     return (
-      <div className="container-md py-3">
-        <input type="text" value={filter} onChange={e => this.setState({ filter: e.target.value })} className="input input-lg width-full mb-2 Box" placeholder="Filter by event" />
-        <ul className="Box list-style-none pl-0">
-          {filtered.map((key, i, arr) => <ListItem key={key} item={log[key]} last={i === arr.length - 1} />)}
-        </ul>
-      </div>
+      <main>
+        <div className="py-4 bg-gray-dark">
+          <div className="container-md text-white p-responsive">
+            <h1 className="f4">Recent Deliveries</h1>
+          </div>
+        </div>
+        <div className="container-md py-3 p-responsive">
+          <input type="text" value={filter} onChange={e => this.setState({ filter: e.target.value })} className="input input-lg width-full mb-2 Box" placeholder="Filter by event" />
+          <ul className="Box list-style-none pl-0">
+            {filtered.map((key, i, arr) => <ListItem key={key} item={log[key]} last={i === arr.length - 1} />)}
+          </ul>
+        </div>
+      </main>
     )
   }
 }

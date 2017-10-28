@@ -19,6 +19,7 @@
     "probot": "probot/probot#use-http-server",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
+    "react-json-view": "^1.13.1",
     "react-octicons": "^0.2.0",
     "socket.io": "^2.0.4"
   },

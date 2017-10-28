@@ -9,7 +9,7 @@ export default class App extends Component {
 
   constructor (props) {
     super(props)
-    this.state = { log: {} }
+    this.state = { log: {}, filter: '' }
   }
 
   componentDidMount () {
@@ -23,11 +23,14 @@ export default class App extends Component {
   }
 
   render () {
-    const {log} = this.state
+    const {log, filter} = this.state
+    const keys = Object.keys(log)
+    const filtered = keys.filter(key => log[key].event.includes(filter))
     return (
-      <div className="container-lg">
-        <ul className="Box list-style-none p-4">
-          {Object.keys(log).map(key => <ListItem key={key} item={log[key]} />)}
+      <div className="container-md py-3">
+        <input type="text" value={filter} onChange={e => this.setState({ filter: e.target.value })} className="input input-lg width-full mb-2 Box" placeholder="Filter by event" />
+        <ul className="Box list-style-none pl-0">
+          {filtered.map((key, i, arr) => <ListItem key={key} item={log[key]} last={i === arr.length - 1} />)}
         </ul>
       </div>
     )

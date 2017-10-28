@@ -31,6 +31,7 @@ module.exports = {
       inject: 'body',
       filename: 'index.html'
     }),
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new webpack.optimize.UglifyJsPlugin(),
     new ExtractTextPlugin('[name].min.css'),
     new PurifyCSSPlugin({

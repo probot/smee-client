@@ -14,6 +14,7 @@
     "test": "jest && standard"
   },
   "dependencies": {
+    "moment": "^2.19.1",
     "primer-css": "^9.6.0",
     "probot": "probot/probot#use-http-server",
     "react": "^16.0.0",

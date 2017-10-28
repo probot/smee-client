@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ListItem from './ListItem'
 import { object } from 'prop-types'
 
 export default class App extends Component {
@@ -22,10 +23,13 @@ export default class App extends Component {
   }
 
   render () {
+    const {log} = this.state
     return (
-      <ul>
-        {Object.keys(this.state.log).map(key => <li key={key}>{key}</li>)}
-      </ul>
+      <div className="container-lg">
+        <ul className="Box list-style-none p-4">
+          {Object.keys(log).map(key => <ListItem key={key} item={log[key]} />)}
+        </ul>
+      </div>
     )
   }
 }

@@ -1,6 +1,5 @@
 const express = require('express')
 const path = require('path')
-const server = require('http').Server
 const socketio = require('socket.io')
 
 const logEvent = require('./lib/logEvent')
@@ -18,10 +17,7 @@ module.exports = (robot) => {
   }
 
   const app = robot.route()
-  const s = server(app)
-  const io = socketio(s)
-
-  s.listen(8080)
+  const io = socketio(robot.server)
 
   robot.on('*', context => {
     const newLog = logEvent(context, log)
@@ -29,9 +25,9 @@ module.exports = (robot) => {
   })
 
   app.use(express.static(path.join(__dirname, 'dist')))
-  app.get('/grapple/logs', (req, res) => res.json(mapToObj(log)))
-  app.post('/grapple/redeliver', (req, res) => {
-    const event = log.get(req.body.id)
+  app.get('/webhooks/logs', (req, res) => res.json(mapToObj(log)))
+  app.post('/webhooks/logs/:id', (req, res) => {
+    const event = log.get(req.params.id)
     robot.receive(event)
   })
 }

@@ -1,14 +1,24 @@
 const express = require('express')
 const path = require('path')
 const socketio = require('socket.io')
-
+const passport = require('passport')
+const session = require('express-session')
 const logEvent = require('./lib/logEvent')
 const populateLog = require('./lib/populateLog')
-const {mapToObj} = require('./lib/helpers')
+const routes = require('./lib/routes')
 
 const log = new Map()
 
-module.exports = (robot) => {
+module.exports = async (robot) => {
+  require('./lib/passport')
+
+  const app = robot.server
+  const io = socketio(robot.http)
+
+  app.use(session({ secret: process.env.OAUTH_SECRET, resave: false, saveUninitialized: false }))
+  app.use(passport.initialize())
+  app.use(passport.session())
+
   // If in a development environment, populate the
   // in-memory log with the on-file log.
   if (process.env.NODE_ENV === 'development') {
@@ -16,18 +26,12 @@ module.exports = (robot) => {
     populateLog(log)
   }
 
-  const app = robot.route()
-  const io = socketio(robot.server)
-
   robot.on('*', context => {
     const newLog = logEvent(context, log)
     if (newLog) io.sockets.emit('new-log', newLog)
   })
 
-  app.use(express.static(path.join(__dirname, 'dist')))
-  app.get('/webhooks/logs', (req, res) => res.json(mapToObj(log)))
-  app.post('/webhooks/logs/:id', (req, res) => {
-    const event = log.get(req.params.id)
-    robot.receive(event)
-  })
+  const router = robot.route()
+  router.use(express.static(path.join(__dirname, 'dist')))
+  routes(robot, app, log)
 }

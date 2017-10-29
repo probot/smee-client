@@ -1,6 +1,6 @@
 {
-  "name": "webhooks",
-  "version": "1.0.0",
+  "name": "probot-webhooks",
+  "version": "0.0.1",
   "description": "",
   "author": "Jason Etcovitch <jasonetco@gmail.com> (https://github.com/JasonEtco)",
   "license": "ISC",
@@ -11,10 +11,15 @@
     "start-prod": "probot run ./index.js",
     "build": "webpack -p",
     "watch-ui": "webpack -w",
-    "test": "jest && standard"
+    "test": "jest && standard",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
+    "express-session": "^1.15.6",
+    "github": "^12.0.1",
     "moment": "^2.19.1",
+    "passport": "^0.4.0",
+    "passport-github2": "^0.1.11",
     "primer-css": "^9.6.0",
     "probot": "probot/probot#use-http-server",
     "react": "^16.0.0",

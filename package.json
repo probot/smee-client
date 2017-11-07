@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "express-session": "^1.15.6",
+    "get-value": "^2.0.6",
     "github": "^12.0.1",
     "moment": "^2.19.1",
     "passport": "^0.4.0",
@@ -24,7 +25,7 @@
     "probot": "probot/probot#use-http-server",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "react-json-view": "^1.13.1",
+    "react-json-view": "^1.13.2",
     "react-octicons": "^0.2.0",
     "socket.io": "^2.0.4"
   },

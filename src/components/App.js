@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ListItem from './ListItem'
 import { object } from 'prop-types'
+import get from 'get-value'
 
 export default class App extends Component {
   static propTypes = {
@@ -25,7 +26,13 @@ export default class App extends Component {
 
   render () {
     const { log, user, filter, loading } = this.state
-    const filtered = log.filter(l => l.event.includes(filter))
+    const filtered = log.filter(l => {
+      if (filter) {
+        const [searchString, value] = filter.split(':')
+        return get(l, searchString) === value
+      }
+      return true
+    })
 
     return (
       <main>
@@ -41,7 +48,10 @@ export default class App extends Component {
           </div>
         </div>
         <div className="container-md py-3 p-responsive">
-          <input type="text" value={filter} onChange={e => this.setState({ filter: e.target.value })} className="input input-lg width-full mb-2 Box" placeholder="Filter by event" />
+          <label>
+            Filter deliveries
+            <input type="text" value={filter} onChange={e => this.setState({ filter: e.target.value })} className="input input-lg width-full mb-2 Box" placeholder="" />
+          </label>
           <ul className="Box list-style-none pl-0">
             {filtered.map((l, i, arr) => <ListItem key={l.id} item={l} last={i === arr.length - 1} />)}
           </ul>

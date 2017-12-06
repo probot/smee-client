@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import ListItem from './ListItem'
-import { object } from 'prop-types'
 import get from 'get-value'
 
 function compare (a, b) {
@@ -15,10 +14,6 @@ export default class App extends Component {
   }
 
   componentDidMount () {
-    window.fetch('/webhooks/logs', { credentials: 'same-origin' }).then(res => res.json()).then(res => {
-      this.setState({ log: res.log, loading: false })
-    })
-
     const events = new window.EventSource(window.__WEBHOOK_PROXY_URL)
     events.onmessage = message => {
       const json = JSON.parse(message.data)
@@ -29,9 +24,7 @@ export default class App extends Component {
         id: json['x-request-id']
       }
 
-      this.setState({
-        log: [...this.state.log, log]
-      })
+      this.setState({ log: [...this.state.log, log] })
     }
   }
 

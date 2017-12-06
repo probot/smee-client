@@ -55,10 +55,7 @@ app.get('/:channel',
     const channel = req.params.channel
 
     // Listen for events on this channel
-    events.on(channel, () => {
-      console.log('New event!')
-      return res.json()
-    })
+    events.on(channel, res.json)
 
     res.on('close', () => {
       events.removeListener(channel, res.json)
@@ -74,7 +71,7 @@ app.post('/:channel', (req, res) => {
     ...req.headers,
     body: req.body
   })
-  logEvent(req.body)
+  // logEvent(req.body)
   res.status(200).end()
 })
 

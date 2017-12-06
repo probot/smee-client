@@ -59,10 +59,20 @@ export default class App extends Component {
           </div>
         </div>
         <div className="container-md py-3 p-responsive">
-          <label>
-            Filter deliveries
-            <input type="text" value={filter} onChange={e => this.setState({ filter: e.target.value })} className="input input-lg width-full mb-2 Box" placeholder="" />
-          </label>
+          <div className="mb-2">
+            <div className="d-flex flex-items-center">
+              <label htmlFor="search">Filter deliveries</label>
+              <a className="ml-2 f6" href="https://github.com/jonschlinkert/get-value" target="_blank" rel="noopener noreferrer">Uses the get-value syntax</a>
+            </div>
+            <input
+              type="text"
+              id="search"
+              placeholder="repository.name:probot"
+              value={filter}
+              onChange={e => this.setState({ filter: e.target.value })}
+              className="input input-lg width-full Box"
+            />
+          </div>
           <ul className="Box list-style-none pl-0">
             {sorted.map((l, i, arr) => <ListItem key={l.id} item={l} last={i === arr.length - 1} />)}
           </ul>

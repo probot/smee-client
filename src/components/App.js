@@ -14,7 +14,7 @@ export default class App extends Component {
   }
 
   componentDidMount () {
-    const events = new window.EventSource(window.__WEBHOOK_PROXY_URL)
+    const events = new window.EventSource(window.location.href)
     events.onmessage = message => {
       const json = JSON.parse(message.data)
       const log = {

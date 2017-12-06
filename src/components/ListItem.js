@@ -8,9 +8,11 @@ import {
   GitPullRequestIcon,
   BookmarkIcon,
   IssueOpenedIcon,
-  KebabHorizontalIcon
+  KebabHorizontalIcon,
+  ClippyIcon
 } from 'react-octicons'
 import EventDescription from './EventDescription'
+import copy from 'copy-to-clipboard'
 
 const iconMap = {
   push: <RepoPushIcon />,
@@ -28,11 +30,15 @@ export default class ListItem extends Component {
   constructor (props) {
     super(props)
     this.toggleExpanded = () => this.setState({ expanded: !this.state.expanded })
-    this.state = { expanded: false }
+    this.copy = () => {
+      const copied = copy(JSON.stringify(this.props.item))
+      this.setState({ copied })
+    }
+    this.state = { expanded: false, copied: false }
   }
 
   render () {
-    const { expanded } = this.state
+    const { expanded, copied } = this.state
     const { item, last } = this.props
     const { event, timestamp, payload, id } = item
     return (
@@ -48,9 +54,12 @@ export default class ListItem extends Component {
 
         {expanded && (
           <div className="mt-3">
-            <div>
-              <p><strong>Event ID:</strong> <code>{id}</code></p>
-              <EventDescription event={event} item={item} />
+            <div className="d-flex flex-justify-between flex-items-start">
+              <div>
+                <p><strong>Event ID:</strong> <code>{id}</code></p>
+                <EventDescription event={event} item={item} />
+              </div>
+              <button onBlur={() => this.setState({ copied: false })} className="btn btn-sm tooltipped tooltipped-s" aria-label={copied ? 'Copied!' : 'Copy payload to clipboard'} onClick={this.copy}><ClippyIcon /></button>
             </div>
             <hr className="mt-3" />
             <div className="mt-3">

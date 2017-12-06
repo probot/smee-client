@@ -16,7 +16,7 @@ const iconMap = {
   push: <RepoPushIcon />,
   pull_request: <GitPullRequestIcon />,
   label: <BookmarkIcon />,
-  issue: <IssueOpenedIcon />
+  issues: <IssueOpenedIcon />
 }
 
 export default class ListItem extends Component {

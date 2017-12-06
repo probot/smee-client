@@ -1,6 +1,13 @@
 import React, { Component } from 'react'
 import ListItem from './ListItem'
 import { object } from 'prop-types'
+import get from 'get-value'
+
+function compare (a, b) {
+  if (a.timestamp < b.timestamp) return 1
+  if (a.timestamp > b.timestamp) return -1
+  return 0
+}
 
 export default class App extends Component {
   static propTypes = {
@@ -25,7 +32,18 @@ export default class App extends Component {
 
   render () {
     const { log, user, filter, loading } = this.state
-    const filtered = log.filter(l => l.event.includes(filter))
+    let filtered = log
+    if (filter) {
+      filtered = log.filter(l => {
+        if (filter && filter.includes(':')) {
+          let [searchString, value] = filter.split(':')
+          if (!searchString.startsWith('payload')) searchString = `payload.${searchString}`
+          return get(l, searchString) === value
+        }
+        return true
+      })
+    }
+    const sorted = filtered.sort(compare)
 
     return (
       <main>
@@ -41,9 +59,22 @@ export default class App extends Component {
           </div>
         </div>
         <div className="container-md py-3 p-responsive">
-          <input type="text" value={filter} onChange={e => this.setState({ filter: e.target.value })} className="input input-lg width-full mb-2 Box" placeholder="Filter by event" />
+          <div className="mb-2">
+            <div className="d-flex flex-items-center">
+              <label htmlFor="search">Filter deliveries</label>
+              <a className="ml-2 f6" href="https://github.com/jonschlinkert/get-value" target="_blank" rel="noopener noreferrer">Uses the get-value syntax</a>
+            </div>
+            <input
+              type="text"
+              id="search"
+              placeholder="repository.name:probot"
+              value={filter}
+              onChange={e => this.setState({ filter: e.target.value })}
+              className="input input-lg width-full Box"
+            />
+          </div>
           <ul className="Box list-style-none pl-0">
-            {filtered.map((l, i, arr) => <ListItem key={l.id} item={l} last={i === arr.length - 1} />)}
+            {sorted.map((l, i, arr) => <ListItem key={l.id} item={l} last={i === arr.length - 1} />)}
           </ul>
         </div>
       </main>

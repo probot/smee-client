@@ -21,8 +21,8 @@ export default class App extends Component {
 
     const events = new window.EventSource(window.__WEBHOOK_PROXY_URL)
     console.log(events)
-    events.onmessage = log => {
-      console.log(log)
+    events.onmessage = message => {
+      const log = JSON.parse(message.data)
       this.setState({
         log: [...this.state.log, log]
       })

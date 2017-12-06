@@ -7,7 +7,7 @@
   "repository": "https://github.com/probot/webhooks.git",
   "scripts": {
     "start": "concurrently \"npm run start-dev\" \"npm run watch-ui\"",
-    "start-dev": "nodemon --ignore src/ --ignore dist/ ./node_modules/probot/bin/probot-run ./index.js",
+    "start-dev": "nodemon --ignore src/ --ignore dist/ --ignore logs.json ./node_modules/probot/bin/probot-run ./index.js",
     "start-prod": "probot run ./index.js",
     "build": "webpack -p",
     "watch-ui": "webpack -w",

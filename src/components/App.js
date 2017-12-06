@@ -3,6 +3,12 @@ import ListItem from './ListItem'
 import { object } from 'prop-types'
 import get from 'get-value'
 
+function compare (a, b) {
+  if (a.timestamp < b.timestamp) return 1
+  if (a.timestamp > b.timestamp) return -1
+  return 0
+}
+
 export default class App extends Component {
   static propTypes = {
     socket: object.isRequired
@@ -26,13 +32,17 @@ export default class App extends Component {
 
   render () {
     const { log, user, filter, loading } = this.state
-    const filtered = log.filter(l => {
-      if (filter) {
-        const [searchString, value] = filter.split(':')
-        return get(l, searchString) === value
-      }
-      return true
-    })
+    let filtered = log
+    if (filter) {
+      filtered = log.filter(l => {
+        if (filter) {
+          const [searchString, value] = filter.split(':')
+          return get(l, searchString) === value
+        }
+        return true
+      })
+    }
+    const sorted = filtered.sort(compare)
 
     return (
       <main>
@@ -53,7 +63,7 @@ export default class App extends Component {
             <input type="text" value={filter} onChange={e => this.setState({ filter: e.target.value })} className="input input-lg width-full mb-2 Box" placeholder="" />
           </label>
           <ul className="Box list-style-none pl-0">
-            {filtered.map((l, i, arr) => <ListItem key={l.id} item={l} last={i === arr.length - 1} />)}
+            {sorted.map((l, i, arr) => <ListItem key={l.id} item={l} last={i === arr.length - 1} />)}
           </ul>
         </div>
       </main>

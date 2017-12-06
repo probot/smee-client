@@ -21,7 +21,7 @@ module.exports = async (robot) => {
 
   // If in a development environment, populate the
   // in-memory log with the on-file log.
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV !== 'production') {
     robot.log('Populating in-memory log')
     populateLog(log)
   }

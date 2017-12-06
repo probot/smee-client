@@ -20,16 +20,11 @@ module.exports = {
     main: path.resolve(__dirname, 'src', 'main.js')
   },
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: path.join(__dirname, 'public'),
     filename: '[name].min.js',
     publicPath: '/'
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'index.tpl.html'),
-      inject: 'body',
-      filename: 'index.html'
-    }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new webpack.optimize.UglifyJsPlugin(),
     new ExtractTextPlugin('[name].min.css'),

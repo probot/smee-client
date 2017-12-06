@@ -7,15 +7,18 @@
   "repository": "https://github.com/probot/webhooks.git",
   "scripts": {
     "start": "concurrently \"npm run start-dev\" \"npm run watch-ui\"",
-    "start-dev": "nodemon --ignore src/ --ignore dist/ --ignore logs.json ./node_modules/probot/bin/probot-run ./index.js",
+    "start-dev": "nodemon --ignore src/ --ignore dist/ --ignore logs.json ./index.js",
     "start-prod": "probot run ./index.js",
-    "build": "webpack -p",
+    "build": "webpack",
     "watch-ui": "webpack -w",
     "test": "jest && standard",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
+    "connect-sse": "^1.2.0",
     "copy-to-clipboard": "^3.0.8",
+    "crypto": "^1.0.1",
+    "eventsource": "^1.0.5",
     "express-session": "^1.15.6",
     "get-value": "^2.0.6",
     "github": "^12.0.1",

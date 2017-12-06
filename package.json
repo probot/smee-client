@@ -12,7 +12,8 @@
     "build": "webpack",
     "watch-ui": "webpack -w",
     "test": "jest && standard",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "connect-sse": "^1.2.0",

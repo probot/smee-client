@@ -8,6 +8,7 @@ import {
   GitPullRequestIcon,
   BookmarkIcon,
   IssueOpenedIcon,
+  IssueClosedIcon,
   KebabHorizontalIcon,
   ClippyIcon
 } from 'react-octicons'
@@ -18,7 +19,8 @@ const iconMap = {
   push: <RepoPushIcon />,
   pull_request: <GitPullRequestIcon />,
   label: <BookmarkIcon />,
-  issues: <IssueOpenedIcon />
+  'issues.opened': <IssueOpenedIcon />,
+  'issues.closed': <IssueClosedIcon />
 }
 
 export default class ListItem extends Component {
@@ -41,11 +43,22 @@ export default class ListItem extends Component {
     const { expanded, copied } = this.state
     const { item, last } = this.props
     const { event, timestamp, payload, id } = item
+
+    let icon
+
+    if (payload.action && iconMap[`${event}.${payload.action}`]) {
+      icon = iconMap[`${event}.${payload.action}`]
+    } else if (iconMap[event]) {
+      icon = iconMap[event]
+    } else {
+      icon = <PackageIcon />
+    }
+
     return (
       <li className={`p-3 ${last ? '' : 'border-bottom'}`}>
         <div className="d-flex flex-items-center">
           <div className="mr-2" style={{ width: 16 }}>
-            {iconMap[event] || <PackageIcon />}
+            {icon}
           </div>
           <span className="input-monospace">{event}</span>
           <time className="f6" style={{ marginLeft: 'auto' }}>{moment(timestamp).fromNow()}</time>

@@ -74,6 +74,7 @@ app.post('/:channel', (req, res) => {
     ...req.headers,
     body: req.body
   })
+  logEvent(req.body)
   res.status(200).end()
 })
 

@@ -35,8 +35,9 @@ export default class App extends Component {
     let filtered = log
     if (filter) {
       filtered = log.filter(l => {
-        if (filter) {
-          const [searchString, value] = filter.split(':')
+        if (filter && filter.includes(':')) {
+          let [searchString, value] = filter.split(':')
+          if (!searchString.startsWith('payload')) searchString = `payload.${searchString}`
           return get(l, searchString) === value
         }
         return true

@@ -25,7 +25,7 @@ export default class App extends Component {
       const log = {
         event: json['x-github-event'],
         payload: json.body,
-        timestamp: json['x-request-start'],
+        timestamp: parseInt(json['x-request-start'], 10),
         id: json['x-request-id']
       }
 

@@ -21,8 +21,14 @@ export default class App extends Component {
 
     const events = new window.EventSource(window.__WEBHOOK_PROXY_URL)
     events.onmessage = message => {
-      const log = JSON.parse(message.data).body
-      console.log(log)
+      const json = JSON.parse(message.data)
+      const log = {
+        event: json['x-github-event'],
+        payload: json.body,
+        timestamp: json['x-request-start'],
+        id: json['x-request-id']
+      }
+
       this.setState({
         log: [...this.state.log, log]
       })

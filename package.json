@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node index.js",
     "start-dev": "concurrently \"nodemon --ignore src/ ./index.js\" \"webpack -u\"",
-    "build": "webpack",
+    "build": "webpack -p",
     "test": "jest && standard",
     "postinstall": "npm run build"
   },

@@ -89,18 +89,21 @@ export default class ListItem extends Component {
                 <p><strong>Event ID:</strong> <code>{id}</code></p>
                 <EventDescription event={event} payload={payload} timestamp={timestamp} />
               </div>
-              <button
-                onBlur={() => this.setState({ copied: false })}
-                onClick={this.copy}
-                className="btn btn-sm tooltipped tooltipped-l"
-                aria-label={copied ? 'Copied!' : 'Copy payload to clipboard'}
-              ><ClippyIcon /></button>
-              <button
-                onBlur={() => this.setState({ redelivered: false })}
-                onClick={this.redeliver}
-                className="btn btn-sm tooltipped tooltipped-l"
-                aria-label={redelivered ? 'Sent!' : 'Redeliver this payload'}
-              ><SyncIcon /></button>
+
+              <div>
+                <button
+                  onBlur={() => this.setState({ copied: false })}
+                  onClick={this.copy}
+                  className="btn btn-sm tooltipped tooltipped-w"
+                  aria-label={copied ? 'Copied!' : 'Copy payload to clipboard'}
+                ><ClippyIcon /></button>
+                <button
+                  onBlur={() => this.setState({ redelivered: false })}
+                  onClick={this.redeliver}
+                  className="btn btn-sm tooltipped tooltipped-w"
+                  aria-label={redelivered ? 'Sent!' : 'Redeliver this payload'}
+                ><SyncIcon /></button>
+              </div>
             </div>
             <hr className="mt-3" />
             <div className="mt-3">

@@ -4,7 +4,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const autoprefixer = require('autoprefixer')
 const glob = require('glob')
 const PurifyCSSPlugin = require('purifycss-webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const browsers = [
   'last 2 versions',

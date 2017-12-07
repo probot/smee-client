@@ -55,7 +55,11 @@ export default class ListItem extends Component {
   render () {
     const { expanded, copied, redelivered } = this.state
     const { item, last } = this.props
-    const { event, timestamp, payload, id } = item
+
+    const event = item['x-github-event']
+    const payload = item.body
+    const timestamp = parseInt(item['x-request-start'], 10)
+    const id = item['x-request-id']
 
     let icon
 

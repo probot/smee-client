@@ -10,7 +10,7 @@ function compare (a, b) {
 export default class App extends Component {
   constructor (props) {
     super(props)
-    this.state = { log: [], messages: [], filter: '' }
+    this.state = { log: [], filter: '' }
   }
 
   componentDidMount () {
@@ -20,16 +20,8 @@ export default class App extends Component {
 
       // Prevent duplicates in the case of redelivered payloads
       if (this.state.log.findIndex(l => l.id === json['x-request-id']) === -1) {
-        const log = {
-          event: json['x-github-event'],
-          payload: json.body,
-          timestamp: parseInt(json['x-request-start'], 10),
-          id: json['x-request-id']
-        }
-
         this.setState({
-          log: [...this.state.log, log],
-          messages: [...this.state.messages, message]
+          log: [...this.state.log, json]
         })
       }
     }

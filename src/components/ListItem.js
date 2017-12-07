@@ -94,13 +94,13 @@ export default class ListItem extends Component {
                 <button
                   onBlur={() => this.setState({ copied: false })}
                   onClick={this.copy}
-                  className="btn btn-sm tooltipped tooltipped-w"
+                  className="btn btn-sm tooltipped tooltipped-s"
                   aria-label={copied ? 'Copied!' : 'Copy payload to clipboard'}
                 ><ClippyIcon /></button>
                 <button
                   onBlur={() => this.setState({ redelivered: false })}
                   onClick={this.redeliver}
-                  className="btn btn-sm tooltipped tooltipped-w"
+                  className="ml-2 btn btn-sm tooltipped tooltipped-s"
                   aria-label={redelivered ? 'Sent!' : 'Redeliver this payload'}
                 ><SyncIcon /></button>
               </div>

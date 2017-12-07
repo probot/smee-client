@@ -10,21 +10,28 @@ function compare (a, b) {
 export default class App extends Component {
   constructor (props) {
     super(props)
-    this.state = { log: [], filter: '' }
+    this.state = { log: [], messages: [], filter: '' }
   }
 
   componentDidMount () {
     const events = new window.EventSource(window.location.href)
     events.onmessage = message => {
       const json = JSON.parse(message.data)
-      const log = {
-        event: json['x-github-event'],
-        payload: json.body,
-        timestamp: parseInt(json['x-request-start'], 10),
-        id: json['x-request-id']
-      }
 
-      this.setState({ log: [...this.state.log, log] })
+      // Prevent duplicates in the case of redelivered payloads
+      if (!this.state.log.every(l => l.id === json['x-request-id'])) {
+        const log = {
+          event: json['x-github-event'],
+          payload: json.body,
+          timestamp: parseInt(json['x-request-start'], 10),
+          id: json['x-request-id']
+        }
+
+        this.setState({
+          log: [...this.state.log, log],
+          messages: [...this.state.messages, message]
+        })
+      }
     }
   }
 

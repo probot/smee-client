@@ -61,7 +61,7 @@ app.post('/:channel', (req, res) => {
 })
 
 // Resend payload via the event emitter
-app.post('/:channel/:id', (req, res) => {
+app.post('/:channel/redeliver', (req, res) => {
   events.emit(req.params.channel, req.body)
   res.status(200).end()
 })

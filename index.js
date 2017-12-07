@@ -1,27 +1,14 @@
-  // router.use(express.static(path.join(__dirname, 'dist')))
-  // routes(robot, app, log)
 const sse = require('connect-sse')
 const express = require('express')
 const crypto = require('crypto')
 const bodyParser = require('body-parser')
 const EventEmitter = require('events')
 const path = require('path')
-const logEvent = require('./lib/logEvent')
-const populateLog = require('./lib/populateLog')
-const routes = require('./lib/routes')
 
-const log = new Map()
-// If in a development environment, populate the
-// in-memory log with the on-file log.
-if (process.env.NODE_ENV !== 'production') {
-  populateLog(log)
-}
+const events = new EventEmitter()
 
 const app = express()
 app.use(bodyParser.json())
-app.set('view engine', 'ejs')
-
-const events = new EventEmitter()
 
 app.get('/', (req, res) => {
   const channel = crypto
@@ -37,8 +24,7 @@ app.get('/:channel',
   // Render HTML page if client accepts HTML
   (req, res, next) => {
     if (req.accepts('html')) {
-      const url = `${req.protocol}://${req.get('host')}/${req.params.channel}`
-      res.render('index', { url })
+      res.sendFile(path.join(__dirname, 'public', 'index.html'))
     } else {
       next()
     }
@@ -71,12 +57,16 @@ app.post('/:channel', (req, res) => {
     ...req.headers,
     body: req.body
   })
-  // logEvent(req.body)
+  res.status(200).end()
+})
+
+// Resend payload via the event emitter
+app.post('/:channel/:id', (req, res) => {
+  events.emit(req.params.channel, req.body)
   res.status(200).end()
 })
 
 app.use('/public', express.static(path.join(__dirname, 'public')))
-routes(app, log)
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Listening at http://localhost:' + listener.address().port)

@@ -64,9 +64,16 @@ export default class App extends Component {
               className="input input-lg width-full Box"
             />
           </div>
-          <ul className="Box list-style-none pl-0">
-            {sorted.map((item, i, arr) => <ListItem key={item['x-github-delivery']} item={item} last={i === arr.length - 1} />)}
-          </ul>
+          {log.length > 0 ? (
+            <ul className="Box list-style-none pl-0">
+              {sorted.map((item, i, arr) => <ListItem key={item['x-github-delivery']} item={item} last={i === arr.length - 1} />)}
+            </ul>
+          ) : (
+            <div className="blankslate">
+              <h3>No events just yet</h3>
+              <p>This page will automatically update as things happen.</p>
+            </div>
+          )}
         </div>
       </main>
     )

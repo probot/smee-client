@@ -65,7 +65,7 @@ export default class App extends Component {
             />
           </div>
           <ul className="Box list-style-none pl-0">
-            {sorted.map((l, i, arr) => <ListItem key={l.id} item={l} last={i === arr.length - 1} />)}
+            {sorted.map((item, i, arr) => <ListItem key={item['x-github-delivery']} item={item} last={i === arr.length - 1} />)}
           </ul>
         </div>
       </main>

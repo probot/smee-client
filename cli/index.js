@@ -19,7 +19,11 @@ module.exports = class Proxy {
     })
 
     req.end((err, res) => {
-      console.log(err, res)
+      if (err) {
+        console.error(err)
+      } else {
+        console.log(`${req.method} ${req.url} - ${res.statusCode}`)
+      }
     })
   }
 

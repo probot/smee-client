@@ -14,8 +14,10 @@ export default class App extends Component {
   }
 
   componentDidMount () {
-    const events = new window.EventSource(window.location.href)
+    const url = window.location.pathname + '/stream'
+    const events = new window.EventSource(url)
     events.onmessage = message => {
+      console.log('received message!')
       const json = JSON.parse(message.data)
 
       // Prevent duplicates in the case of redelivered payloads

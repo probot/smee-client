@@ -19,7 +19,7 @@ export default class App extends Component {
       const json = JSON.parse(message.data)
 
       // Prevent duplicates in the case of redelivered payloads
-      if (!this.state.log.every(l => l.id === json['x-request-id'])) {
+      if (this.state.log.findIndex(l => l.id === json['x-request-id']) === -1) {
         const log = {
           event: json['x-github-event'],
           payload: json.body,

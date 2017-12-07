@@ -7,7 +7,7 @@
   "repository": "https://github.com/probot/webhooks.git",
   "scripts": {
     "start": "node index.js",
-    "start-dev": "concurrently \"nodemon --ignore src/ ./index.js\" \"webpack -u\"",
+    "start-dev": "concurrently \"nodemon --ignore src/ ./index.js\" \"webpack -w\"",
     "build": "webpack -p",
     "test": "jest && standard",
     "postinstall": "npm run build"

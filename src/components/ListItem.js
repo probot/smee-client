@@ -87,7 +87,7 @@ export default class ListItem extends Component {
             <div className="d-flex flex-justify-between flex-items-start">
               <div>
                 <p><strong>Event ID:</strong> <code>{id}</code></p>
-                <EventDescription event={event} item={item} />
+                <EventDescription event={event} payload={payload} timestamp={timestamp} />
               </div>
               <button
                 onBlur={() => this.setState({ copied: false })}

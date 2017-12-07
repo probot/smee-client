@@ -1,0 +1,24 @@
+{
+  "name": "hooksy",
+  "version": "1.0.0",
+  "description": "Client to proxy webhooks to local host",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest && standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/probot/webhooks.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/probot/webhooks/issues"
+  },
+  "homepage": "https://github.com/probot/webhooks#readme",
+  "dependencies": {
+    "commander": "^2.12.2",
+    "eventsource": "^1.0.5",
+    "superagent": "^3.8.1"
+  }
+}

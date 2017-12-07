@@ -25,7 +25,7 @@ app.get('/:channel', (req, res, next) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
 
-app.get('/:channel/stream', sse, (req, res) => {
+app.get('/:channel/stream', sse(), (req, res) => {
   console.log('Setting up stream!')
   // Allow CORS
   res.setHeader('Access-Control-Allow-Origin', '*')

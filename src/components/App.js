@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import ListItem from './ListItem'
-import { object } from 'prop-types'
 import get from 'get-value'
 
 function compare (a, b) {
@@ -8,30 +7,29 @@ function compare (a, b) {
   if (a.timestamp > b.timestamp) return -1
   return 0
 }
-
 export default class App extends Component {
-  static propTypes = {
-    socket: object.isRequired
-  }
-
   constructor (props) {
     super(props)
-    this.state = { log: [], filter: '', loading: true }
+    this.state = { log: [], filter: '' }
   }
 
   componentDidMount () {
-    window.fetch('/webhooks/logs', { credentials: 'same-origin' }).then(res => res.json()).then(res => {
-      if (res.loggedIn === false) { window.location = '/probot/login' }
-      this.setState({ log: res.log, user: res.user, loading: false })
-    })
+    const events = new window.EventSource(window.location.pathname)
+    events.onmessage = message => {
+      console.log('received message!')
+      const json = JSON.parse(message.data)
 
-    this.props.socket.on('new-log', log => this.setState({
-      log: [...this.state.log, log]
-    }))
+      // Prevent duplicates in the case of redelivered payloads
+      if (this.state.log.findIndex(l => l.id === json['x-request-id']) === -1) {
+        this.setState({
+          log: [...this.state.log, json]
+        })
+      }
+    }
   }
 
   render () {
-    const { log, user, filter, loading } = this.state
+    const { log, filter } = this.state
     let filtered = log
     if (filter) {
       filtered = log.filter(l => {
@@ -50,12 +48,6 @@ export default class App extends Component {
         <div className="py-2 bg-gray-dark">
           <div className="container-md text-white p-responsive d-flex flex-items-center flex-justify-between">
             <h1 className="f4">Recent Deliveries</h1>
-            {!loading && (
-              <div className="d-flex flex-items-center">
-                <h5 className="mr-2">{user.username}</h5>
-                <img src={`${user.photos[0].value}&s=88`} width={32} />
-              </div>
-            )}
           </div>
         </div>
         <div className="container-md py-3 p-responsive">
@@ -73,9 +65,16 @@ export default class App extends Component {
               className="input input-lg width-full Box"
             />
           </div>
-          <ul className="Box list-style-none pl-0">
-            {sorted.map((l, i, arr) => <ListItem key={l.id} item={l} last={i === arr.length - 1} />)}
-          </ul>
+          {log.length > 0 ? (
+            <ul className="Box list-style-none pl-0">
+              {sorted.map((item, i, arr) => <ListItem key={item['x-github-delivery']} item={item} last={i === arr.length - 1} />)}
+            </ul>
+          ) : (
+            <div className="blankslate">
+              <h3>No events just yet</h3>
+              <p>This page will automatically update as things happen.</p>
+            </div>
+          )}
         </div>
       </main>
     )

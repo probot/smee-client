@@ -4,4 +4,4 @@ npm-debug.log
 .env
 package-lock.json
 logs.json
-dist
+public/main.min.*

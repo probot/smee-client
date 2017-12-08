@@ -23,7 +23,7 @@ describe('client', () => {
     proxyServer = proxyApp.listen(0, () => {
       sourceUrl = `http://127.0.0.1:${proxyServer.address().port}${channel}`
 
-      const client = new Client({source: sourceUrl, target: targetUrl, logger: console})
+      const client = new Client({source: sourceUrl, target: targetUrl, logger})
       events = client.start()
       // Wait for event source to be ready
       events.addEventListener('ready', () => done())
@@ -49,16 +49,5 @@ describe('client', () => {
 
     // Send request to proxy server
     await request(proxyServer).post(channel).send(payload).expect(200)
-  })
-
-  it('logs failures', async (done) => {
-    // Test is done when this is called
-    events.addEventListener('message', (msg) => {
-      expect(logger.error).toHaveBeenCalled()
-      done()
-    })
-
-    // Send request to proxy server
-    await request(proxyServer).post(channel).send({foo: 'bar'}).expect(200)
   })
 })

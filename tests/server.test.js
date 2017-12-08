@@ -26,7 +26,7 @@ describe('server', () => {
   describe('GET /', () => {
     it('redirects from / to /TOKEN', async () => {
       const res = await request(server).get('/')
-      expect(res.status).toBe(302)
+      expect(res.status).toBe(301)
       expect(typeof res.headers.location).toBe('string')
     })
   })

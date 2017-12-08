@@ -9,7 +9,7 @@
     "start": "node ./lib/index.js",
     "start-dev": "concurrently \"nodemon --ignore src/ ./lib/index.js\" \"webpack -w\"",
     "build": "webpack -p",
-    "test": "jest && eslint lib/** src/**/*.js",
+    "test": "jest --coverage && eslint lib/** src/**/*.js",
     "postinstall": "npm run build"
   },
   "dependencies": {

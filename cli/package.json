@@ -21,5 +21,10 @@
     "eventsource": "^1.0.5",
     "morgan": "^1.9.0",
     "superagent": "^3.8.1"
+  },
+  "devDependencies": {
+    "jest": "^21.2.1",
+    "nock": "^9.1.4",
+    "supertest": "^3.0.0"
   }
 }

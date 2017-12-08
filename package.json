@@ -63,5 +63,6 @@
   },
   "engines": {
     "node": "8.9.1"
-  }
+  },
+  "main": "lib/server"
 }

@@ -1,8 +1,11 @@
 {
-  "name": "hooksy",
+  "name": "smee-cli",
   "version": "1.0.0",
   "description": "Client to proxy webhooks to local host",
   "main": "index.js",
+  "bin": {
+    "smee": "./bin/smee.js"
+  },
   "scripts": {
     "test": "jest && standard"
   },

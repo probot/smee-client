@@ -15,10 +15,18 @@ export default class App extends Component {
 
   componentDidMount () {
     const events = new window.EventSource(window.location.pathname)
+
     events.addEventListener('ready', message => {
       const json = JSON.parse(message.data)
       this.setState({ ready: true, listeners: json.count })
     })
+
+    events.addEventListener('counter', message => {
+      const json = JSON.parse(message.data)
+      console.log(json)
+      this.setState({ listeners: json.count })
+    })
+
     events.onmessage = message => {
       const json = JSON.parse(message.data)
 

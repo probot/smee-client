@@ -64,5 +64,11 @@
   "engines": {
     "node": "8.9.1"
   },
-  "main": "lib/server"
+  "main": "lib/server",
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "client"
+    ]
+  }
 }

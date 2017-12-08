@@ -7,7 +7,7 @@
     "smee": "./bin/smee.js"
   },
   "scripts": {
-    "test": "jest && standard"
+    "test": "jest --coverage && standard"
   },
   "repository": {
     "type": "git",

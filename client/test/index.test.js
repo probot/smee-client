@@ -6,7 +6,7 @@ const nock = require('nock')
 // Only allow requests to the proxy server listening on localhost
 nock.enableNetConnect('127.0.0.1')
 
-describe('server', () => {
+describe('client', () => {
   let proxyApp, proxyServer, sourceUrl, events
 
   const targetUrl = 'http://example.com/foo/bar'

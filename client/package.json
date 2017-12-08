@@ -30,5 +30,10 @@
     "nock": "^9.1.4",
     "standard": "^10.0.3",
     "supertest": "^3.0.0"
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
   }
 }

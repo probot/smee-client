@@ -4,6 +4,14 @@
 
 < IMAGE SCREENSHOT >
 
+## How it works
+
+1. Go to https://smee.io/new, which will redirect you to a randomly generated channel.
+
+1. Use this as your Webhook URL and set it as your Probot App's `WEBHOOK_PROXY_URL` environment variable.
+
+1. Watch events come in to the web UI and profit!
+
 ## Motivation
 
 One of the most cumbersome parts of building a GitHub App with [Probot](https://probot.github.io) is dealing with webhook deliveries. When working locally, for your app to receive webhooks you'd need to expose it to the internet - that's where we've used [localtunnel](https://localtunnel.me). However, it's not very reliable or fast and is more than many apps need to simply collect webhook events.

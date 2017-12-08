@@ -51,8 +51,4 @@ module.exports = class Proxy {
 
     return events
   }
-
-  close () {
-    this.events.close()
-  }
 }

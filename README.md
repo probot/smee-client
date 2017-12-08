@@ -1,4 +1,4 @@
-# webhooks [WIP] &middot; [![Build Status](https://img.shields.io/travis/probot/webhooks/master.svg)](https://travis-ci.org/probot/webhooks)
+# webhooks [WIP] &middot; [![Build Status](https://img.shields.io/travis/probot/webhooks/master.svg)](https://travis-ci.org/probot/webhooks) [![Codecov](https://img.shields.io/codecov/c/github/probot/webhooks.svg)](https://codecov.io/gh/probot/webhooks/)
 
 > a GitHub App built with [probot](https://github.com/probot/probot) that stores GitHub App webhook payloads and presents them in a custom UI, built to work with other Probot Apps.
 

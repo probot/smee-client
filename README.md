@@ -6,11 +6,13 @@
 
 ## How it works
 
-1. Go to https://smee.io/new, which will redirect you to a randomly generated channel.
+1. Go to https://smee.io/new, which will redirect you to a randomly generated channel. You must be using a browser that supports [Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events).
 
-1. Use this as your Webhook URL and set it as your Probot App's `WEBHOOK_PROXY_URL` environment variable.
+1. Use that new page's URL as your App's Webhook URL and set it as your Probot App's `WEBHOOK_PROXY_URL` environment variable.
 
-1. Watch events come in to the web UI and profit!
+1. Watch events come in to the web UI
+
+1. Profit!
 
 ## Motivation
 

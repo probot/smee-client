@@ -24,8 +24,16 @@ describe('server', () => {
   })
 
   describe('GET /', () => {
-    it('redirects from / to /TOKEN', async () => {
+    it('returns the proper HTML', async () => {
       const res = await request(server).get('/')
+      expect(res.status).toBe(200)
+      expect(res.text).toMatchSnapshot()
+    })
+  })
+
+  describe('GET /new', () => {
+    it('redirects from /new to /TOKEN', async () => {
+      const res = await request(server).get('/new')
       expect(res.status).toBe(302)
       expect(typeof res.headers.location).toBe('string')
     })
@@ -52,6 +60,7 @@ describe('server', () => {
         const data = JSON.parse(msg.data)
         expect(data.body).toEqual(payload)
         expect(data['x-foo']).toEqual('bar')
+
         // test is done if all of this gets called
         done()
       })

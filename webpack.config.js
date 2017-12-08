@@ -4,7 +4,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const autoprefixer = require('autoprefixer')
 const glob = require('glob')
 const PurifyCSSPlugin = require('purifycss-webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const browsers = [
   'last 2 versions',
@@ -20,16 +19,11 @@ module.exports = {
     main: path.resolve(__dirname, 'src', 'main.js')
   },
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: path.join(__dirname, 'public'),
     filename: '[name].min.js',
     publicPath: '/'
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'index.tpl.html'),
-      inject: 'body',
-      filename: 'index.html'
-    }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new webpack.optimize.UglifyJsPlugin(),
     new ExtractTextPlugin('[name].min.css'),

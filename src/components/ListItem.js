@@ -10,7 +10,8 @@ import {
   IssueOpenedIcon,
   IssueClosedIcon,
   KebabHorizontalIcon,
-  ClippyIcon
+  ClippyIcon,
+  SyncIcon
 } from 'react-octicons'
 import EventDescription from './EventDescription'
 import copy from 'copy-to-clipboard'
@@ -32,17 +33,36 @@ export default class ListItem extends Component {
   constructor (props) {
     super(props)
     this.toggleExpanded = () => this.setState({ expanded: !this.state.expanded })
-    this.copy = () => {
-      const copied = copy(JSON.stringify(this.props.item))
-      this.setState({ copied })
-    }
-    this.state = { expanded: false, copied: false }
+    this.copy = this.copy.bind(this)
+    this.redeliver = this.redeliver.bind(this)
+    this.state = { expanded: false, copied: false, redelivered: false }
+  }
+
+  copy () {
+    const copied = copy(JSON.stringify(this.props.item))
+    this.setState({ copied })
+  }
+
+  redeliver () {
+    window.fetch(`${window.location.pathname}/redeliver`, {
+      method: 'POST',
+      body: JSON.stringify(this.props.item),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(res => {
+      this.setState({ redelivered: res.status === 200 })
+    })
   }
 
   render () {
-    const { expanded, copied } = this.state
+    const { expanded, copied, redelivered } = this.state
     const { item, last } = this.props
-    const { event, timestamp, payload, id } = item
+
+    const event = item['x-github-event']
+    const payload = item.body
+    const timestamp = parseInt(item['x-request-start'], 10)
+    const id = item['x-request-id']
 
     let icon
 
@@ -70,9 +90,23 @@ export default class ListItem extends Component {
             <div className="d-flex flex-justify-between flex-items-start">
               <div>
                 <p><strong>Event ID:</strong> <code>{id}</code></p>
-                <EventDescription event={event} item={item} />
+                <EventDescription event={event} payload={payload} timestamp={timestamp} />
               </div>
-              <button onBlur={() => this.setState({ copied: false })} className="btn btn-sm tooltipped tooltipped-s" aria-label={copied ? 'Copied!' : 'Copy payload to clipboard'} onClick={this.copy}><ClippyIcon /></button>
+
+              <div>
+                <button
+                  onBlur={() => this.setState({ copied: false })}
+                  onClick={this.copy}
+                  className="btn btn-sm tooltipped tooltipped-s"
+                  aria-label={copied ? 'Copied!' : 'Copy payload to clipboard'}
+                ><ClippyIcon /></button>
+                <button
+                  onBlur={() => this.setState({ redelivered: false })}
+                  onClick={this.redeliver}
+                  className="ml-2 btn btn-sm tooltipped tooltipped-s"
+                  aria-label={redelivered ? 'Sent!' : 'Redeliver this payload'}
+                ><SyncIcon /></button>
+              </div>
             </div>
             <hr className="mt-3" />
             <div className="mt-3">

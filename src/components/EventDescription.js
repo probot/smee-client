@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
-import { string, object } from 'prop-types'
+import { string, object, number } from 'prop-types'
 import moment from 'moment'
 
 export default class EventDescription extends Component {
   static propTypes = {
     event: string.isRequired,
-    item: object.isRequired
+    payload: object.isRequired,
+    timestamp: number.isRequired
   }
 
   render () {
-    const { event, item } = this.props
-    const { payload, timestamp } = item
+    const { event, payload, timestamp } = this.props
 
     const formattedTime = moment(timestamp).format('dddd, MMMM Do YYYY, h:mm:ss a')
     const onARepo = payload.repository && payload.repository.full_name

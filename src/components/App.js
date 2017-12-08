@@ -15,8 +15,11 @@ export default class App extends Component {
 
   componentDidMount () {
     const events = new window.EventSource(window.location.pathname)
+    events.addEventListener('ready', message => {
+      const json = JSON.parse(message.data)
+      this.setState({ ready: true, listeners: json.count })
+    })
     events.onmessage = message => {
-      console.log('received message!')
       const json = JSON.parse(message.data)
 
       // Prevent duplicates in the case of redelivered payloads
@@ -29,7 +32,16 @@ export default class App extends Component {
   }
 
   render () {
-    const { log, filter } = this.state
+    const { log, filter, ready, listeners } = this.state
+
+    if (!ready) {
+      return (
+        <main>
+          <h1>Loading...</h1>
+        </main>
+      )
+    }
+
     let filtered = log
     if (filter) {
       filtered = log.filter(l => {
@@ -65,16 +77,23 @@ export default class App extends Component {
               className="input input-lg width-full Box"
             />
           </div>
-          {log.length > 0 ? (
-            <ul className="Box list-style-none pl-0">
-              {sorted.map((item, i, arr) => <ListItem key={item['x-github-delivery']} item={item} last={i === arr.length - 1} />)}
-            </ul>
-          ) : (
-            <div className="blankslate">
-              <h3>No events just yet</h3>
-              <p>This page will automatically update as things happen.</p>
+          <div className="Box Box--condensed">
+            <div className="Box-header">
+              <h3 className="Box-title">
+                Active listeners <span className="Counter Counter--gray">{listeners - 1}</span>
+              </h3>
             </div>
-          )}
+            {log.length > 0 ? (
+              <ul className="Box-content list-style-none pl-0">
+                {sorted.map((item, i, arr) => <ListItem key={item['x-github-delivery']} item={item} last={i === arr.length - 1} />)}
+              </ul>
+            ) : (
+              <div className="blankslate blankslate-clean-background">
+                <h3>No events just yet</h3>
+                <p>This page will automatically update as things happen.</p>
+              </div>
+            )}
+          </div>
         </div>
       </main>
     )

@@ -6,10 +6,10 @@
   "license": "ISC",
   "repository": "https://github.com/probot/webhooks.git",
   "scripts": {
-    "start": "node index.js",
-    "start-dev": "concurrently \"nodemon --ignore src/ ./index.js\" \"webpack -w\"",
+    "start": "node ./lib/index.js",
+    "start-dev": "concurrently \"nodemon --ignore src/ ./lib/index.js\" \"webpack -w\"",
     "build": "webpack -p",
-    "test": "jest && standard",
+    "test": "jest --coverage && eslint lib/** src/**/*.js",
     "postinstall": "npm run build"
   },
   "dependencies": {
@@ -26,7 +26,6 @@
     "copy-webpack-plugin": "^4.2.0",
     "crypto": "^1.0.1",
     "css-loader": "^0.28.7",
-    "eslint-config-standard-react": "^5.0.0",
     "eventsource": "^1.0.5",
     "express": "^4.16.2",
     "extract-text-webpack-plugin": "^3.0.1",
@@ -50,9 +49,17 @@
   },
   "devDependencies": {
     "concurrently": "^3.5.0",
-    "standard": "^10.0.3",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-config-standard-react": "^5.0.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-react": "^7.5.1",
+    "eslint-plugin-standard": "^3.0.1",
+    "jest": "^21.2.1",
     "nodemon": "^1.12.1",
-    "jest": "^21.2.1"
+    "standard": "^10.0.3",
+    "supertest": "^3.0.0"
   },
   "engines": {
     "node": "8.9.1"

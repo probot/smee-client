@@ -40,16 +40,21 @@ describe('server', () => {
   })
 
   describe('events', () => {
-    it('emits events', async () => {
-      const spy = jest.fn()
+    it('emits events', async (done) => {
+      const payload = {payload: true}
 
-      events.addEventListener('message', (message) => {
-        spy(message)
+      await request(server).post(channel)
+        .set('X-Foo', 'bar')
+        .send(payload)
+        .expect(200)
+
+      events.addEventListener('message', (msg) => {
+        const data = JSON.parse(msg.data)
+        expect(data.body).toEqual(payload)
+        expect(data['x-foo']).toEqual('bar')
+        // test is done if all of this gets called
+        done()
       })
-
-      const res = await request(server).post(channel).send({ payload: true })
-      expect(res.status).toBe(200)
-      expect(spy).toHaveBeenCalled()
     })
   })
 

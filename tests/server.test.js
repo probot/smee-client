@@ -56,15 +56,21 @@ describe('server', () => {
         done()
       })
     })
-  })
 
-  it('POST /:channel/redeliver re-emits a payload', async () => {
-    const payload = {
-      foo: true,
-      bar: false
-    }
+    it('POST /:channel/redeliver re-emits a payload', async (done) => {
+      const payload = {payload: true}
 
-    const res = await request(server).post('/jason/redeliver').send(payload)
-    expect(res.status).toBe(200)
+      await request(server).post(channel + '/redeliver')
+        .send(payload)
+        .expect(200)
+
+      events.addEventListener('message', (msg) => {
+        const data = JSON.parse(msg.data)
+        expect(data).toEqual(payload)
+
+        // test is done if all of this gets called
+        done()
+      })
+    })
   })
 })

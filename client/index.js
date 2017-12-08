@@ -2,9 +2,10 @@ const EventSource = require('eventsource')
 const superagent = require('superagent')
 
 module.exports = class Proxy {
-  constructor ({source, target}) {
+  constructor ({source, target, logger = console}) {
     this.source = source
     this.target = target
+    this.logger = logger
   }
 
   onmessage (msg) {
@@ -20,19 +21,19 @@ module.exports = class Proxy {
 
     req.end((err, res) => {
       if (err) {
-        console.error(err)
+        this.logger.error(err)
       } else {
-        console.log(`${req.method} ${req.url} - ${res.statusCode}`)
+        this.logger.info(`${req.method} ${req.url} - ${res.statusCode}`)
       }
     })
   }
 
   onopen () {
-    console.log('Connected', this.events.url)
+    this.logger.info('Connected', this.events.url)
   }
 
   onerror (err) {
-    console.error(err)
+    this.logger.error(err)
   }
 
   start () {
@@ -45,7 +46,7 @@ module.exports = class Proxy {
     events.addEventListener('open', this.onopen.bind(this))
     events.addEventListener('error', this.onerror.bind(this))
 
-    console.log(`Proxying requests from ${this.source} to ${this.target}`)
+    this.logger.info(`Proxying requests from ${this.source} to ${this.target}`)
 
     this.events = events
 

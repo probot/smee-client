@@ -2,7 +2,7 @@
 
 .header__anim {
   position: relative;
-  width: 64px;
+  width: 128px;
   height: 64px;
 
   &__circle {
@@ -11,47 +11,66 @@
   }
 
   &__center {
-    width: 50%;
+    width: 25%;
     height: 50%;
     top: 25%;
-    left: 25%;
+    left: 50%;
     background-color: $red;
-  }
+    z-index: 4;
+    animation: pulse 2000ms ease-in-out infinite;
 
-  &__stroke {
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    border: 3px dotted $blue-700;
-    animation: simpleRotate 10000ms linear infinite;
-
-    @keyframes simpleRotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(-360deg); }
+    @keyframes pulse {
+      0% { transform: translateX(-50%) scale(1); }
+      25% { transform: translateX(-50%) scale(1); }
+      30% { transform: translateX(-50%) scale(1.1); }
+      50% { transform: translateX(-50%) scale(1); }
+      65% { transform: translateX(-50%) scale(1.1); }
+      70% { transform: translateX(-50%) scale(1); }
+      100% { transform: translateX(-50%) scale(1); }
     }
   }
 
+  &__stroke {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: mix($blue-600, $blue-700, 50%);
+  }
 
-  &__dot {
-    background-color: $blue-400;
-    width: 20%;
+  &::before, &::after, &__stroke {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    width: 10%;
     height: 20%;
-    top: 26px;
-    left: 40%;
-    animation: rotate 2000ms linear infinite;
+    background-color: $blue-300;
+    z-index: 3;
+  }
 
-    @keyframes rotate {
-      from {
-        transform: rotate(0deg)
-                   translate(32px)
-                   rotate(0deg);
-      }
-      to {
-        transform: rotate(360deg)
-                   translate(32px) 
-                   rotate(-360deg);
-      }
+  &::before { left: 0; }
+  &::after { right: 0; }
+
+  &__payload {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 10%;
+    height: 3px;
+    z-index: 2;
+    background-color: $blue-800;
+    animation: payload 2000ms linear infinite;
+
+    @keyframes payload {
+      0% { transform: translate(0, -50%); }
+      30% { transform: translate(500%, -50%); }
+      70% { transform: translate(500%, -50%); }
+      100% { transform: translate(900%, -50%); }
     }
   }
 }

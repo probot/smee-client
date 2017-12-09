@@ -1,0 +1,39 @@
+{
+  "name": "smee-cli",
+  "version": "1.0.0",
+  "description": "Client to proxy webhooks to local host",
+  "main": "index.js",
+  "bin": {
+    "smee": "./bin/smee.js"
+  },
+  "scripts": {
+    "test": "jest --coverage && standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/probot/webhooks.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/probot/webhooks/issues"
+  },
+  "homepage": "https://github.com/probot/webhooks#readme",
+  "dependencies": {
+    "commander": "^2.12.2",
+    "eventsource": "^1.0.5",
+    "morgan": "^1.9.0",
+    "superagent": "^3.8.1"
+  },
+  "devDependencies": {
+    "jest": "^21.2.1",
+    "nock": "^9.1.4",
+    "standard": "^10.0.3",
+    "supertest": "^3.0.0"
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
+  }
+}

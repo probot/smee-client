@@ -1,1 +1,61 @@
-@import 'primer-css/index.scss'
+@import 'primer-css/index.scss';
+
+.header__anim {
+  position: relative;
+  width: 64px;
+  height: 64px;
+
+  &__circle {
+    border-radius: 50%;
+    position: absolute;
+  }
+
+  &__center {
+    width: 50%;
+    height: 50%;
+    top: 25%;
+    left: 25%;
+    background-color: $red;
+  }
+
+  &__stroke {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    border: 3px dotted $blue-700;
+    animation: simpleRotate 10000ms linear infinite;
+
+    @keyframes simpleRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(-360deg); }
+    }
+  }
+
+
+  &__dot {
+    background-color: $blue-400;
+    width: 20%;
+    height: 20%;
+    top: 26px;
+    left: 40%;
+    animation: rotate 2000ms linear infinite;
+
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg)
+                   translate(32px)
+                   rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg)
+                   translate(32px) 
+                   rotate(-360deg);
+      }
+    }
+  }
+}
+
+.subhead {
+  color: $blue-700;
+}

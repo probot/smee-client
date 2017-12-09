@@ -2,7 +2,7 @@ const path = require('path')
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const autoprefixer = require('autoprefixer')
-const glob = require('glob')
+const glob = require('glob-all')
 const PurifyCSSPlugin = require('purifycss-webpack')
 
 const browsers = [
@@ -14,7 +14,7 @@ const browsers = [
   '> 1%'
 ]
 
-module.exports = {
+const cfg = {
   entry: {
     main: path.resolve(__dirname, 'src', 'main.js')
   },
@@ -26,12 +26,7 @@ module.exports = {
   plugins: [
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new webpack.optimize.UglifyJsPlugin(),
-    new ExtractTextPlugin('[name].min.css'),
-    new PurifyCSSPlugin({
-      minimize: true,
-      moduleExtensions: ['.js'],
-      paths: glob.sync(path.join(__dirname, 'src', '**/*.js'))
-    })
+    new ExtractTextPlugin('[name].min.css')
   ],
   module: {
     rules: [{
@@ -82,3 +77,16 @@ module.exports = {
     }]
   }
 }
+
+if (process.env.NODE_ENV === 'production') {
+  cfg.plugins.push(new PurifyCSSPlugin({
+    minimize: true,
+    moduleExtensions: ['.js'],
+    paths: glob.sync([
+      path.join(__dirname, 'src', '**/*.js'),
+      path.join(__dirname, 'public', '*.html')
+    ])
+  }))
+}
+
+module.exports = cfg

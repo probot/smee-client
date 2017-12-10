@@ -12,42 +12,67 @@ const logger = {
 }
 
 describe('client', () => {
-  let proxyApp, proxyServer, sourceUrl, events
+  let proxy, host, client, channel
 
   const targetUrl = 'http://example.com/foo/bar'
-  const channel = '/fake-channel'
 
   beforeEach((done) => {
-    proxyApp = createServer()
-
-    proxyServer = proxyApp.listen(0, () => {
-      sourceUrl = `http://127.0.0.1:${proxyServer.address().port}${channel}`
-
-      const client = new Client({source: sourceUrl, target: targetUrl, logger})
-      events = client.start()
-      // Wait for event source to be ready
-      events.addEventListener('ready', () => done())
-    })
-  })
-
-  afterEach(() => {
-    proxyServer && proxyServer.close()
-    events && events.close()
-  })
-
-  it('POST /:channel forwards to target url', async (done) => {
-    const payload = {payload: true}
-
-    // Expect request to target
-    const forward = nock('http://example.com').post('/foo/bar', payload).reply(200)
-
-    // Test is done when this is called
-    events.addEventListener('message', (msg) => {
-      expect(forward.isDone()).toBe(true)
+    proxy = createServer().listen(0, () => {
+      host = `http://127.0.0.1:${proxy.address().port}`
       done()
     })
+  })
 
-    // Send request to proxy server
-    await request(proxyServer).post(channel).send(payload).expect(200)
+  describe('connecting to a channel', () => {
+    beforeEach((done) => {
+      channel = '/fake-channel'
+      client = new Client({
+        source: `${host}${channel}`,
+        target: targetUrl,
+        logger
+      }).start()
+      // Wait for event source to be ready
+      client.addEventListener('ready', () => done())
+    })
+
+    afterEach(() => {
+      proxy && proxy.close()
+      client && client.close()
+    })
+
+    test('POST /:channel forwards to target url', async (done) => {
+      const payload = {payload: true}
+
+      // Expect request to target
+      const forward = nock('http://example.com').post('/foo/bar', payload).reply(200)
+
+      // Test is done when this is called
+      client.addEventListener('message', (msg) => {
+        expect(forward.isDone()).toBe(true)
+        done()
+      })
+
+      // Send request to proxy server
+      await request(proxy).post(channel).send(payload).expect(200)
+    })
+  })
+
+  describe('/new', () => {
+    beforeEach(() => {
+      client = new Client({
+        source: `${host}/new`,
+        target: targetUrl,
+        logger
+      }).start()
+    })
+
+    test('connects to a new channel', async (done) => {
+      // Wait for event source to be ready
+      client.addEventListener('ready', () => {
+        expect(client.url).not.toMatch(/\/new$/)
+        expect(client.url).toMatch(/\/(\w+)/)
+        done()
+      })
+    })
   })
 })

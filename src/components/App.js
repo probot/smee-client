@@ -14,17 +14,38 @@ export default class App extends Component {
   }
 
   componentDidMount () {
-    const events = new window.EventSource(window.location.pathname)
-    events.onmessage = message => {
-      console.log('received message!')
-      const json = JSON.parse(message.data)
+    this.setupEventSource()
+  }
 
-      // Prevent duplicates in the case of redelivered payloads
-      if (this.state.log.findIndex(l => l.id === json['x-request-id']) === -1) {
-        this.setState({
-          log: [...this.state.log, json]
-        })
-      }
+  setupEventSource () {
+    const url = window.location.pathname
+    console.log('Connecting to event source:', url)
+    this.events = new window.EventSource(url)
+    this.events.onmessage = this.onmessage.bind(this)
+    this.events.onerror = this.onerror.bind(this)
+  }
+
+  onerror (err) {
+    switch (this.events.readyState) {
+      case window.EventSource.CONNECTING:
+        console.log('Reconnecting...', err)
+        break
+      case window.EventSource.CLOSED:
+        console.log('Reinitializing...', err)
+        this.setupEventSource()
+        break
+    }
+  }
+
+  onmessage (message) {
+    console.log('received message!')
+    const json = JSON.parse(message.data)
+
+    // Prevent duplicates in the case of redelivered payloads
+    if (this.state.log.findIndex(l => l.id === json['x-request-id']) === -1) {
+      this.setState({
+        log: [...this.state.log, json]
+      })
     }
   }
 

@@ -1,14 +1,14 @@
-# NAME &middot; [![Build Status](https://img.shields.io/travis/probot/webhooks/master.svg)](https://travis-ci.org/probot/webhooks) [![Codecov](https://img.shields.io/codecov/c/github/probot/webhooks.svg)](https://codecov.io/gh/probot/webhooks/)
+# smee &middot; [![Build Status](https://img.shields.io/travis/probot/webhooks/master.svg)](https://travis-ci.org/probot/webhooks) [![Codecov](https://img.shields.io/codecov/c/github/probot/webhooks.svg)](https://codecov.io/gh/probot/webhooks/)
 
-`NAME` is a web application that receives payloads then sends them, via the [EventSource](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) API, to other clients.
-
-< IMAGE SCREENSHOT >
+**smee** is a web application that receives payloads then sends them, via the [EventSource](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) API, to other clients.
 
 ## How it works
 
 1. Go to https://smee.io/new, which will redirect you to a randomly generated channel. You must be using a browser that supports [Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events).
 
-1. Use that new page's URL as your App's Webhook URL and set it as your Probot App's `WEBHOOK_PROXY_URL` environment variable.
+1. Use that new page's URL as your App's Webhook URL
+
+1. Use [the CLI](https://npmjs.com/package/smee-cli) to proxy events and send them to a path on your local device, or set it as your Probot App's `WEBHOOK_PROXY_URL` environment variable.
 
 1. Watch events come in to the web UI
 

@@ -34,7 +34,7 @@ describe('server', () => {
   describe('GET /new', () => {
     it('redirects from /new to /TOKEN', async () => {
       const res = await request(server).get('/new')
-      expect(res.status).toBe(301)
+      expect(res.status).toBe(307)
       expect(typeof res.headers.location).toBe('string')
     })
   })

@@ -1,1 +1,22 @@
-@import 'primer-css/index.scss'
+@import 'primer-css/index.scss';
+
+$blue-650: mix($blue-600, $blue-700, 50%);
+$animationSpeed: 1500ms;
+
+@import 'styles/header-anim';
+@import 'styles/main-anim';
+
+.btn-outline-blue {
+  background-color: transparent;
+  color: white;
+  border-color: white !important;
+
+  &:hover {
+    color: $blue-500;
+    background-color: white;
+  }
+}
+
+.blue-700 {
+  color: $blue-700;
+}

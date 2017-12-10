@@ -21,13 +21,25 @@
     <a href="/new" class="btn btn-outline btn-outline-blue">Start a new channel</a>
   </header>
 
-  <div class="container-lg py-6 p-responsive">
+  <main class="container-lg py-6 mt-6 p-responsive">
     <p class="lead text-center col-12 col-md-8 mx-auto">If your application needs to respond to webhooks, you'll need some way to expose <strong>localhost</strong> to the internet. <strong>smee.io</strong> is a small service that uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events" target="_blank" rel="noopener noreferrer">Server-Sent Events</a> to proxy payloads from the webhook source, then transmit them to your locally running application.</p>
 
-    <!-- An explanatory image goes here -->
+    <div class="main__anim my-6">
+      <div class="main__anim__circle main__anim__left">
+        <span>Webhook Emitter</span>
+      </div>
+      <div class="main__anim__circle main__anim__right">
+        <span>localhost</span>
+      </div>
+      <div class="main__anim__line"></div>
+      <div class="main__anim__payload"></div>
+      <div class="main__anim__circle main__anim__center">
+        <span></span>
+      </div>
+    </div>
 
     <p class="lead text-center col-12 col-md-8 mx-auto">Tell your webhook source to send payloads to your <strong>smee.io</strong> channel, then either use the <a href="https://npmjs.com/package/smee-cli" target="_blank" rel="noopener noreferrer">smee CLI</a> or, if you're using <a href="https://probot.github.io" target="_blank" rel="noopener noreferrer">Probot</a> to build a GitHub App, just <a href="https://probot.github.io/docs/webhooks/">set the environment variable</a>.</p>
-  </div>
+  </main>
 
   <footer class="border-top text-center py-4">
     Made with 🤖 by the <a href="https://github.com/probot" target="_blank" rel="noopener noreferrer">Probot team</a>.

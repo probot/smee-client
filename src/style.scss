@@ -4,6 +4,7 @@ $blue-650: mix($blue-600, $blue-700, 50%);
 $animationSpeed: 1500ms;
 
 @import 'styles/header-anim';
+@import 'styles/main-anim';
 
 .btn-outline-blue {
   background-color: transparent;

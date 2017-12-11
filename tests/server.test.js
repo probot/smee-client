@@ -35,7 +35,7 @@ describe('server', () => {
     it('redirects from /new to /TOKEN', async () => {
       const res = await request(server).get('/new')
       expect(res.status).toBe(307)
-      expect(res.headers.location).toMatch(/^http:\/\/127\.0\.0\.1:\d+\/\w+$/)
+      expect(res.headers.location).toMatch(/^http:\/\/127\.0\.0\.1:\d+\/[\w-]+$/)
     })
   })
 

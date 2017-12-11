@@ -70,7 +70,7 @@ describe('client', () => {
       // Wait for event source to be ready
       client.addEventListener('ready', () => {
         expect(client.url).not.toMatch(/\/new$/)
-        expect(client.url).toMatch(/\/(\w+)/)
+        expect(client.url).toMatch(/\/([\w-]+)$/)
         done()
       })
     })

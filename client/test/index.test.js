@@ -23,6 +23,11 @@ describe('client', () => {
     })
   })
 
+  afterEach(() => {
+    proxy && proxy.close()
+    client && client.close()
+  })
+
   describe('connecting to a channel', () => {
     beforeEach((done) => {
       channel = '/fake-channel'
@@ -33,11 +38,6 @@ describe('client', () => {
       }).start()
       // Wait for event source to be ready
       client.addEventListener('ready', () => done())
-    })
-
-    afterEach(() => {
-      proxy && proxy.close()
-      client && client.close()
     })
 
     test('POST /:channel forwards to target url', async (done) => {

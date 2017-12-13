@@ -13,7 +13,6 @@
       },
       "debug": false,
       "loose": true,
-      "modules": false,
       "useBuiltIns": true
     }],
     "react"

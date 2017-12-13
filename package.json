@@ -50,7 +50,10 @@
     "webpack": "^3.8.1"
   },
   "devDependencies": {
+    "babel-jest": "^21.2.0",
     "concurrently": "^3.5.0",
+    "enzyme": "^3.2.0",
+    "enzyme-adapter-react-16": "^1.1.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-config-standard-react": "^5.0.0",
     "eslint-plugin-import": "^2.8.0",
@@ -60,6 +63,8 @@
     "eslint-plugin-standard": "^3.0.1",
     "jest": "^21.2.1",
     "nodemon": "^1.12.1",
+    "raf": "^3.4.0",
+    "react-test-renderer": "^16.2.0",
     "standard": "^10.0.3",
     "supertest": "^3.0.0"
   },
@@ -68,6 +73,9 @@
   },
   "main": "lib/server",
   "jest": {
+    "setupFiles": [
+      "./tests/setup.js"
+    ],
     "testPathIgnorePatterns": [
       "/node_modules/",
       "client"

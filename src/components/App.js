@@ -42,7 +42,7 @@ export default class App extends Component {
     const json = JSON.parse(message.data)
 
     // Prevent duplicates in the case of redelivered payloads
-    if (this.state.log.findIndex(l => l.id === json['X-GitHub-Delivery']) === -1) {
+    if (this.state.log.findIndex(l => l.id === json['x-github-delivery']) === -1) {
       this.setState({
         log: [...this.state.log, json]
       })

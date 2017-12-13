@@ -42,7 +42,8 @@ export default class App extends Component {
     const json = JSON.parse(message.data)
 
     // Prevent duplicates in the case of redelivered payloads
-    if (this.state.log.findIndex(l => l.id === json['x-request-id']) === -1) {
+    const idProp = 'x-github-delivery'
+    if (this.state.log.every(l => l[idProp] === json[idProp])) {
       this.setState({
         log: [...this.state.log, json]
       })

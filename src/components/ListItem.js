@@ -61,8 +61,7 @@ export default class ListItem extends Component {
 
     const event = item['x-github-event']
     const payload = item.body
-    const timestamp = parseInt(item['x-request-start'], 10)
-    const id = item['x-request-id']
+    const id = item['x-github-delivery']
 
     let icon
 
@@ -81,7 +80,7 @@ export default class ListItem extends Component {
             {icon}
           </div>
           <span className="input-monospace">{event}</span>
-          <time className="f6" style={{ marginLeft: 'auto' }}>{moment(timestamp).fromNow()}</time>
+          <time className="f6" style={{ marginLeft: 'auto' }}>{moment(item.timestamp).fromNow()}</time>
           <button onClick={this.toggleExpanded} className="ellipsis-expander ml-2"><KebabHorizontalIcon height={12} /></button>
         </div>
 
@@ -90,7 +89,7 @@ export default class ListItem extends Component {
             <div className="d-flex flex-justify-between flex-items-start">
               <div>
                 <p><strong>Event ID:</strong> <code>{id}</code></p>
-                <EventDescription event={event} payload={payload} timestamp={timestamp} />
+                <EventDescription event={event} payload={payload} timestamp={item.timestamp} />
               </div>
 
               <div>

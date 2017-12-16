@@ -1,11 +1,13 @@
 import React from 'react'
 import EventDescription from '../src/components/EventDescription'
 import { shallow } from 'enzyme'
+import moment from 'moment-timezone'
 
-describe('<ListItem />', () => {
+describe('<EventDescription />', () => {
   let props
 
   beforeEach(() => {
+    moment.tz.setDefault('UTC')
     props = {
       event: 'issues',
       timestamp: 1513148474751,
@@ -16,7 +18,7 @@ describe('<ListItem />', () => {
   describe('render', () => {
     it('renders the correct description', () => {
       const wrapper = shallow(<EventDescription {...props} />)
-      expect(wrapper.find('p').text()).toBe('There was a issues event received on Wednesday, December 13th 2017, 2:01:14 am.')
+      expect(wrapper.find('p').text()).toBe('There was a issues event received on Wednesday, December 13th 2017, 7:01:14 am.')
     })
 
     it('renders the correct description when on one repo', () => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { string, object, number } from 'prop-types'
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 export default class EventDescription extends Component {
   static propTypes = {

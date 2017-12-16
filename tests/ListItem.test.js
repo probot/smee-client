@@ -3,7 +3,7 @@ import ListItem from '../src/components/ListItem'
 import { shallow } from 'enzyme'
 
 describe('<ListItem />', () => {
-  let item
+  let item, el
 
   beforeEach(() => {
     item = {
@@ -11,34 +11,55 @@ describe('<ListItem />', () => {
       timestamp: 1513148474751,
       body: { action: 'opened' }
     }
+
+    el = shallow(<ListItem last item={item} />)
   })
 
-  it('should render with one child', () => {
-    const wrapper = shallow(<ListItem last item={item} />)
-    expect(wrapper.children().length).toBe(1)
+  describe('render', () => {
+    it('should render with one child', () => {
+      expect(el.children().length).toBe(1)
+    })
+
+    it('should render the expanded markup', () => {
+      expect(el.children().length).toBe(1)
+
+      el.find('button.ellipsis-expander').simulate('click')
+      expect(el.children().length).toBe(2)
+    })
+
+    it('renders the correct octicon if there is no action', () => {
+      const i = { ...item, 'x-github-event': 'test' }
+      const wrapper = shallow(<ListItem last item={i} />)
+      expect(wrapper.find('PackageIcon').length).toBe(1)
+    })
+
+    it('renders the package octicon if the event is unknown', () => {
+      const i = {
+        'x-github-event': 'push',
+        timestamp: 1513148474751,
+        body: {}
+      }
+      const wrapper = shallow(<ListItem last item={i} />)
+      expect(wrapper.find('RepoPushIcon').length).toBe(1)
+    })
   })
 
-  it('should render the expanded markup', () => {
-    const wrapper = shallow(<ListItem last item={item} />)
-    expect(wrapper.children().length).toBe(1)
+  describe('copy', () => {
+    beforeEach(() => {
+      el.find('button.ellipsis-expander').simulate('click')
+    })
 
-    wrapper.find('button.ellipsis-expander').simulate('click')
-    expect(wrapper.children().length).toBe(2)
-  })
+    it('changes the button\'s label onClick, then onBlur', async () => {
+      const btn = el.find('.js-copy-btn')
+      expect(el.state('copied')).toBeFalsy()
+      expect(btn.prop('aria-label')).toBe('Copy payload to clipboard')
 
-  it('renders the correct octicon if there is no action', () => {
-    const i = { ...item, 'x-github-event': 'test' }
-    const wrapper = shallow(<ListItem last item={i} />)
-    expect(wrapper.find('PackageIcon').length).toBe(1)
-  })
+      el.setState({ copied: true })
 
-  it('renders the package octicon if the event is unknown', () => {
-    const i = {
-      'x-github-event': 'push',
-      timestamp: 1513148474751,
-      body: {}
-    }
-    const wrapper = shallow(<ListItem last item={i} />)
-    expect(wrapper.find('RepoPushIcon').length).toBe(1)
+      btn.simulate('focus')
+      btn.simulate('blur')
+      expect(el.state('copied')).toBeFalsy()
+      expect(btn.prop('aria-label')).toBe('Copy payload to clipboard')
+    })
   })
 })

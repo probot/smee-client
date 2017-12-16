@@ -50,16 +50,41 @@ describe('<ListItem />', () => {
     })
 
     it('changes the button\'s label onClick, then onBlur', async () => {
-      const btn = el.find('.js-copy-btn')
+      let btn = el.find('.js-copy-btn')
       expect(el.state('copied')).toBeFalsy()
       expect(btn.prop('aria-label')).toBe('Copy payload to clipboard')
 
       el.setState({ copied: true })
+      btn = el.find('.js-copy-btn')
+      expect(btn.prop('aria-label')).toBe('Copied!')
 
       btn.simulate('focus')
       btn.simulate('blur')
       expect(el.state('copied')).toBeFalsy()
+      btn = el.find('.js-copy-btn')
       expect(btn.prop('aria-label')).toBe('Copy payload to clipboard')
+    })
+  })
+
+  describe('redeliver', () => {
+    beforeEach(() => {
+      el.find('button.ellipsis-expander').simulate('click')
+    })
+
+    it('changes the button\'s label onClick, then onBlur', async () => {
+      let btn = el.find('.js-redeliver-btn')
+      expect(el.state('redelivered')).toBeFalsy()
+      expect(btn.prop('aria-label')).toBe('Redeliver this payload')
+
+      el.setState({ redelivered: true })
+      btn = el.find('.js-redeliver-btn')
+      expect(btn.prop('aria-label')).toBe('Sent!')
+
+      btn.simulate('focus')
+      btn.simulate('blur')
+      expect(el.state('redelivered')).toBeFalsy()
+      btn = el.find('.js-redeliver-btn')
+      expect(btn.prop('aria-label')).toBe('Redeliver this payload')
     })
   })
 })

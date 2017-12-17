@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ListItem from './ListItem'
 import get from 'get-value'
+import octicons from 'octicons'
 
 function compare (a, b) {
   if (a.timestamp < b.timestamp) return 1
@@ -10,7 +11,7 @@ function compare (a, b) {
 export default class App extends Component {
   constructor (props) {
     super(props)
-    this.state = { log: [], filter: '' }
+    this.state = { log: [], filter: '', connection: false }
   }
 
   componentDidMount () {
@@ -21,11 +22,21 @@ export default class App extends Component {
     const url = window.location.pathname
     console.log('Connecting to event source:', url)
     this.events = new window.EventSource(url)
+    this.events.onopen = this.onopen.bind(this)
     this.events.onmessage = this.onmessage.bind(this)
     this.events.onerror = this.onerror.bind(this)
   }
 
+  onopen (data) {
+    this.setState({
+      connection: true
+    })
+  }
+
   onerror (err) {
+    this.setState({
+      connection: false
+    })
     switch (this.events.readyState) {
       case window.EventSource.CONNECTING:
         console.log('Reconnecting...', err)
@@ -97,7 +108,19 @@ export default class App extends Component {
               <p>This page will automatically update as things happen.</p>
             </div>
           )}
+          <div className="mb-2 blankslate blankslate-clean-background">
+            {
+              this.state.connection
+              ? <div className="flash flash-with-icon">
+                <span dangerouslySetInnerHTML={{ __html: octicons.check.toSVG() }} /> Event stream status: Connected
+              </div>
+              : <div className="flash flash-warn flash-with-icon">
+                <span dangerouslySetInnerHTML={{ __html: octicons.alert.toSVG() }} /> Event stream status: Disconnected
+              </div>
+            }
+          </div>
         </div>
+
       </main>
     )
   }

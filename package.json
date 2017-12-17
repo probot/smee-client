@@ -36,7 +36,6 @@
     "html-webpack-plugin": "^2.30.1",
     "moment": "^2.19.1",
     "node-sass": "^4.5.3",
-    "octicons": "^7.0.1",
     "postcss-loader": "^2.0.8",
     "primer-css": "^9.6.0",
     "prop-types": "^15.6.0",

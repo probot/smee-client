@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ListItem from './ListItem'
 import get from 'get-value'
-import octicons from 'octicons'
+import { AlertIcon, PulseIcon } from 'react-octicons'
 
 function compare (a, b) {
   if (a.timestamp < b.timestamp) return 1
@@ -75,13 +75,22 @@ export default class App extends Component {
       })
     }
     const sorted = filtered.sort(compare)
-
+    const stateString = this.state.connection ? 'Connected' : 'Not Connected'
     return (
       <main>
         <div className="py-2 bg-gray-dark">
           <div className="container-md text-white p-responsive d-flex flex-items-center flex-justify-between">
             <h1 className="f4">Recent Deliveries</h1>
+            <div className="flex-items-right tooltipped tooltipped-w" aria-label={stateString + ' to event stream'}>
+              {this.state.connection
+              ? <PulseIcon
+                style={{fill: '#6cc644'}} />
+              : <AlertIcon
+                style={{fill: 'yellow'}} />
+              }
+            </div>
           </div>
+
         </div>
         <div className="container-md py-3 p-responsive">
           <div className="mb-2">
@@ -108,17 +117,6 @@ export default class App extends Component {
               <p>This page will automatically update as things happen.</p>
             </div>
           )}
-          <div className="mb-2 blankslate blankslate-clean-background">
-            {
-              this.state.connection
-              ? <div className="flash flash-with-icon">
-                <span dangerouslySetInnerHTML={{ __html: octicons.check.toSVG() }} /> Event stream status: Connected
-              </div>
-              : <div className="flash flash-warn flash-with-icon">
-                <span dangerouslySetInnerHTML={{ __html: octicons.alert.toSVG() }} /> Event stream status: Disconnected
-              </div>
-            }
-          </div>
         </div>
 
       </main>

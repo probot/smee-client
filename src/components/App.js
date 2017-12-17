@@ -54,7 +54,7 @@ export default class App extends Component {
 
     // Prevent duplicates in the case of redelivered payloads
     const idProp = 'x-github-delivery'
-    if (this.state.log.every(l => l[idProp] === json[idProp])) {
+    if (this.state.log.findIndex(l => l[idProp] === json[idProp]) > -1) {
       this.setState({
         log: [...this.state.log, json]
       })

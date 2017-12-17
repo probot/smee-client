@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ListItem from './ListItem'
 import get from 'get-value'
+import { AlertIcon, PulseIcon } from 'react-octicons'
 
 function compare (a, b) {
   if (a.timestamp < b.timestamp) return 1
@@ -10,7 +11,7 @@ function compare (a, b) {
 export default class App extends Component {
   constructor (props) {
     super(props)
-    this.state = { log: [], filter: '' }
+    this.state = { log: [], filter: '', connection: false }
   }
 
   componentDidMount () {
@@ -21,11 +22,21 @@ export default class App extends Component {
     const url = window.location.pathname
     console.log('Connecting to event source:', url)
     this.events = new window.EventSource(url)
+    this.events.onopen = this.onopen.bind(this)
     this.events.onmessage = this.onmessage.bind(this)
     this.events.onerror = this.onerror.bind(this)
   }
 
+  onopen (data) {
+    this.setState({
+      connection: true
+    })
+  }
+
   onerror (err) {
+    this.setState({
+      connection: false
+    })
     switch (this.events.readyState) {
       case window.EventSource.CONNECTING:
         console.log('Reconnecting...', err)
@@ -64,13 +75,22 @@ export default class App extends Component {
       })
     }
     const sorted = filtered.sort(compare)
-
+    const stateString = this.state.connection ? 'Connected' : 'Not Connected'
     return (
       <main>
         <div className="py-2 bg-gray-dark">
           <div className="container-md text-white p-responsive d-flex flex-items-center flex-justify-between">
             <h1 className="f4">Recent Deliveries</h1>
+            <div className="flex-items-right tooltipped tooltipped-w" aria-label={stateString + ' to event stream'}>
+              {this.state.connection
+              ? <PulseIcon
+                style={{fill: '#6cc644'}} />
+              : <AlertIcon
+                style={{fill: 'yellow'}} />
+              }
+            </div>
           </div>
+
         </div>
         <div className="container-md py-3 p-responsive">
           <div className="mb-2">
@@ -98,6 +118,7 @@ export default class App extends Component {
             </div>
           )}
         </div>
+
       </main>
     )
   }

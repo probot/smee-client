@@ -10,8 +10,9 @@ program
   .option('-P, --path <path>', 'URL path to post proxied requests to`', '/')
   .parse(process.argv)
 
-const source = program.url
-const target = `http://127.0.0.1:${program.port}${program.path}`
+const client = new Client({
+  host: program.host,
+  port: program.port
+})
 
-const client = new Client({source, target})
 client.start()

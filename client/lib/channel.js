@@ -1,7 +1,7 @@
 const EventSource = require('eventsource')
 const superagent = require('superagent')
 
-module.exports = class Client {
+module.exports = class Channel {
   constructor ({source, target, logger = console}) {
     this.source = source
     this.target = target

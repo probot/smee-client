@@ -2,7 +2,7 @@
   "name": "smee-cli",
   "version": "1.0.0",
   "description": "Client to proxy webhooks to local host",
-  "main": "index.js",
+  "main": "lib/index.js",
   "bin": {
     "smee": "./bin/smee.js"
   },
@@ -23,6 +23,7 @@
     "commander": "^2.12.2",
     "eventsource": "^1.0.5",
     "morgan": "^1.9.0",
+    "rcfile": "^1.0.3",
     "superagent": "^3.8.1"
   },
   "devDependencies": {

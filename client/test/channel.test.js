@@ -1,5 +1,5 @@
 const createServer = require('../..')
-const Client = require('..')
+const Channel = require('../lib/channel')
 const request = require('supertest')
 const nock = require('nock')
 
@@ -23,7 +23,7 @@ describe('client', () => {
     proxyServer = proxyApp.listen(0, () => {
       sourceUrl = `http://127.0.0.1:${proxyServer.address().port}${channel}`
 
-      const client = new Client({source: sourceUrl, target: targetUrl, logger})
+      const client = new Channel({source: sourceUrl, target: targetUrl, logger})
       events = client.start()
       // Wait for event source to be ready
       events.addEventListener('ready', () => done())

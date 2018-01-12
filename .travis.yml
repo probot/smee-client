@@ -17,7 +17,8 @@ env:
 
 install:
   - npm install -g codecov
-  - npm install --prefix $TEST_DIR
+  - npm install --prefix client
+  - npm install --prefix server
 
 branches:
   except:

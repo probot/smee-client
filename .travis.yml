@@ -11,15 +11,19 @@ notifications:
 before_install:
   - npm install -g npm@5
 
-install:
-  - npm install -g codecov
-
 env:
   - TEST_DIR=client
   - TEST_DIR=server
+
+install:
+  - npm install -g codecov
+  - npm install --prefix $TEST_DIR
 
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
 
-script: cd $TEST_DIR && npm install && npm test && codecov
+script:
+  - cd $TEST_DIR
+  - npm test
+  - codecov

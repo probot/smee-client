@@ -57,22 +57,15 @@ describe('client', () => {
     })
   })
 
-  describe('/new', () => {
-    beforeEach(() => {
-      client = new Client({
-        source: `${host}/new`,
-        target: targetUrl,
-        logger
-      }).start()
-    })
-
-    test('connects to a new channel', async (done) => {
-      // Wait for event source to be ready
-      client.addEventListener('ready', () => {
-        expect(client.url).not.toMatch(/\/new$/)
-        expect(client.url).toMatch(/\/([\w-]+)$/)
-        done()
+  describe('createChannel', () => {
+    test('returns a new channel', async () => {
+      const req = nock('https://smee.io').head('/new').reply(302, '', {
+        Location: 'https://smee.io/abc123'
       })
+
+      const channel = await Client.createChannel()
+      expect(channel).toEqual('https://smee.io/abc123')
+      expect(req.isDone()).toBe(true)
     })
   })
 })

@@ -1,7 +1,7 @@
 const EventSource = require('eventsource')
 const superagent = require('superagent')
 
-module.exports = class Client {
+class Client {
   constructor ({source, target, logger = console}) {
     this.source = source
     this.target = target
@@ -46,10 +46,18 @@ module.exports = class Client {
     events.addEventListener('open', this.onopen.bind(this))
     events.addEventListener('error', this.onerror.bind(this))
 
-    this.logger.info(`Proxying requests from ${this.source} to ${this.target}`)
+    this.logger.info(`Forwarding ${this.source} to ${this.target}`)
 
     this.events = events
 
     return events
   }
 }
+
+Client.createChannel = async () => {
+  return superagent.head('https://smee.io/new').redirects(0).catch((err, res) => {
+    return err.response.headers.location
+  })
+}
+
+module.exports = Client

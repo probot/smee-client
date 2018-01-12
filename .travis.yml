@@ -13,16 +13,13 @@ before_install:
 
 install:
   - npm install -g codecov
-  - npm install
-  - npm install --prefix client
+
+env:
+  - TEST_DIR=client
+  - TEST_DIR=server
 
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
 
-script:
-  - npm test
-  - codecov
-  - cd client
-  - npm test
-  - codecov
+script: cd $TEST_DIR && npm install && npm test && codecov

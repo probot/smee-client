@@ -33,26 +33,7 @@ const cfg = {
       test: /\.jsx?$/,
       exclude: /node_modules/,
       use: {
-        loader: 'babel-loader',
-        options: {
-          presets: [
-            ['env', {
-              targets: { browsers },
-              debug: false,
-              loose: true,
-              modules: false,
-              useBuiltIns: true
-            }],
-            'react'
-          ],
-          plugins: [
-            'transform-class-properties',
-            [
-              'transform-object-rest-spread',
-              { useBuiltIns: true }
-            ]
-          ]
-        }
+        loader: 'babel-loader'
       }
     }, {
       test: /\.scss$/,

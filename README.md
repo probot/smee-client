@@ -8,7 +8,7 @@
 
 1. Use that new page's URL as your App's Webhook URL
 
-1. Use [the CLI](https://npmjs.com/package/smee-cli) to proxy events and send them to a path on your local device, or set it as your Probot App's `WEBHOOK_PROXY_URL` environment variable.
+1. Use the [client](./client) to proxy events and send them to a path on your local device, or set it as your Probot App's `WEBHOOK_PROXY_URL` environment variable.
 
 1. Watch events come in to the web UI
 

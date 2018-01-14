@@ -1,4 +1,4 @@
-# smee &middot; [![Build Status](https://img.shields.io/travis/probot/webhooks/master.svg)](https://travis-ci.org/probot/webhooks) [![Codecov](https://img.shields.io/codecov/c/github/probot/webhooks.svg)](https://codecov.io/gh/probot/webhooks/)
+# smee &middot; [![Build Status](https://img.shields.io/travis/probot/smee/master.svg)](https://travis-ci.org/probot/smee) [![Codecov](https://img.shields.io/codecov/c/github/probot/smee.svg)](https://codecov.io/gh/probot/smee/)
 
 **smee** is a web application that receives payloads then sends them, via the [EventSource](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) API, to other clients.
 

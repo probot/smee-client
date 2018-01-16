@@ -2,12 +2,14 @@ import React, { Component } from 'react'
 import ListItem from './ListItem'
 import get from 'get-value'
 import { AlertIcon, PulseIcon } from 'react-octicons'
+import Blank from './Blank'
 
 function compare (a, b) {
   if (a.timestamp < b.timestamp) return 1
   if (a.timestamp > b.timestamp) return -1
   return 0
 }
+
 export default class App extends Component {
   constructor (props) {
     super(props)
@@ -90,35 +92,29 @@ export default class App extends Component {
               }
             </div>
           </div>
-
         </div>
-        <div className="container-md py-3 p-responsive">
-          <div className="mb-2">
-            <div className="d-flex flex-items-center">
-              <label htmlFor="search">Filter deliveries</label>
-              <a className="ml-2 f6" href="https://github.com/jonschlinkert/get-value" target="_blank" rel="noopener noreferrer">Uses the get-value syntax</a>
+
+        {log.length > 0 ? (
+          <div className="container-md py-3 p-responsive">
+            <div className="mb-2">
+              <div className="d-flex flex-items-center">
+                <label htmlFor="search">Filter deliveries</label>
+                <a className="ml-2 f6" href="https://github.com/jonschlinkert/get-value" target="_blank" rel="noopener noreferrer">Uses the get-value syntax</a>
+              </div>
+              <input
+                type="text"
+                id="search"
+                placeholder="repository.name:probot"
+                value={filter}
+                onChange={e => this.setState({ filter: e.target.value })}
+                className="input input-lg width-full Box"
+              />
             </div>
-            <input
-              type="text"
-              id="search"
-              placeholder="repository.name:probot"
-              value={filter}
-              onChange={e => this.setState({ filter: e.target.value })}
-              className="input input-lg width-full Box"
-            />
-          </div>
-          {log.length > 0 ? (
             <ul className="Box list-style-none pl-0">
               {sorted.map((item, i, arr) => <ListItem key={item['x-github-delivery']} item={item} last={i === arr.length - 1} />)}
             </ul>
-          ) : (
-            <div className="blankslate">
-              <h3>No events just yet</h3>
-              <p>This page will automatically update as things happen.</p>
-            </div>
-          )}
-        </div>
-
+          </div>
+        ) : <Blank />}
       </main>
     )
   }

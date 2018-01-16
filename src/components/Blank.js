@@ -1,0 +1,53 @@
+import React, { Component } from 'react'
+import { InfoIcon } from 'react-octicons'
+
+const code = `const SmeeClient = require('smee-client')
+
+const smee = new SmeeClient({
+  source: 'https://smee.io/abc123',
+  target: 'http://localhost:3000/events',
+  logger: console
+})
+
+const events = smee.start()
+
+// Stop forwarding events
+events.close()`
+
+export default class Blank extends Component {
+  render () {
+    return (
+      <div className="container-md p-responsive">
+        <div className="Box p-3 mt-4">
+          <div className="d-flex flex-items-center mb-2">
+            <label htmlFor="url">Webhook Proxy URL</label>
+            <span className="ml-2 tooltipped tooltipped-n text-gray-light" aria-label="Tell your service of choice to send webhook payloads to this URL."><InfoIcon /></span>
+          </div>
+          <input
+            type="text"
+            id="url"
+            autoFocus
+            onFocus={e => e.target.select()}
+            readOnly
+            value={window.location.href}
+            className="form-control input-xl input-block"
+          />
+          <p className="mt-2 text-gray-light f6">This page will automatically update as things happen.</p>
+
+          <hr />
+          <div className="mt-4 markdown-body">
+            <h3>Use the CLI</h3>
+            <p>The <code>smee</code> command will forward webhooks from smee.io to your local development environment.</p>
+            <pre><code>
+              $ smee
+            </code></pre>
+            <h3>Use the Node.js client</h3>
+            <pre><code>
+              {code}
+            </code></pre>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}

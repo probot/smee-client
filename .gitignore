@@ -4,6 +4,6 @@ npm-debug.log
 .env
 package-lock.json
 logs.json
-public/main.min.*
+server/public/main.min.*
 coverage
 .vscode

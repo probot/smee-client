@@ -9,7 +9,11 @@
     "start": "node ./index.js",
     "start-dev": "concurrently \"nodemon --ignore src/ ./index.js\" \"webpack -w\"",
     "build": "webpack -p",
+<<<<<<< HEAD
     "test": "jest --coverage && eslint **/*.js",
+=======
+    "test": "jest --coverage && eslint",
+>>>>>>> origin/master
     "postinstall": "npm run build"
   },
   "dependencies": {
@@ -33,7 +37,10 @@
     "get-value": "^2.0.6",
     "glob-all": "^3.1.0",
     "helmet": "^3.9.0",
+<<<<<<< HEAD
     "highlight.js": "^9.12.0",
+=======
+>>>>>>> origin/master
     "html-webpack-plugin": "^2.30.1",
     "moment": "^2.19.1",
     "moment-timezone": "^0.5.14",

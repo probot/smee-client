@@ -1,10 +1,7 @@
 {
   "private": true,
-  "dependencies": {
-    "smee-server": "./server"
-  },
   "scripts": {
-    "start": "cd ./server && npm start",
-    "build": "cd ./server && npm run build"
+    "postinstall": "npm install --prefix server",
+    "start": "npm start --prefix server"
   }
 }

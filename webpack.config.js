@@ -25,7 +25,7 @@ const cfg = {
   },
   plugins: [
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-    new webpack.optimize.UglifyJsPlugin(),
+    // new webpack.optimize.UglifyJsPlugin(),
     new ExtractTextPlugin('[name].min.css')
   ],
   module: {

@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 import { InfoIcon } from 'react-octicons'
 import hljs from 'highlight.js'
 
-const code = `const SmeeClient = require('smee-client')
+export default class Blank extends Component {
+  render () {
+    const code = `const SmeeClient = require('smee-client')
 
 const smee = new SmeeClient({
-  source: 'https://smee.io/abc123',
+  source: '${window.location.href}',
   target: 'http://localhost:3000/events',
   logger: console
 })
@@ -15,8 +17,6 @@ const events = smee.start()
 // Stop forwarding events
 events.close()`
 
-export default class Blank extends Component {
-  render () {
     return (
       <div className="container-md p-responsive">
         <div className="Box p-3 mt-4">
@@ -40,7 +40,7 @@ export default class Blank extends Component {
             <h3>Use the CLI</h3>
             <p>The <code>smee</code> command will forward webhooks from smee.io to your local development environment.</p>
             <pre><code>
-              $ smee
+              $ smee -s {window.location.href}
             </code></pre>
             <h3>Use the Node.js client</h3>
             <pre className="js" dangerouslySetInnerHTML={{ __html: hljs.highlight('javascript', code).value }} />

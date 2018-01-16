@@ -4,7 +4,7 @@
   "description": "",
   "author": "Jason Etcovitch <jasonetco@gmail.com> (https://github.com/JasonEtco)",
   "license": "ISC",
-  "repository": "https://github.com/probot/webhooks.git",
+  "repository": "https://github.com/probot/smee.git",
   "scripts": {
     "start": "node ./lib/index.js",
     "start-dev": "concurrently \"nodemon --ignore src/ ./lib/index.js\" \"webpack -w\"",

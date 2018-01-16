@@ -5,6 +5,11 @@ $animationSpeed: 1500ms;
 
 @import 'styles/header-anim';
 @import 'styles/main-anim';
+@import 'styles/github';
+
+body {
+  background-color: $gray-200;
+}
 
 .btn-outline-blue {
   background-color: transparent;
@@ -20,3 +25,11 @@ $animationSpeed: 1500ms;
 .blue-700 {
   color: $blue-700;
 }
+
+.input-xl {
+  font-size: $h1-size;
+  padding: $spacer-2;
+  line-height: 1.5;
+}
+
+.octicon { fill: currentColor; }

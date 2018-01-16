@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { InfoIcon } from 'react-octicons'
+import hljs from 'highlight.js'
 
 const code = `const SmeeClient = require('smee-client')
 
@@ -42,9 +43,7 @@ export default class Blank extends Component {
               $ smee
             </code></pre>
             <h3>Use the Node.js client</h3>
-            <pre><code>
-              {code}
-            </code></pre>
+            <pre className="js" dangerouslySetInnerHTML={{ __html: hljs.highlight('javascript', code).value }} />
           </div>
         </div>
       </div>

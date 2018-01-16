@@ -13,7 +13,7 @@ const log = process.env.NODE_ENV === 'test' ? _ => _ : console.log
 module.exports = () => {
   const events = new EventEmitter()
   const app = express()
-  const pubFolder = path.join(__dirname, '..', 'public')
+  const pubFolder = path.join(__dirname, 'public')
 
   if (process.env.FORCE_HTTPS) {
     app.use(require('helmet')())

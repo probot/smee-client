@@ -1,4 +1,4 @@
-const createServer = require('../..')
+const createServer = require('../../server/server')
 const Client = require('..')
 const request = require('supertest')
 const nock = require('nock')

@@ -1,4 +1,4 @@
-const createServer = require('../lib/server')
+const createServer = require('../server')
 const request = require('supertest')
 const EventSource = require('eventsource')
 

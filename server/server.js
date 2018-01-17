@@ -33,9 +33,7 @@ module.exports = () => {
     const channel = crypto
       .randomBytes(12)
       .toString('base64')
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=/g, '~')
+      .replace(/[+/=]+/g, '')
 
     res.redirect(307, `${protocol}://${host}/${channel}`)
   })

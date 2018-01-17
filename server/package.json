@@ -10,6 +10,7 @@
     "start-dev": "concurrently \"nodemon --ignore src/ ./index.js\" \"webpack -w\"",
     "build": "webpack -p",
     "test": "jest --coverage && eslint",
+    "test:update": "jest -u",
     "postinstall": "npm run build"
   },
   "dependencies": {

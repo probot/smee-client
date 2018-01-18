@@ -48,8 +48,17 @@ exports[`server GET / returns the proper HTML 1`] = `
   <footer class=\\"border-top text-center py-4\\">
     Made with 🤖 by the <a href=\\"https://github.com/probot\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">Probot team</a>.
   </footer>
+
+  <script async src=\\"https://www.googletagmanager.com/gtag/js?id=UA-102577034-3\\"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-102577034-3');
+  </script>
 </body>
-</html>"
+</html>
+"
 `;
 
 exports[`server GET /:channel returns the proper HTML 1`] = `
@@ -63,7 +72,7 @@ exports[`server GET /:channel returns the proper HTML 1`] = `
   <link rel=\\"shortcut icon\\" href=\\"/public/favicon.png\\">
   <link rel=\\"stylesheet\\" href=\\"/public/main.min.css\\">
 </head>
-<body> 
+<body>
   <noscript>
     <div class=\\"no-script\\">
       <h1>You must enable JavaScript to use try out todo.</h1>
@@ -72,6 +81,14 @@ exports[`server GET /:channel returns the proper HTML 1`] = `
   </noscript>
   <div class=\\"mount\\"></div>
   <script src=\\"/public/main.min.js\\"></script>
+  <script async src=\\"https://www.googletagmanager.com/gtag/js?id=UA-102577034-3\\"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-102577034-3');
+  </script>
 </body>
-</html>"
+</html>
+"
 `;

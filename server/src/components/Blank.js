@@ -40,7 +40,12 @@ events.close()`
             <h3>Use the CLI</h3>
             <p>The <code>smee</code> command will forward webhooks from smee.io to your local development environment.</p>
             <pre><code>
-              $ smee -s {window.location.href}
+              $ smee -u {window.location.href}
+            </code></pre>
+
+            <p>For usage info:</p>
+            <pre><code>
+              $ smee --help
             </code></pre>
 
             <h3 className="mt-3">Use the Node.js client</h3>

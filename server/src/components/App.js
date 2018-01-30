@@ -4,16 +4,12 @@ import get from 'get-value'
 import { AlertIcon, PulseIcon } from 'react-octicons'
 import Blank from './Blank'
 
-function compare (a, b) {
-  if (a.timestamp < b.timestamp) return 1
-  if (a.timestamp > b.timestamp) return -1
-  return 0
-}
-
 export default class App extends Component {
   constructor (props) {
     super(props)
     this.channel = window.location.pathname.substring(1)
+    this.storageLimit = 30
+
     const ref = localStorage.getItem(`smee:log:${this.channel}`)
     this.state = { log: ref ? JSON.parse(ref) : [], filter: '', connection: false }
   }
@@ -60,9 +56,9 @@ export default class App extends Component {
     const idProp = 'x-github-delivery'
     if (this.state.log.findIndex(l => l[idProp] === json[idProp]) === -1) {
       this.setState({
-        log: [...this.state.log, json]
+        log: [json, ...this.state.log]
       }, () => {
-        localStorage.setItem(`smee:log:${this.channel}`, JSON.stringify(this.state.log))
+        localStorage.setItem(`smee:log:${this.channel}`, JSON.stringify(this.state.log.slice(0, this.storageLimit)))
       })
     }
   }
@@ -80,7 +76,7 @@ export default class App extends Component {
         return true
       })
     }
-    const sorted = filtered.sort(compare)
+
     const stateString = this.state.connection ? 'Connected' : 'Not Connected'
     return (
       <main>
@@ -115,7 +111,7 @@ export default class App extends Component {
               />
             </div>
             <ul className="Box list-style-none pl-0">
-              {sorted.map((item, i, arr) => <ListItem key={item['x-github-delivery']} item={item} last={i === arr.length - 1} />)}
+              {filtered.map((item, i, arr) => <ListItem key={item['x-github-delivery']} item={item} last={i === arr.length - 1} />)}
             </ul>
           </div>
         ) : <Blank />}

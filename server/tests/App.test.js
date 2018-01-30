@@ -36,8 +36,7 @@ describe('<App />', () => {
 
     it('renders a list of logs', () => {
       wrapper.setState({ log: [issuesOpened] })
-
-      expect(wrapper.find('li').exists())
+      expect(wrapper.find('ListItem').exists()).toBeTruthy()
     })
   })
 

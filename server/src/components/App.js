@@ -13,7 +13,8 @@ function compare (a, b) {
 export default class App extends Component {
   constructor (props) {
     super(props)
-    this.state = { log: [], filter: '', connection: false }
+    const ref = localStorage.getItem('smee:log')
+    this.state = { log: ref ? JSON.parse(ref) : [], filter: '', connection: false }
   }
 
   componentDidMount () {
@@ -59,6 +60,8 @@ export default class App extends Component {
     if (this.state.log.findIndex(l => l[idProp] === json[idProp]) === -1) {
       this.setState({
         log: [...this.state.log, json]
+      }, () => {
+        localStorage.setItem('smee:log', JSON.stringify(this.state.log))
       })
     }
   }

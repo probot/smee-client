@@ -13,7 +13,8 @@ function compare (a, b) {
 export default class App extends Component {
   constructor (props) {
     super(props)
-    const ref = localStorage.getItem('smee:log')
+    this.channel = window.location.pathname.substring(1)
+    const ref = localStorage.getItem(`smee:log:${this.channel}`)
     this.state = { log: ref ? JSON.parse(ref) : [], filter: '', connection: false }
   }
 
@@ -61,7 +62,7 @@ export default class App extends Component {
       this.setState({
         log: [...this.state.log, json]
       }, () => {
-        localStorage.setItem('smee:log', JSON.stringify(this.state.log))
+        localStorage.setItem(`smee:log:${this.channel}`, JSON.stringify(this.state.log))
       })
     }
   }

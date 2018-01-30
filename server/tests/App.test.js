@@ -3,6 +3,7 @@ import App from '../src/components/App'
 import Blank from '../src/components/Blank'
 import { shallow } from 'enzyme'
 import issuesOpened from './fixtures/issues.opened.json'
+import issuesOpenedTwo from './fixtures/issues.opened2.json'
 
 describe('<App />', () => {
   let localStorage, wrapper
@@ -37,6 +38,17 @@ describe('<App />', () => {
     it('renders a list of logs', () => {
       wrapper.setState({ log: [issuesOpened] })
       expect(wrapper.find('ListItem').exists()).toBeTruthy()
+    })
+
+    it('respects the filter', () => {
+      wrapper.setState({ log: [issuesOpened, issuesOpenedTwo], filter: 'repository.name:probot' })
+      console.info(issuesOpenedTwo.body.repository.name)
+      expect(wrapper.find('ListItem').length).toBe(1)
+    })
+
+    it('respects the filter if it starts with payload', () => {
+      wrapper.setState({ log: [issuesOpened, issuesOpenedTwo], filter: 'payload.repository.name:probot' })
+      expect(wrapper.find('ListItem').length).toBe(1)
     })
   })
 

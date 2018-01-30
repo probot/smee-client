@@ -2,6 +2,7 @@ import React from 'react'
 import App from '../src/components/App'
 import Blank from '../src/components/Blank'
 import { shallow } from 'enzyme'
+import issuesOpened from './fixtures/issues.opened.json'
 
 describe('<App />', () => {
   let localStorage, wrapper
@@ -30,7 +31,13 @@ describe('<App />', () => {
 
   describe('render', () => {
     it('renders the blank page', () => {
-      expect(wrapper.containsMatchingElement(<Blank />))
+      expect(wrapper.containsMatchingElement(<Blank />)).toBeTruthy()
+    })
+
+    it('renders a list of logs', () => {
+      wrapper.setState({ log: [issuesOpened] })
+
+      expect(wrapper.find('li').exists())
     })
   })
 

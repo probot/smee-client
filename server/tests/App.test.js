@@ -49,6 +49,11 @@ describe('<App />', () => {
       wrapper.setState({ log: [issuesOpened, issuesOpenedTwo], filter: 'body.repository.name:probot' })
       expect(wrapper.find('ListItem').length).toBe(1)
     })
+
+    it('only filters correct get-value syntax (with :)', () => {
+      wrapper.setState({ log: [issuesOpened, issuesOpenedTwo], filter: 'hello' })
+      expect(wrapper.find('ListItem').length).toBe(2)
+    })
   })
 
   describe('onopen', () => {

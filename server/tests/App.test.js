@@ -42,12 +42,11 @@ describe('<App />', () => {
 
     it('respects the filter', () => {
       wrapper.setState({ log: [issuesOpened, issuesOpenedTwo], filter: 'repository.name:probot' })
-      console.info(issuesOpenedTwo.body.repository.name)
       expect(wrapper.find('ListItem').length).toBe(1)
     })
 
-    it('respects the filter if it starts with payload', () => {
-      wrapper.setState({ log: [issuesOpened, issuesOpenedTwo], filter: 'payload.repository.name:probot' })
+    it('respects the filter if it starts with body', () => {
+      wrapper.setState({ log: [issuesOpened, issuesOpenedTwo], filter: 'body.repository.name:probot' })
       expect(wrapper.find('ListItem').length).toBe(1)
     })
   })

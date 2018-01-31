@@ -5,6 +5,7 @@
     "jsx-quotes": 0
   },
   "env": {
-    "jest": true
+    "jest": true,
+    "browser": true
   }
 }

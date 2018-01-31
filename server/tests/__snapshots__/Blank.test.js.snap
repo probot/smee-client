@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Blank /> render renders the blank page 1`] = `<Blank />`;

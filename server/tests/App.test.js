@@ -88,10 +88,10 @@ describe('<App />', () => {
     })
 
     it('logs to the console when the state changes to closed', () => {
-      wrapper.instance().events.readyState = 0 // CONNECTING
+      wrapper.instance().events.readyState = 2 // CLOSED
 
       wrapper.instance().onerror('error')
-      expect(consoleLog).toHaveBeenCalledWith('Reinitializing', 'error')
+      expect(consoleLog.mock.calls[1]).toEqual(['Reinitializing...', 'error'])
     })
   })
 

@@ -70,7 +70,8 @@ export default class App extends Component {
       filtered = log.filter(l => {
         if (filter && filter.includes(':')) {
           let [searchString, value] = filter.split(':')
-          if (!searchString.startsWith('payload')) searchString = `payload.${searchString}`
+          if (!searchString.startsWith('body')) searchString = `body.${searchString}`
+          console.log(l, searchString, value)
           return get(l, searchString) === value
         }
         return true

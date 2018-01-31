@@ -3,9 +3,10 @@ import App from '../src/components/App'
 import Blank from '../src/components/Blank'
 import { shallow } from 'enzyme'
 import issuesOpened from './fixtures/issues.opened.json'
+import issuesOpenedTwo from './fixtures/issues.opened2.json'
 
 describe('<App />', () => {
-  let localStorage, wrapper
+  let localStorage, wrapper, consoleLog
 
   beforeEach(() => {
     localStorage = {
@@ -13,18 +14,22 @@ describe('<App />', () => {
       setItem: jest.fn()
     }
 
+    const EventSource = jest.fn()
+    EventSource.CONNECTING = 0
+    EventSource.CLOSED = 2
+
     Object.defineProperties(window, {
       localStorage: {
         value: localStorage
       },
       EventSource: {
-        value: jest.fn()
+        value: EventSource
       }
     })
 
     Object.defineProperty(location, 'pathname', { value: '/CHANNEL' })
 
-    console.log = jest.fn()
+    console.log = consoleLog = jest.fn()
 
     wrapper = shallow(<App />)
   })
@@ -37,6 +42,28 @@ describe('<App />', () => {
     it('renders a list of logs', () => {
       wrapper.setState({ log: [issuesOpened] })
       expect(wrapper.find('ListItem').exists()).toBeTruthy()
+    })
+
+    it('respects the filter', () => {
+      wrapper.setState({ log: [issuesOpened, issuesOpenedTwo], filter: 'repository.name:probot' })
+      expect(wrapper.find('ListItem').length).toBe(1)
+    })
+
+    it('respects the filter if it starts with body', () => {
+      wrapper.setState({ log: [issuesOpened, issuesOpenedTwo], filter: 'body.repository.name:probot' })
+      expect(wrapper.find('ListItem').length).toBe(1)
+    })
+
+    it('only filters correct get-value syntax (with :)', () => {
+      wrapper.setState({ log: [issuesOpened, issuesOpenedTwo], filter: 'hello' })
+      expect(wrapper.find('ListItem').length).toBe(2)
+    })
+
+    it('updates the App state when the filter input changes', () => {
+      wrapper.setState({ log: [issuesOpened, issuesOpenedTwo] })
+      const input = wrapper.find('input#search')
+      input.simulate('change', { target: { value: 'hello' } })
+      expect(wrapper.state('filter')).toBe('hello')
     })
   })
 
@@ -51,6 +78,20 @@ describe('<App />', () => {
     it('sets the connection state to false', () => {
       wrapper.instance().onerror()
       expect(wrapper.state('connection')).toBeFalsy()
+    })
+
+    it('logs to the console when the state changes to connecting', () => {
+      wrapper.instance().events.readyState = 0 // CONNECTING
+
+      wrapper.instance().onerror('error')
+      expect(consoleLog).toHaveBeenCalledWith('Reconnecting...', 'error')
+    })
+
+    it('logs to the console when the state changes to closed', () => {
+      wrapper.instance().events.readyState = 2 // CLOSED
+
+      wrapper.instance().onerror('error')
+      expect(consoleLog.mock.calls[1]).toEqual(['Reinitializing...', 'error'])
     })
   })
 

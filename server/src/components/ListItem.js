@@ -44,7 +44,7 @@ export default class ListItem extends Component {
   }
 
   redeliver () {
-    window.fetch(`${window.location.pathname}/redeliver`, {
+    return window.fetch(`${window.location.pathname}/redeliver`, {
       method: 'POST',
       body: JSON.stringify(this.props.item),
       headers: {

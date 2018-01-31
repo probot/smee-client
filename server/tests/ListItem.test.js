@@ -15,6 +15,17 @@ describe('<ListItem />', () => {
     el = shallow(<ListItem last item={item} />)
   })
 
+  describe('redeliver', () => {
+    it('sets the redelivered state to true', async () => {
+      const fetch = jest.fn(() => Promise.resolve({ status: 200 }))
+      Object.defineProperty(window, 'fetch', { value: fetch, writable: true })
+
+      await el.instance().redeliver()
+      expect(fetch).toHaveBeenCalled()
+      expect(el.state('redelivered')).toBeTruthy()
+    })
+  })
+
   describe('render', () => {
     it('should render with one child', () => {
       expect(el.children().length).toBe(1)

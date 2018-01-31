@@ -54,6 +54,13 @@ describe('<App />', () => {
       wrapper.setState({ log: [issuesOpened, issuesOpenedTwo], filter: 'hello' })
       expect(wrapper.find('ListItem').length).toBe(2)
     })
+
+    it('updates the App state when the filter input changes', () => {
+      wrapper.setState({ log: [issuesOpened, issuesOpenedTwo] })
+      const input = wrapper.find('input#search')
+      input.simulate('change', { target: { value: 'hello' } })
+      expect(wrapper.state('filter')).toBe('hello')
+    })
   })
 
   describe('onopen', () => {

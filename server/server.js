@@ -4,8 +4,10 @@ const crypto = require('crypto')
 const bodyParser = require('body-parser')
 const EventEmitter = require('events')
 const path = require('path')
-
+const cookieParser = require('cookie-parser')
+const jwt = require('jsonwebtoken')
 const KeepAlive = require('./keep-alive')
+const store = require('store')
 
 // Tiny logger to prevent logs in tests
 const log = process.env.NODE_ENV === 'test' ? _ => _ : console.log
@@ -21,11 +23,13 @@ module.exports = () => {
   }
 
   app.use(bodyParser.json())
+  app.use(cookieParser())
   app.use('/public', express.static(pubFolder))
 
   app.get('/', (req, res) => {
     res.sendFile(path.join(pubFolder, 'index.html'))
   })
+
 
   app.get('/new', (req, res) => {
     const protocol = req.headers['x-forwarded-proto'] || req.protocol
@@ -35,12 +39,30 @@ module.exports = () => {
       .toString('base64')
       .replace(/[+/=]+/g, '')
 
+    const secret = jwt.sign({token: channel}, 'secet')
+
+    const decoded = jwt.verify(secret, 'secet')
+    res.cookie('jwtToken',decoded, { maxAge : 90000000})
+    store.set('token',decoded)
     res.redirect(307, `${protocol}://${host}/${channel}`)
   })
 
+
   app.get('/:channel', (req, res, next) => {
     if (req.accepts('html')) {
-      res.sendFile(path.join(pubFolder, 'webhooks.html'))
+      if(typeof req.cookies.jwtToken !== 'undefined'){
+        if(req.cookies.jwtToken.token === store.get('token').token) {
+            res.sendFile(path.join(pubFolder, 'webhooks.html'))
+        } else {
+          res.json({
+            message : 'wrong header'
+          })
+        }
+      } else {
+      res.json({
+        message : 'Sorry this channel is already under use'
+      })
+    }
     } else {
       next()
     }

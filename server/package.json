@@ -23,6 +23,7 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "connect-sse": "^1.2.0",
+    "cookie-parser": "^1.4.3",
     "copy-to-clipboard": "^3.0.8",
     "copy-webpack-plugin": "^4.2.0",
     "crypto": "^1.0.1",

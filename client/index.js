@@ -6,13 +6,11 @@ class Client {
     this.source = source
     this.target = target
     this.logger = logger
-
   }
-  function validateURL(value) {
-      var urlregex = /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
-      return urlregex.test(value);
+  validateURL (value) {
+    var urlregex = /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/
+    return urlregex.test(value)
   }
-  const url = validateURL(this.source)
 
   onmessage (msg) {
     const data = JSON.parse(msg.data)
@@ -51,12 +49,11 @@ class Client {
     events.addEventListener('message', this.onmessage.bind(this))
     events.addEventListener('open', this.onopen.bind(this))
     events.addEventListener('error', this.onerror.bind(this))
-    if (url === true) {
+    if (this.validateURL(this.source) === true) {
       this.logger.info(`Forwarding ${this.source} to ${this.target}`)
     } else {
       this.logger.error('Please check your WEBHOOK_PROXY_URL')
     }
-
 
     this.events = events
 

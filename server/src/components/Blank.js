@@ -18,25 +18,25 @@ const events = smee.start()
 events.close()`
 
     return (
-      <div className="container-md p-responsive">
-        <div className="Box p-3 mt-4 mb-6">
-          <div className="d-flex flex-items-center mb-2">
-            <label htmlFor="url">Webhook Proxy URL</label>
-            <span className="ml-2 tooltipped tooltipped-n text-gray-light" aria-label="Tell your service of choice to send webhook payloads to this URL."><InfoIcon /></span>
+      <div className='container-md p-responsive'>
+        <div className='Box p-3 mt-4 mb-6'>
+          <div className='d-flex flex-items-center mb-2'>
+            <label htmlFor='url'>Webhook Proxy URL</label>
+            <span className='ml-2 tooltipped tooltipped-n text-gray-light' aria-label='Tell your service of choice to send webhook payloads to this URL.'><InfoIcon /></span>
           </div>
           <input
-            type="text"
-            id="url"
+            type='text'
+            id='url'
             autoFocus
             onFocus={e => e.target.select()}
             readOnly
             value={window.location.href}
-            className="form-control input-xl input-block"
+            className='form-control input-xl input-block'
           />
-          <p className="mt-2 text-gray-light f6">This page will automatically update as things happen.</p>
+          <p className='mt-2 text-gray-light f6'>This page will automatically update as things happen.</p>
 
           <hr />
-          <div className="mt-4 markdown-body">
+          <div className='mt-4 markdown-body'>
             <h3>Use the CLI</h3>
             <p>The <code>smee</code> command will forward webhooks from smee.io to your local development environment.</p>
             <pre><code>
@@ -48,10 +48,10 @@ events.close()`
               $ smee --help
             </code></pre>
 
-            <h3 className="mt-3">Use the Node.js client</h3>
-            <pre className="js" dangerouslySetInnerHTML={{ __html: hljs.highlight('javascript', code).value }} />
+            <h3 className='mt-3'>Use the Node.js client</h3>
+            <pre className='js' dangerouslySetInnerHTML={{ __html: hljs.highlight('javascript', code).value }} />
 
-            <h3 className="mt-3">Using Probot's built-in support</h3>
+            <h3 className='mt-3'>Using Probot's built-in support</h3>
             <pre>
               $ npm install --save smee-client
             </pre>

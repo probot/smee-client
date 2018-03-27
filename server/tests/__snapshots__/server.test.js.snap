@@ -61,4 +61,6 @@ exports[`server GET / returns the proper HTML 1`] = `
 "
 `;
 
-exports[`server GET /:channel returns the proper HTML 1`] = `"{\\"message\\":\\"Sorry this channel is already under use\\"}"`;
+exports[`server GET /:user/:channel returns the proper HTML 1`] = `"Found. Redirecting to /"`;
+
+exports[`server GET /auth/github returns the proper HTML 1`] = `""`;

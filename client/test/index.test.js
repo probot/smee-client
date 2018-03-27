@@ -39,6 +39,9 @@ describe('client', () => {
       // Wait for event source to be ready
       client.addEventListener('ready', () => done())
     })
+    test('Checks the error', async () => {
+      expect(client.onerror()).toBeUndefined()
+    })
 
     test('POST /:channel forwards to target url', async (done) => {
       const payload = {payload: true}

@@ -38,7 +38,9 @@ class Client {
   }
 
   onerror (err) {
-    this.logger.error(err)
+    if ((this.validateURL(this.source)) === true) {
+      this.logger.error(err)
+    }
   }
 
   start () {
@@ -52,13 +54,12 @@ class Client {
     events.addEventListener('error', this.onerror.bind(this))
     if (this.validateURL(this.source) === true) {
       this.logger.info(`Forwarding ${this.source} to ${this.target}`)
+      this.events = events
+
+      return events
     } else {
-      this.logger.error('Please check your WEBHOOK_PROXY_URL')
+      this.logger.error('Please check your WEBHOOK_PROXY_URL in .env file')
     }
-
-    this.events = events
-
-    return events
   }
 }
 

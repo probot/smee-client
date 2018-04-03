@@ -61,6 +61,68 @@ exports[`server GET / returns the proper HTML 1`] = `
 "
 `;
 
-exports[`server GET /:user/:channel returns the proper HTML 1`] = `"Found. Redirecting to /"`;
+exports[`server GET /:channel returns the proper HTML 1`] = `
+"<!DOCTYPE html>
+<html lang=\\"en\\">
+<head>
+  <meta charset=\\"UTF-8\\">
+  <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\">
+  <meta http-equiv=\\"X-UA-Compatible\\" content=\\"ie=edge\\">
+  <title>Webhooks</title>
+  <link rel=\\"shortcut icon\\" href=\\"/public/favicon.png\\">
+  <link rel=\\"stylesheet\\" href=\\"/public/main.min.css\\">
+</head>
+<body>
+  <noscript>
+    <div class=\\"no-script\\">
+      <h1>You must enable JavaScript to use try out todo.</h1>
+      <a href=\\"https://github.com/probot/webhooks/issues\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">Need help?</a>
+    </div>
+  </noscript>
+  <div class=\\"mount\\"></div>
+  <script src=\\"/public/main.min.js\\"></script>
+  <script async src=\\"https://www.googletagmanager.com/gtag/js?id=UA-102577034-3\\"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-102577034-3');
+  </script>
+</body>
+</html>
+"
+`;
 
-exports[`server GET /auth/github returns the proper HTML 1`] = `""`;
+exports[`server GET /:user/:channel  wrong user  1`] = `"{\\"message\\":\\"Sorry you don't have access to this URL\\"}"`;
+
+exports[`server events emits events 1`] = `
+"<!DOCTYPE html>
+<html lang=\\"en\\">
+<head>
+  <meta charset=\\"UTF-8\\">
+  <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\">
+  <meta http-equiv=\\"X-UA-Compatible\\" content=\\"ie=edge\\">
+  <title>Webhooks</title>
+  <link rel=\\"shortcut icon\\" href=\\"/public/favicon.png\\">
+  <link rel=\\"stylesheet\\" href=\\"/public/main.min.css\\">
+</head>
+<body>
+  <noscript>
+    <div class=\\"no-script\\">
+      <h1>You must enable JavaScript to use try out todo.</h1>
+      <a href=\\"https://github.com/probot/webhooks/issues\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">Need help?</a>
+    </div>
+  </noscript>
+  <div class=\\"mount\\"></div>
+  <script src=\\"/public/main.min.js\\"></script>
+  <script async src=\\"https://www.googletagmanager.com/gtag/js?id=UA-102577034-3\\"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-102577034-3');
+  </script>
+</body>
+</html>
+"
+`;

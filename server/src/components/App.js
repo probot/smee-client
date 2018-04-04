@@ -112,7 +112,7 @@ export default class App extends Component {
                 <label htmlFor="search">Filter deliveries</label>
                 <a className="ml-2 f6" href="https://github.com/jonschlinkert/get-value" target="_blank" rel="noopener noreferrer">Uses the get-value syntax</a>
 
-                <button onClick={this.clear} className="btn btn-sm btn-danger" style={{ marginLeft: 'auto' }}>Clear logs</button>
+                <button onClick={this.clear} className="btn btn-sm btn-danger" style={{ marginLeft: 'auto' }}>Clear deliveries</button>
               </div>
               <input
                 type="text"

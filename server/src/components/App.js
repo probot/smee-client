@@ -10,6 +10,8 @@ export default class App extends Component {
     this.channel = window.location.pathname.substring(1)
     this.storageLimit = 30
 
+    this.clear = this.clear.bind(this)
+
     const ref = localStorage.getItem(`smee:log:${this.channel}`)
     this.state = { log: ref ? JSON.parse(ref) : [], filter: '', connection: false }
   }
@@ -63,6 +65,14 @@ export default class App extends Component {
     }
   }
 
+  clear () {
+    if (confirm('Are you sure you want to clear the delivery log?')) {
+      console.log('Clearing logs')
+      this.setState({ log: [] })
+      localStorage.removeItem(`smee:log:${this.channel}`)
+    }
+  }
+
   render () {
     const { log, filter } = this.state
     let filtered = log
@@ -98,9 +108,11 @@ export default class App extends Component {
         {log.length > 0 ? (
           <div className="container-md py-3 p-responsive">
             <div className="mb-2">
-              <div className="d-flex flex-items-center">
+              <div className="d-flex flex-items-end mb-2">
                 <label htmlFor="search">Filter deliveries</label>
                 <a className="ml-2 f6" href="https://github.com/jonschlinkert/get-value" target="_blank" rel="noopener noreferrer">Uses the get-value syntax</a>
+
+                <button onClick={this.clear} className="btn btn-sm btn-danger" style={{ marginLeft: 'auto' }}>Clear deliveries</button>
               </div>
               <input
                 type="text"

@@ -91,15 +91,15 @@ export default class App extends Component {
     const stateString = this.state.connection ? 'Connected' : 'Not Connected'
     return (
       <main>
-        <div className='py-2 bg-gray-dark'>
-          <div className='container-md text-white p-responsive d-flex flex-items-center flex-justify-between'>
-            <h1 className='f4'>Recent Deliveries</h1>
-            <div className='flex-items-right tooltipped tooltipped-w' aria-label={stateString + ' to event stream'}>
+        <div className="py-2 bg-gray-dark">
+          <div className="container-md text-white p-responsive d-flex flex-items-center flex-justify-between">
+            <h1 className="f4">Recent Deliveries</h1>
+            <div className="flex-items-right tooltipped tooltipped-w" aria-label={stateString + ' to event stream'}>
               {this.state.connection
-                ? <PulseIcon
-                  style={{fill: '#6cc644'}} />
-                : <AlertIcon
-                  style={{fill: 'yellow'}} />
+              ? <PulseIcon
+                style={{fill: '#6cc644'}} />
+              : <AlertIcon
+                style={{fill: 'yellow'}} />
               }
             </div>
           </div>
@@ -115,15 +115,15 @@ export default class App extends Component {
                 <button onClick={this.clear} className="btn btn-sm btn-danger" style={{ marginLeft: 'auto' }}>Clear deliveries</button>
               </div>
               <input
-                type='text'
-                id='search'
-                placeholder='repository.name:probot'
+                type="text"
+                id="search"
+                placeholder="repository.name:probot"
                 value={filter}
                 onChange={e => this.setState({ filter: e.target.value })}
-                className='input input-lg width-full Box'
+                className="input input-lg width-full Box"
               />
             </div>
-            <ul className='Box list-style-none pl-0'>
+            <ul className="Box list-style-none pl-0">
               {filtered.map((item, i, arr) => <ListItem key={item['x-github-delivery']} item={item} last={i === arr.length - 1} />)}
             </ul>
           </div>

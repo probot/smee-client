@@ -75,8 +75,8 @@ exports[`server GET /:channel returns the proper HTML 1`] = `
 <body>
   <noscript>
     <div class=\\"no-script\\">
-      <h1>You must enable JavaScript to use try out todo.</h1>
-      <a href=\\"https://github.com/probot/webhooks/issues\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">Need help?</a>
+      <h1>You must enable JavaScript to use try out Smee.</h1>
+      <a href=\\"https://github.com/probot/smee/issues\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">Need help?</a>
     </div>
   </noscript>
   <div class=\\"mount\\"></div>

@@ -108,8 +108,9 @@ module.exports = () => {
     if (req.accepts('html')) {
       if(req.session.user !== undefined) {
         res.redirect(307, '/' + req.session.user + '/' + req.params.channel)
+      } else {
+        res.sendFile(path.join(pubFolder, 'webhooks.html'))
       }
-      res.sendFile(path.join(pubFolder, 'webhooks.html'))
     } else {
       next()
     }

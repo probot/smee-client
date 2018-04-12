@@ -35,6 +35,7 @@ describe('server', () => {
     it('returns the proper HTML when unauthenticated', async () => {
       const res = await request(server).get('/')
       expect(res.status).toBe(200)
+      expect(res.text).toMatchSnapshot()
     })
 
     it('returns the proper HTML when authenticated', async () => {
@@ -86,7 +87,6 @@ describe('server', () => {
     it('returns the proper HTML when unauthenticated', async () => {
       const res = await request(server).get(channel)
       expect(res.status).toBe(200)
-      expect(res.text).toMatchSnapshot()
     })
 
     it('checks user authentication and redirects', async () => {

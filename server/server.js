@@ -36,7 +36,18 @@ module.exports = () => {
   app.use('/public', express.static(pubFolder))
 
   app.get('/', (req, res) => {
-    res.sendFile(path.join(pubFolder, 'index.html'))
+    if(req.session.user !== undefined ) {
+      res.sendFile(path.join(pubFolder, 'loggedIn.html'))
+    } else {
+      res.sendFile(path.join(pubFolder, 'index.html'))
+    }
+  })
+
+  // logging user out
+
+  app.get('/logout', (req, res) => {
+    req.session = null
+    res.redirect('/')
   })
 
   app.get('/new', (req, res) => {
@@ -95,6 +106,9 @@ module.exports = () => {
 
   app.get('/:channel', (req, res, next) => {
     if (req.accepts('html')) {
+      if(req.session.user !== undefined) {
+        res.redirect(307, '/' + req.session.user + '/' + req.params.channel)
+      }
       res.sendFile(path.join(pubFolder, 'webhooks.html'))
     } else {
       next()

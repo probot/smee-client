@@ -32,10 +32,27 @@ describe('server', () => {
   })
 
   describe('GET /', () => {
-    it('returns the proper HTML', async () => {
+    it('returns the proper HTML when unauthenticated', async () => {
       const res = await request(server).get('/')
       expect(res.status).toBe(200)
       expect(res.text).toMatchSnapshot()
+    })
+
+    it('returns the proper HTML when authenticated', async () => {
+      let cookie = Buffer.from(JSON.stringify({'user': 'test', 'token': 'test'})).toString('base64')
+      let kg = Keygrip(['key1'])
+      let hash = kg.sign('session=' + cookie)
+      const res = await request(server).get('/')
+        .set('cookie', ['session=' + cookie + '; ' + 'session.sig=' + hash + ';'])
+      expect(res.status).toBe(200)
+      expect(res.text).toMatchSnapshot()
+    })
+  })
+
+  describe('GET /logout', () => {
+    it('logout the user', async () => {
+      const res = await request(server).get('/logout')
+      expect(res.redirect).toBe(true)
     })
   })
 
@@ -67,10 +84,20 @@ describe('server', () => {
   })
 
   describe('GET /:channel', () => {
-    it('returns the proper HTML', async () => {
+    it('returns the proper HTML when unauthenticated', async () => {
       const res = await request(server).get(channel)
       expect(res.status).toBe(200)
       expect(res.text).toMatchSnapshot()
+    })
+
+    it('checks user authentication and redirects', async () => {
+      let cookie = Buffer.from(JSON.stringify({'user': 'test', 'token': 'test'})).toString('base64')
+      let kg = Keygrip(['key1'])
+      let hash = kg.sign('session=' + cookie)
+      const res = await request(server).get(channel)
+                  .set('cookie', ['session=' + cookie + '; ' + 'session.sig=' + hash + ';'])
+      expect(res.status).toBe(307)
+      expect(res.redirect).toBe(true)
     })
   })
 

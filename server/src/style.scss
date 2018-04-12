@@ -22,6 +22,28 @@ body {
   }
 }
 
+.btn-outline-green {
+  background-color: $green-500;
+  color: white;
+  border-color: $blue-500 !important;
+
+  &:hover {
+    color: $blue-500;
+    background-color: white;
+  }
+}
+
+.btn-outline-red {
+  background-color: $red-500;
+  color: white;
+  border-color: transparent !important;
+
+  &:hover {
+    color: $blue-500;
+    background-color: white;
+  }
+}
+
 .blue-700 {
   color: $blue-700;
 }

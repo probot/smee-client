@@ -44,6 +44,12 @@ body {
   }
 }
 
+.position {
+  top:0;
+  right:0px;
+  position:fixed;
+}
+
 .blue-700 {
   color: $blue-700;
 }
@@ -52,6 +58,70 @@ body {
   font-size: $h1-size;
   padding: $spacer-2;
   line-height: 1.5;
+}
+
+// for Error page
+
+.colorfill {
+  background-color: #26E2D4;
+}
+
+.upfill {
+  background-color: #26E2D4;
+  fill:#1983FB;
+}
+
+@keyframes moveing {
+  0% {
+    transform: translateY(0px);
+  }
+  10% {
+    transform: translateY(100px);
+  }
+  20% {
+    transform: translateY(0px);
+  }
+  30% {
+    transform: translateY(100px);
+  }
+  40% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(200px);
+  }
+  60% {
+    transform: translateY(0px);
+  }
+  70% {
+    transform: translateY(250px);
+  }
+  80% {
+    transform: translateY(0px);
+  }
+  90% {
+    transform: translateY(400px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.upfill {
+  transform: translateY(0px);
+  animation: moveing 10s ease infinite;
+}
+
+.svg-container {
+    width: 100%;
+    min-height: 100%;
+    position: fixed;
+}
+
+svg {
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 
 .octicon { fill: currentColor; }

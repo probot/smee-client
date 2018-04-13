@@ -103,6 +103,7 @@ export default class App extends Component {
               }
             </div>
           </div>
+          <div><a href="/logout" className="btn btn-outline btn-outline-red position">Logout</a></div>
         </div>
 
         {log.length > 0 ? (

@@ -156,9 +156,7 @@ module.exports = () => {
         if (req.session.user === req.params.username) {
           res.sendFile(path.join(pubFolder, 'webhooks.html'))
         } else {
-          res.json({
-            message: 'Sorry you don\'t have access to this URL'
-          })
+          res.sendFile(path.join(pubFolder, 'error.html'))
         }
       }
     } else {

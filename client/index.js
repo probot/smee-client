@@ -7,6 +7,10 @@ class Client {
     this.source = source
     this.target = target
     this.logger = logger
+
+    if (!validator.isURL(this.source)) {
+      throw new Error('The provided URL is invalid.')
+    }
   }
 
   onmessage (msg) {
@@ -34,9 +38,7 @@ class Client {
   }
 
   onerror (err) {
-    if (validator.isURL(this.source)) {
-      this.logger.error(err)
-    }
+    this.logger.error(err)
   }
 
   start () {
@@ -48,14 +50,11 @@ class Client {
     events.addEventListener('message', this.onmessage.bind(this))
     events.addEventListener('open', this.onopen.bind(this))
     events.addEventListener('error', this.onerror.bind(this))
-    if (validator.isURL(this.source)) {
-      this.logger.info(`Forwarding ${this.source} to ${this.target}`)
-      this.events = events
 
-      return events
-    } else {
-      this.logger.error('The provided URL is invalid')
-    }
+    this.logger.info(`Forwarding ${this.source} to ${this.target}`)
+    this.events = events
+
+    return events
   }
 }
 

@@ -8,9 +8,6 @@ class Client {
     this.target = target
     this.logger = logger
   }
-  validateURL (value) {
-    return validator.isURL(value)
-  }
 
   onmessage (msg) {
     const data = JSON.parse(msg.data)
@@ -37,7 +34,7 @@ class Client {
   }
 
   onerror (err) {
-    if (this.validateURL(this.source)) {
+    if (validator.isURL(this.source)) {
       this.logger.error(err)
     }
   }
@@ -51,7 +48,7 @@ class Client {
     events.addEventListener('message', this.onmessage.bind(this))
     events.addEventListener('open', this.onopen.bind(this))
     events.addEventListener('error', this.onerror.bind(this))
-    if (this.validateURL(this.source) === true) {
+    if (validator.isURL(this.source) === true) {
       this.logger.info(`Forwarding ${this.source} to ${this.target}`)
       this.events = events
 

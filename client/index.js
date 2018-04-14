@@ -57,7 +57,7 @@ class Client {
 
       return events
     } else {
-      this.logger.error('Please check your WEBHOOK_PROXY_URL in .env file')
+      this.logger.error('The provided URL is invalid')
     }
   }
 }

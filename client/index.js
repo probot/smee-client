@@ -48,7 +48,7 @@ class Client {
     events.addEventListener('message', this.onmessage.bind(this))
     events.addEventListener('open', this.onopen.bind(this))
     events.addEventListener('error', this.onerror.bind(this))
-    if (validator.isURL(this.source) === true) {
+    if (validator.isURL(this.source)) {
       this.logger.info(`Forwarding ${this.source} to ${this.target}`)
       this.events = events
 

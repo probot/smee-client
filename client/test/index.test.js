@@ -40,6 +40,18 @@ describe('client', () => {
       client.addEventListener('ready', () => done())
     })
 
+    test('throws an error if the source is invalid', async () => {
+      try {
+        client = new Client({
+          source: 'not-a-real-url',
+          target: targetUrl,
+          logger
+        }).start()
+      } catch (e) {
+        expect(e.message).toMatchSnapshot()
+      }
+    })
+
     test('POST /:channel forwards to target url', async (done) => {
       const payload = {payload: true}
 

@@ -23,7 +23,8 @@
     "commander": "^2.12.2",
     "eventsource": "^1.0.5",
     "morgan": "^1.9.0",
-    "superagent": "^3.8.1"
+    "superagent": "^3.8.1",
+    "validator": "^9.4.1"
   },
   "devDependencies": {
     "jest": "^21.2.1",

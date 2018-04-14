@@ -1,3 +1,4 @@
+const validator = require('validator')
 const EventSource = require('eventsource')
 const superagent = require('superagent')
 
@@ -6,6 +7,10 @@ class Client {
     this.source = source
     this.target = target
     this.logger = logger
+
+    if (!validator.isURL(this.source)) {
+      throw new Error('The provided URL is invalid.')
+    }
   }
 
   onmessage (msg) {
@@ -47,7 +52,6 @@ class Client {
     events.addEventListener('error', this.onerror.bind(this))
 
     this.logger.info(`Forwarding ${this.source} to ${this.target}`)
-
     this.events = events
 
     return events

@@ -39,8 +39,17 @@ describe('client', () => {
       // Wait for event source to be ready
       client.addEventListener('ready', () => done())
     })
-    test('Checks the error', async () => {
-      expect(client.onerror()).toBeUndefined()
+
+    test('throws an error if the source is invalid', async () => {
+      try {
+        client = new Client({
+          source: 'not-a-real-url',
+          target: targetUrl,
+          logger
+        }).start()
+      } catch (e) {
+        expect(e.message).toMatchSnapshot()
+      }
     })
 
     test('POST /:channel forwards to target url', async (done) => {

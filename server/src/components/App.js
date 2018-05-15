@@ -12,8 +12,10 @@ export default class App extends Component {
 
     this.clear = this.clear.bind(this)
 
-    const ref = localStorage.getItem(`smee:log:${this.channel}`)
-    const pinnedRef = localStorage.getItem(`smee:log:${this.channel}:pinned`)
+    this.ref = `smee:log:${this.channel}`
+    this.pinnedRef = this.ref + ':pinned'
+    const ref = localStorage.getItem(this.ref)
+    const pinnedRef = localStorage.getItem(this.pinnedRef)
 
     this.state = {
       log: ref ? JSON.parse(ref) : [],
@@ -70,7 +72,7 @@ export default class App extends Component {
       this.setState({
         log: [json, ...this.state.log]
       }, () => {
-        localStorage.setItem(`smee:log:${this.channel}`, JSON.stringify(this.state.log.slice(0, this.storageLimit)))
+        localStorage.setItem(this.ref, JSON.stringify(this.state.log.slice(0, this.storageLimit)))
       })
     }
   }
@@ -78,26 +80,30 @@ export default class App extends Component {
   clear () {
     if (confirm('Are you sure you want to clear the delivery log?')) {
       console.log('Clearing logs')
-      this.setState({ log: this.state.log.filter(log => this.state.pinnedDeliveries.includes(log.id)) })
-      localStorage.removeItem(`smee:log:${this.channel}`)
+      const filtered = this.state.log.filter(log => this.state.pinnedDeliveries.includes(log.id))
+      this.setState({ log: filtered })
+      if (filtered.length > 0) {
+        localStorage.setItem(this.ref, JSON.stringify(filtered))
+      } else {
+        localStorage.removeItem(this.ref)
+      }
     }
   }
 
   togglePinned (id) {
     const deliveryId = this.state.pinnedDeliveries.indexOf(id)
+    let pinnedDeliveries
     if (deliveryId > -1) {
-      this.setState({ pinnedDeliveries: [
+      pinnedDeliveries = [
         ...this.state.pinnedDeliveries.slice(0, deliveryId),
         ...this.state.pinnedDeliveries.slice(deliveryId + 1)
-      ] })
+      ]
     } else {
-      this.setState({
-        pinnedDeliveries: [
-          ...this.state.pinnedDeliveries,
-          id
-        ]
-      })
+      pinnedDeliveries = [...this.state.pinnedDeliveries, id]
     }
+
+    this.setState({ pinnedDeliveries })
+    localStorage.setItem(this.pinnedRef, JSON.stringify(pinnedDeliveries))
   }
 
   isPinned (item) {

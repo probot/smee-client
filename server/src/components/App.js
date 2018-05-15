@@ -13,7 +13,16 @@ export default class App extends Component {
     this.clear = this.clear.bind(this)
 
     const ref = localStorage.getItem(`smee:log:${this.channel}`)
-    this.state = { log: ref ? JSON.parse(ref) : [], filter: '', connection: false }
+    const pinnedRef = localStorage.getItem(`smee:log:${this.channel}:pinned`)
+
+    this.state = {
+      log: ref ? JSON.parse(ref) : [],
+      pinnedDeliveries: pinnedRef ? JSON.parse(pinnedRef) : [],
+      filter: '',
+      connection: false
+    }
+
+    this.togglePinned = this.togglePinned.bind(this)
   }
 
   componentDidMount () {
@@ -68,8 +77,25 @@ export default class App extends Component {
   clear () {
     if (confirm('Are you sure you want to clear the delivery log?')) {
       console.log('Clearing logs')
-      this.setState({ log: [] })
+      this.setState({ log: this.state.log.filter(log => this.state.pinnedDeliveries.includes(log.id)) })
       localStorage.removeItem(`smee:log:${this.channel}`)
+    }
+  }
+
+  togglePinned (id) {
+    const deliveryId = this.state.pinnedDeliveries.indexOf(id)
+    if (deliveryId > -1) {
+      this.setState({ pinnedDeliveries: [
+        ...this.state.pinnedDeliveries.slice(0, deliveryId),
+        ...this.state.pinnedDeliveries.slice(deliveryId + 1)
+      ] })
+    } else {
+      this.setState({
+        pinnedDeliveries: [
+          ...this.state.pinnedDeliveries,
+          id
+        ]
+      })
     }
   }
 
@@ -124,7 +150,10 @@ export default class App extends Component {
               />
             </div>
             <ul className="Box list-style-none pl-0">
-              {filtered.map((item, i, arr) => <ListItem key={item['x-github-delivery']} item={item} last={i === arr.length - 1} />)}
+              {filtered.map((item, i, arr) => {
+                const id = item['x-github-delivery']
+                return <ListItem key={id} pinned={this.state.pinnedDeliveries.includes(id)} togglePinned={this.togglePinned} item={item} last={i === arr.length - 1} />
+              })}
             </ul>
           </div>
         ) : <Blank />}

@@ -3,12 +3,7 @@ import { object, bool, func } from 'prop-types'
 import moment from 'moment'
 import ReactJson from 'react-json-view'
 import EventIcon from './EventIcon'
-import {
-  KebabHorizontalIcon,
-  ClippyIcon,
-  SyncIcon,
-  PinIcon
-} from 'react-octicons'
+import { KebabHorizontalIcon, ClippyIcon, SyncIcon, PinIcon } from 'react-octicons'
 import EventDescription from './EventDescription'
 import copy from 'copy-to-clipboard'
 
@@ -16,7 +11,7 @@ export default class ListItem extends Component {
   static propTypes = {
     item: object.isRequired,
     pinned: bool.isRequired,
-    togglePin: func.isRequired,
+    togglePinned: func.isRequired,
     last: bool.isRequired
   }
 
@@ -47,7 +42,7 @@ export default class ListItem extends Component {
 
   render () {
     const { expanded, copied, redelivered } = this.state
-    const { item, last, pinned } = this.props
+    const { item, last, pinned, togglePinned } = this.props
 
     const event = item['x-github-event']
     const payload = item.body
@@ -57,7 +52,7 @@ export default class ListItem extends Component {
       <li className={`p-3 ${last ? '' : 'border-bottom'}`}>
         <div className="d-flex flex-items-center">
           <div className="mr-2" style={{ width: 16 }}>
-            <EventIcon />
+            <EventIcon event={event} action={payload.action} />
           </div>
           <span className="input-monospace">{event}</span>
           <time className="f6" style={{ marginLeft: 'auto' }}>{moment(item.timestamp).fromNow()}</time>
@@ -74,17 +69,14 @@ export default class ListItem extends Component {
 
               <div>
                 <button
-                  onClick={this.pin}
-                  className="btn btn-sm tooltipped tooltipped-s"
+                  onClick={() => togglePinned(id)}
+                  className={`btn btn-sm tooltipped tooltipped-s ${pinned && 'text-blue'}`}
                   aria-label="Pin this delivery"
-                  style={{ opacity: pinned ? 1 : 0.5 }}
-                >
-                  <PinIcon />
-                </button>
+                ><PinIcon /></button>
                 <button
                   onBlur={() => this.setState({ copied: false })}
                   onClick={this.copy}
-                  className="btn btn-sm tooltipped tooltipped-s js-copy-btn"
+                  className="ml-2 btn btn-sm tooltipped tooltipped-s js-copy-btn"
                   aria-label={copied ? 'Copied!' : 'Copy payload to clipboard'}
                 ><ClippyIcon /></button>
                 <button

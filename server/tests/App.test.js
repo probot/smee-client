@@ -11,7 +11,8 @@ describe('<App />', () => {
   beforeEach(() => {
     localStorage = {
       getItem: jest.fn(),
-      setItem: jest.fn()
+      setItem: jest.fn(),
+      removeItem: jest.fn()
     }
 
     const EventSource = jest.fn()
@@ -114,6 +115,27 @@ describe('<App />', () => {
 
       expect(wrapper.state('log').length).toBe(1)
       expect(localStorage.setItem).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('clear', () => {
+    beforeEach(() => {
+      window.confirm = jest.fn(() => true)
+      const item = { 'x-github-delivery': 123 }
+      wrapper.setState({ log: [item] })
+    })
+
+    it('clears the log state and localStorage', () => {
+      wrapper.instance().clear()
+      expect(wrapper.state('log')).toEqual([])
+      expect(localStorage.removeItem).toHaveBeenCalled()
+    })
+
+    it('does not clear pinned deliveries', () => {
+      wrapper.instance().togglePinned(123)
+      wrapper.instance().clear()
+      expect(wrapper.state('log')).toMatchSnapshot()
+      expect(localStorage.setItem.mock.calls[0][1]).toMatchSnapshot()
     })
   })
 

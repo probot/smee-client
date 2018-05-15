@@ -1,5 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`<App /> clear does not clear pinned deliveries 1`] = `
+Array [
+  Object {
+    "x-github-delivery": 123,
+  },
+]
+`;
+
+exports[`<App /> clear does not clear pinned deliveries 2`] = `"[123]"`;
+
 exports[`<App /> onmessage adds the new log to the state and localStorage 1`] = `"[{\\"x-github-delivery\\":123}]"`;
 
 exports[`<App /> togglePinned stores the pinnedDeliveries in localStorage 1`] = `"[123]"`;

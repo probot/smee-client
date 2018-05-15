@@ -80,7 +80,7 @@ export default class App extends Component {
   clear () {
     if (confirm('Are you sure you want to clear the delivery log?')) {
       console.log('Clearing logs')
-      const filtered = this.state.log.filter(log => this.state.pinnedDeliveries.includes(log.id))
+      const filtered = this.state.log.filter(this.isPinned)
       this.setState({ log: filtered })
       if (filtered.length > 0) {
         localStorage.setItem(this.ref, JSON.stringify(filtered))

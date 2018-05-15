@@ -23,6 +23,7 @@ export default class App extends Component {
     }
 
     this.togglePinned = this.togglePinned.bind(this)
+    this.isPinned = this.isPinned.bind(this)
   }
 
   componentDidMount () {
@@ -99,8 +100,13 @@ export default class App extends Component {
     }
   }
 
+  isPinned (item) {
+    const id = item['x-github-delivery']
+    return this.state.pinnedDeliveries.includes(id)
+  }
+
   render () {
-    const { log, filter } = this.state
+    const { log, filter, pinnedDeliveries } = this.state
     let filtered = log
     if (filter) {
       filtered = log.filter(l => {
@@ -149,10 +155,18 @@ export default class App extends Component {
                 className="input input-lg width-full Box"
               />
             </div>
+            {pinnedDeliveries.length > 0 && (
+              <ul className="Box list-style-none pl-0 mb-2">
+                {filtered.filter(this.isPinned).map((item, i, arr) => {
+                  const id = item['x-github-delivery']
+                  return <ListItem key={id} pinned togglePinned={this.togglePinned} item={item} last={i === arr.length - 1} />
+                })}
+              </ul>
+            )}
             <ul className="Box list-style-none pl-0">
-              {filtered.map((item, i, arr) => {
+              {filtered.filter(item => !this.isPinned(item)).map((item, i, arr) => {
                 const id = item['x-github-delivery']
-                return <ListItem key={id} pinned={this.state.pinnedDeliveries.includes(id)} togglePinned={this.togglePinned} item={item} last={i === arr.length - 1} />
+                return <ListItem key={id} pinned={false} togglePinned={this.togglePinned} item={item} last={i === arr.length - 1} />
               })}
             </ul>
           </div>

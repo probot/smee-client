@@ -116,4 +116,17 @@ describe('<App />', () => {
       expect(localStorage.setItem).not.toHaveBeenCalled()
     })
   })
+
+  describe('togglePinned', () => {
+    it('adds a pinned item to the array', () => {
+      wrapper.instance().togglePinned(123)
+      expect(wrapper.state('pinnedDeliveries')).toEqual([123])
+    })
+
+    it('removes a pinned item from the array', () => {
+      wrapper.setState({ pinnedDeliveries: [123] })
+      wrapper.instance().togglePinned(123)
+      expect(wrapper.state('pinnedDeliveries')).toEqual([])
+    })
+  })
 })

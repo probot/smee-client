@@ -128,5 +128,11 @@ describe('<App />', () => {
       wrapper.instance().togglePinned(123)
       expect(wrapper.state('pinnedDeliveries')).toEqual([])
     })
+
+    it('stores the pinnedDeliveries in localStorage', () => {
+      wrapper.instance().togglePinned(123)
+      expect(localStorage.setItem.mock.calls[0][0]).toBe('smee:log:CHANNEL:pinnedDeliveries')
+      expect(localStorage.setItem.mock.calls[0][1]).toMatchSnapshot()
+    })
   })
 })

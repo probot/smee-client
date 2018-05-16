@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ListItem from './ListItem'
 import get from 'get-value'
-import { AlertIcon, PulseIcon } from 'react-octicons'
+import { AlertIcon, PulseIcon, SearchIcon, PinIcon } from 'react-octicons'
 import Blank from './Blank'
 
 export default class App extends Component {
@@ -131,7 +131,7 @@ export default class App extends Component {
       <main>
         <div className="py-2 bg-gray-dark">
           <div className="container-md text-white p-responsive d-flex flex-items-center flex-justify-between">
-            <h1 className="f4">Recent Deliveries</h1>
+            <h1 className="f4">Webhook Deliveries</h1>
             <div className="flex-items-right tooltipped tooltipped-w" aria-label={stateString + ' to event stream'}>
               {this.state.connection
               ? <PulseIcon
@@ -147,7 +147,7 @@ export default class App extends Component {
           <div className="container-md py-3 p-responsive">
             <div className="mb-2">
               <div className="d-flex flex-items-end mb-2">
-                <label htmlFor="search">Filter deliveries</label>
+                <label htmlFor="search" className="d-flex flex-items-center f6 text-gray"><SearchIcon height={12} width={12} className="mr-1" /> Filter deliveries</label>
                 <a className="ml-2 f6" href="https://github.com/jonschlinkert/get-value" target="_blank" rel="noopener noreferrer">Uses the get-value syntax</a>
 
                 <button onClick={this.clear} className="btn btn-sm btn-danger" style={{ marginLeft: 'auto' }}>Clear deliveries</button>
@@ -162,13 +162,17 @@ export default class App extends Component {
               />
             </div>
             {pinnedDeliveries.length > 0 && (
-              <ul className="Box list-style-none pl-0 mb-2">
-                {filtered.filter(this.isPinned).map((item, i, arr) => {
-                  const id = item['x-github-delivery']
-                  return <ListItem key={id} pinned togglePinned={this.togglePinned} item={item} last={i === arr.length - 1} />
-                })}
-              </ul>
+              <React.Fragment>
+                <h6 className="d-flex flex-items-center text-gray mb-1"><PinIcon height={12} width={12} className="mr-1" /> Pinned</h6>
+                <ul className="Box list-style-none pl-0 mb-2">
+                  {filtered.filter(this.isPinned).map((item, i, arr) => {
+                    const id = item['x-github-delivery']
+                    return <ListItem key={id} pinned togglePinned={this.togglePinned} item={item} last={i === arr.length - 1} />
+                  })}
+                </ul>
+              </React.Fragment>
             )}
+            <h6 className="d-flex flex-items-center text-gray mb-1">All</h6>
             <ul className="Box list-style-none pl-0">
               {filtered.filter(item => !this.isPinned(item)).map((item, i, arr) => {
                 const id = item['x-github-delivery']

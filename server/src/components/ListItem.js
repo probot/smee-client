@@ -1,60 +1,17 @@
 import React, { Component } from 'react'
-import { object, bool } from 'prop-types'
+import { object, bool, func } from 'prop-types'
 import moment from 'moment'
 import ReactJson from 'react-json-view'
-import {
-  RepoPushIcon,
-  PackageIcon,
-  GitPullRequestIcon,
-  BookmarkIcon,
-  IssueOpenedIcon,
-  IssueClosedIcon,
-  KebabHorizontalIcon,
-  ClippyIcon,
-  SyncIcon,
-  CommentIcon,
-  CheckIcon,
-  RepoForkedIcon,
-  EyeIcon,
-  ChecklistIcon,
-  CloudUploadIcon,
-  GlobeIcon,
-  HubotIcon,
-  MilestoneIcon,
-  ProjectIcon,
-  StopIcon,
-  NoteIcon
-} from 'react-octicons'
+import EventIcon from './EventIcon'
+import { KebabHorizontalIcon, ClippyIcon, SyncIcon, PinIcon } from 'react-octicons'
 import EventDescription from './EventDescription'
 import copy from 'copy-to-clipboard'
-
-const iconMap = {
-  push: <RepoPushIcon />,
-  pull_request: <GitPullRequestIcon />,
-  label: <BookmarkIcon />,
-  'issues.opened': <IssueOpenedIcon />,
-  'issues.closed': <IssueClosedIcon />,
-  issue_comment: <CommentIcon />,
-  status: <CheckIcon />,
-  fork: <RepoForkedIcon />,
-  watch: <EyeIcon />,
-  check_run: <ChecklistIcon />,
-  check_suite: <ChecklistIcon />,
-  deployment: <CloudUploadIcon />,
-  deployment_status: <CloudUploadIcon />,
-  ping: <GlobeIcon />,
-  installation: <HubotIcon />,
-  installation_repositories: <HubotIcon />,
-  milestone: <MilestoneIcon />,
-  project: <ProjectIcon />,
-  project_card: <NoteIcon />,
-  project_column: <ProjectIcon />,
-  repository_vulnerability_alert: <StopIcon />
-}
 
 export default class ListItem extends Component {
   static propTypes = {
     item: object.isRequired,
+    pinned: bool.isRequired,
+    togglePinned: func.isRequired,
     last: bool.isRequired
   }
 
@@ -85,27 +42,17 @@ export default class ListItem extends Component {
 
   render () {
     const { expanded, copied, redelivered } = this.state
-    const { item, last } = this.props
+    const { item, last, pinned, togglePinned } = this.props
 
     const event = item['x-github-event']
     const payload = item.body
     const id = item['x-github-delivery']
 
-    let icon
-
-    if (payload.action && iconMap[`${event}.${payload.action}`]) {
-      icon = iconMap[`${event}.${payload.action}`]
-    } else if (iconMap[event]) {
-      icon = iconMap[event]
-    } else {
-      icon = <PackageIcon />
-    }
-
     return (
       <li className={`p-3 ${last ? '' : 'border-bottom'}`}>
         <div className="d-flex flex-items-center">
           <div className="mr-2" style={{ width: 16 }}>
-            {icon}
+            <EventIcon event={event} action={payload.action} />
           </div>
           <span className="input-monospace">{event}</span>
           <time className="f6" style={{ marginLeft: 'auto' }}>{moment(item.timestamp).fromNow()}</time>
@@ -122,9 +69,14 @@ export default class ListItem extends Component {
 
               <div>
                 <button
+                  onClick={() => togglePinned(id)}
+                  className={`btn btn-sm tooltipped tooltipped-s ${pinned && 'text-blue'}`}
+                  aria-label="Pin this delivery"
+                ><PinIcon /></button>
+                <button
                   onBlur={() => this.setState({ copied: false })}
                   onClick={this.copy}
-                  className="btn btn-sm tooltipped tooltipped-s js-copy-btn"
+                  className="ml-2 btn btn-sm tooltipped tooltipped-s js-copy-btn"
                   aria-label={copied ? 'Copied!' : 'Copy payload to clipboard'}
                 ><ClippyIcon /></button>
                 <button

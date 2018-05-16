@@ -3,7 +3,7 @@ import ListItem from '../src/components/ListItem'
 import { shallow } from 'enzyme'
 
 describe('<ListItem />', () => {
-  let item, el
+  let item, el, togglePinned
 
   beforeEach(() => {
     item = {
@@ -12,7 +12,9 @@ describe('<ListItem />', () => {
       body: { action: 'opened' }
     }
 
-    el = shallow(<ListItem last item={item} />)
+    togglePinned = jest.fn()
+
+    el = shallow(<ListItem last item={item} pinned={false} togglePinned={togglePinned} />)
   })
 
   describe('redeliver', () => {
@@ -36,22 +38,6 @@ describe('<ListItem />', () => {
 
       el.find('button.ellipsis-expander').simulate('click')
       expect(el.children().length).toBe(2)
-    })
-
-    it('renders the correct octicon if there is no action', () => {
-      const i = { ...item, 'x-github-event': 'test' }
-      const wrapper = shallow(<ListItem last item={i} />)
-      expect(wrapper.find('PackageIcon').length).toBe(1)
-    })
-
-    it('renders the package octicon if the event is unknown', () => {
-      const i = {
-        'x-github-event': 'push',
-        timestamp: 1513148474751,
-        body: {}
-      }
-      const wrapper = shallow(<ListItem last item={i} />)
-      expect(wrapper.find('RepoPushIcon').length).toBe(1)
     })
   })
 

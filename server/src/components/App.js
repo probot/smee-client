@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ListItem from './ListItem'
 import get from 'get-value'
-import { AlertIcon, PulseIcon } from 'react-octicons'
+import { AlertIcon, PulseIcon, SearchIcon, PinIcon } from 'react-octicons'
 import Blank from './Blank'
 
 export default class App extends Component {
@@ -12,8 +12,20 @@ export default class App extends Component {
 
     this.clear = this.clear.bind(this)
 
-    const ref = localStorage.getItem(`smee:log:${this.channel}`)
-    this.state = { log: ref ? JSON.parse(ref) : [], filter: '', connection: false }
+    this.ref = `smee:log:${this.channel}`
+    this.pinnedRef = this.ref + ':pinned'
+    const ref = localStorage.getItem(this.ref)
+    const pinnedRef = localStorage.getItem(this.pinnedRef)
+
+    this.state = {
+      log: ref ? JSON.parse(ref) : [],
+      pinnedDeliveries: pinnedRef ? JSON.parse(pinnedRef) : [],
+      filter: '',
+      connection: false
+    }
+
+    this.togglePinned = this.togglePinned.bind(this)
+    this.isPinned = this.isPinned.bind(this)
   }
 
   componentDidMount () {
@@ -60,7 +72,7 @@ export default class App extends Component {
       this.setState({
         log: [json, ...this.state.log]
       }, () => {
-        localStorage.setItem(`smee:log:${this.channel}`, JSON.stringify(this.state.log.slice(0, this.storageLimit)))
+        localStorage.setItem(this.ref, JSON.stringify(this.state.log.slice(0, this.storageLimit)))
       })
     }
   }
@@ -68,13 +80,39 @@ export default class App extends Component {
   clear () {
     if (confirm('Are you sure you want to clear the delivery log?')) {
       console.log('Clearing logs')
-      this.setState({ log: [] })
-      localStorage.removeItem(`smee:log:${this.channel}`)
+      const filtered = this.state.log.filter(this.isPinned)
+      this.setState({ log: filtered })
+      if (filtered.length > 0) {
+        localStorage.setItem(this.ref, JSON.stringify(filtered))
+      } else {
+        localStorage.removeItem(this.ref)
+      }
     }
   }
 
+  togglePinned (id) {
+    const deliveryId = this.state.pinnedDeliveries.indexOf(id)
+    let pinnedDeliveries
+    if (deliveryId > -1) {
+      pinnedDeliveries = [
+        ...this.state.pinnedDeliveries.slice(0, deliveryId),
+        ...this.state.pinnedDeliveries.slice(deliveryId + 1)
+      ]
+    } else {
+      pinnedDeliveries = [...this.state.pinnedDeliveries, id]
+    }
+
+    this.setState({ pinnedDeliveries })
+    localStorage.setItem(this.pinnedRef, JSON.stringify(pinnedDeliveries))
+  }
+
+  isPinned (item) {
+    const id = item['x-github-delivery']
+    return this.state.pinnedDeliveries.includes(id)
+  }
+
   render () {
-    const { log, filter } = this.state
+    const { log, filter, pinnedDeliveries } = this.state
     let filtered = log
     if (filter) {
       filtered = log.filter(l => {
@@ -93,7 +131,7 @@ export default class App extends Component {
       <main>
         <div className="py-2 bg-gray-dark">
           <div className="container-md text-white p-responsive d-flex flex-items-center flex-justify-between">
-            <h1 className="f4">Recent Deliveries</h1>
+            <h1 className="f4">Webhook Deliveries</h1>
             <div className="flex-items-right tooltipped tooltipped-w" aria-label={stateString + ' to event stream'}>
               {this.state.connection
               ? <PulseIcon
@@ -109,8 +147,8 @@ export default class App extends Component {
           <div className="container-md py-3 p-responsive">
             <div className="mb-2">
               <div className="d-flex flex-items-end mb-2">
-                <label htmlFor="search">Filter deliveries</label>
-                <a className="ml-2 f6" href="https://github.com/jonschlinkert/get-value" target="_blank" rel="noopener noreferrer">Uses the get-value syntax</a>
+                <label htmlFor="search" className="d-flex flex-items-center f6 text-gray"><SearchIcon height={12} width={12} className="mr-1" /> Filter by</label>
+                &nbsp;<a className="f6" href="https://github.com/jonschlinkert/get-value" target="_blank" rel="noopener noreferrer">get-value syntax</a>
 
                 <button onClick={this.clear} className="btn btn-sm btn-danger" style={{ marginLeft: 'auto' }}>Clear deliveries</button>
               </div>
@@ -123,8 +161,23 @@ export default class App extends Component {
                 className="input input-lg width-full Box"
               />
             </div>
+            {pinnedDeliveries.length > 0 && (
+              <React.Fragment>
+                <h6 className="d-flex flex-items-center text-gray mb-1"><PinIcon height={12} width={12} className="mr-1" /> Pinned</h6>
+                <ul className="Box list-style-none pl-0 mb-2">
+                  {filtered.filter(this.isPinned).map((item, i, arr) => {
+                    const id = item['x-github-delivery']
+                    return <ListItem key={id} pinned togglePinned={this.togglePinned} item={item} last={i === arr.length - 1} />
+                  })}
+                </ul>
+              </React.Fragment>
+            )}
+            <h6 className="d-flex flex-items-center text-gray mb-1">All</h6>
             <ul className="Box list-style-none pl-0">
-              {filtered.map((item, i, arr) => <ListItem key={item['x-github-delivery']} item={item} last={i === arr.length - 1} />)}
+              {filtered.filter(item => !this.isPinned(item)).map((item, i, arr) => {
+                const id = item['x-github-delivery']
+                return <ListItem key={id} pinned={false} togglePinned={this.togglePinned} item={item} last={i === arr.length - 1} />
+              })}
             </ul>
           </div>
         ) : <Blank />}

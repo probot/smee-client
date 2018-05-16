@@ -147,8 +147,8 @@ export default class App extends Component {
           <div className="container-md py-3 p-responsive">
             <div className="mb-2">
               <div className="d-flex flex-items-end mb-2">
-                <label htmlFor="search" className="d-flex flex-items-center f6 text-gray"><SearchIcon height={12} width={12} className="mr-1" /> Filter deliveries</label>
-                <a className="ml-2 f6" href="https://github.com/jonschlinkert/get-value" target="_blank" rel="noopener noreferrer">Uses the get-value syntax</a>
+                <label htmlFor="search" className="d-flex flex-items-center f6 text-gray"><SearchIcon height={12} width={12} className="mr-1" /> Filter by</label>
+                &nbsp;<a className="f6" href="https://github.com/jonschlinkert/get-value" target="_blank" rel="noopener noreferrer">get-value syntax</a>
 
                 <button onClick={this.clear} className="btn btn-sm btn-danger" style={{ marginLeft: 'auto' }}>Clear deliveries</button>
               </div>

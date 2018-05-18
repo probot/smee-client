@@ -67,7 +67,7 @@ export default class ListItem extends Component {
                 <EventDescription event={event} payload={payload} timestamp={item.timestamp} />
               </div>
 
-              <div>
+              <div className="d-flex ml-2">
                 <button
                   onClick={() => togglePinned(id)}
                   className={`btn btn-sm tooltipped tooltipped-s ${pinned && 'text-blue'}`}

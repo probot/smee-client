@@ -38,7 +38,10 @@ events.close()`
           <hr />
           <div className="mt-4 markdown-body">
             <h3>Use the CLI</h3>
-            <p>The <code>smee</code> command will forward webhooks from smee.io to your local development environment.</p>
+            <pre>
+              $ npm install --global smee-client
+            </pre>
+            <p>Then the <code>smee</code> command will forward webhooks from smee.io to your local development environment.</p>
             <pre><code>
               $ smee -u {window.location.href}
             </code></pre>
@@ -49,6 +52,10 @@ events.close()`
             </code></pre>
 
             <h3 className="mt-3">Use the Node.js client</h3>
+            <pre>
+              $ npm install --save smee-client
+            </pre>
+            <p>Then:</p>
             <pre className="js" dangerouslySetInnerHTML={{ __html: hljs.highlight('javascript', code).value }} />
 
             <h3 className="mt-3">Using Probot's built-in support</h3>

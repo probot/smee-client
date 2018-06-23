@@ -16,9 +16,9 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/probot/webhooks/issues"
+    "url": "https://github.com/probot/smee/issues"
   },
-  "homepage": "https://github.com/probot/webhooks#readme",
+  "homepage": "https://github.com/probot/smee#readme",
   "dependencies": {
     "commander": "^2.12.2",
     "eventsource": "^1.0.5",

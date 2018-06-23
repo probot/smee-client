@@ -1,6 +1,6 @@
 {
   "name": "smee-client",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Client to proxy webhooks to local host",
   "main": "index.js",
   "bin": {
@@ -16,21 +16,21 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/probot/webhooks/issues"
+    "url": "https://github.com/probot/smee/issues"
   },
-  "homepage": "https://github.com/probot/webhooks#readme",
+  "homepage": "https://github.com/probot/smee#readme",
   "dependencies": {
     "commander": "^2.12.2",
     "eventsource": "^1.0.5",
     "morgan": "^1.9.0",
-    "superagent": "^3.8.1",
-    "validator": "^9.4.1"
+    "superagent": "^3.8.3",
+    "validator": "^10.4.0"
   },
   "devDependencies": {
-    "jest": "^21.2.1",
-    "nock": "^9.1.4",
-    "standard": "^10.0.3",
-    "supertest": "^3.0.0"
+    "jest": "^23.1.0",
+    "nock": "^9.3.3",
+    "standard": "^11.0.1",
+    "supertest": "^3.1.0"
   },
   "standard": {
     "env": [

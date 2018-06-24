@@ -9,6 +9,7 @@ import copy from 'copy-to-clipboard'
 
 export default class ListItem extends Component {
   static propTypes = {
+    active: bool.isRequired,
     item: object.isRequired,
     pinned: bool.isRequired,
     togglePinned: func.isRequired,
@@ -17,10 +18,15 @@ export default class ListItem extends Component {
 
   constructor (props) {
     super(props)
+    this.select = this.select.bind(this)
     this.toggleExpanded = () => this.setState({ expanded: !this.state.expanded })
     this.copy = this.copy.bind(this)
     this.redeliver = this.redeliver.bind(this)
-    this.state = { expanded: false, copied: false, redelivered: false }
+    this.state = { expanded: false, copied: false, redelivered: false, active: false }
+  }
+
+  select () {
+    this.setState({ active: !this.state.active })
   }
 
   copy () {
@@ -41,7 +47,7 @@ export default class ListItem extends Component {
   }
 
   render () {
-    const { expanded, copied, redelivered } = this.state
+    const { active, expanded, copied, redelivered } = this.state
     const { item, last, pinned, togglePinned } = this.props
 
     const event = item['x-github-event']
@@ -49,7 +55,11 @@ export default class ListItem extends Component {
     const id = item['x-github-delivery']
 
     return (
-      <li className={`p-3 ${last ? '' : 'border-bottom'}`}>
+      <li className={`p-3 ${last ? '' : 'border-bottom'} ${active ? 'menu-item selected' : 'menu-item'}`}
+        tabIndex="0"
+        style={{outline: 'none', fontWeight: 'normal'}}
+        onFocus={this.select}
+        onBlur={this.select}>
         <div className="d-flex flex-items-center">
           <div className="mr-2" style={{ width: 16 }}>
             <EventIcon event={event} action={payload.action} />

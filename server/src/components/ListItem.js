@@ -9,7 +9,6 @@ import copy from 'copy-to-clipboard'
 
 export default class ListItem extends Component {
   static propTypes = {
-    active: bool.isRequired,
     item: object.isRequired,
     pinned: bool.isRequired,
     togglePinned: func.isRequired,

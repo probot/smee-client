@@ -46,6 +46,7 @@
     "purifycss-webpack": "^0.7.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
+    "react-hotkeys": "^1.1.4",
     "react-json-view": "^1.13.2",
     "react-octicons": "^0.2.0",
     "sass-loader": "^6.0.6",

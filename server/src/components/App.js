@@ -12,16 +12,8 @@ const keyMap = {
 
 export default class App extends Component {
   render () {
-    const handlers = {
-      'moveUp': (e) => console.log('pressed up'),
-      'moveDown': (e) => console.log('pressed down'),
-      'open': (e) => console.log('pressed open'),
-      'pin': (e) => console.log('pressed pin'),
-      'redeliver': (e) => console.log('pressed redeliver')
-    }
-
     return (
-      <HotKeys keyMap={keyMap} handlers={handlers} focused>
+      <HotKeys keyMap={keyMap}>
         <Deliveries />
       </HotKeys>
     )

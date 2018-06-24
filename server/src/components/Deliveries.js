@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {HotKeys} from 'react-hotkeys'
 import ListItem from './ListItem'
 import get from 'get-value'
 import { AlertIcon, PulseIcon, SearchIcon, PinIcon } from 'react-octicons'
@@ -125,6 +126,13 @@ export default class Deliveries extends Component {
         return true
       })
     }
+    const handlers = {
+      'moveUp': (e) => console.log('pressed up'),
+      'moveDown': (e) => console.log('pressed down'),
+      'open': (e) => console.log('pressed open'),
+      'pin': (e) => console.log('pressed pin'),
+      'redeliver': (e) => console.log('pressed redeliver')
+    }
 
     const stateString = this.state.connection ? 'Connected' : 'Not Connected'
     return (
@@ -142,13 +150,12 @@ export default class Deliveries extends Component {
             </div>
           </div>
         </div>
-
         {log.length > 0 ? (
           <div className="container-md py-3 p-responsive">
             <div className="mb-2">
               <div className="d-flex flex-items-end mb-2">
                 <label htmlFor="search" className="d-flex flex-items-center f6 text-gray"><SearchIcon height={12} width={12} className="mr-1" /> Filter by</label>
-                &nbsp;<a className="f6" href="https://github.com/jonschlinkert/get-value" target="_blank" rel="noopener noreferrer">get-value syntax</a>
+                <a className="f6" href="https://github.com/jonschlinkert/get-value" target="_blank" rel="noopener noreferrer">get-value syntax</a>
 
                 <button onClick={this.clear} className="btn btn-sm btn-danger" style={{ marginLeft: 'auto' }}>Clear deliveries</button>
               </div>
@@ -161,24 +168,28 @@ export default class Deliveries extends Component {
                 className="input input-lg width-full Box"
               />
             </div>
-            {pinnedDeliveries.length > 0 && (
-              <React.Fragment>
-                <h6 className="d-flex flex-items-center text-gray mb-1"><PinIcon height={12} width={12} className="mr-1" /> Pinned</h6>
-                <ul className="Box list-style-none pl-0 mb-2">
-                  {filtered.filter(this.isPinned).map((item, i, arr) => {
+            <HotKeys handlers={handlers}>
+              <div>
+                {pinnedDeliveries.length > 0 && (
+                <React.Fragment>
+                  <h6 className="d-flex flex-items-center text-gray mb-1"><PinIcon height={12} width={12} className="mr-1" /> Pinned</h6>
+                  <ul className="Box list-style-none pl-0 mb-2" focused>
+                    {filtered.filter(this.isPinned).map((item, i, arr) => {
+                      const id = item['x-github-delivery']
+                      return <ListItem key={id} pinned togglePinned={this.togglePinned} item={item} last={i === arr.length - 1} />
+                    })}
+                  </ul>
+                </React.Fragment>
+            )}
+                <h6 className="d-flex flex-items-center text-gray mb-1">All</h6>
+                <ul className="Box list-style-none pl-0">
+                  {filtered.filter(item => !this.isPinned(item)).map((item, i, arr) => {
                     const id = item['x-github-delivery']
-                    return <ListItem key={id} pinned togglePinned={this.togglePinned} item={item} last={i === arr.length - 1} />
+                    return <ListItem key={id} pinned={false} togglePinned={this.togglePinned} item={item} last={i === arr.length - 1} />
                   })}
                 </ul>
-              </React.Fragment>
-            )}
-            <h6 className="d-flex flex-items-center text-gray mb-1">All</h6>
-            <ul className="Box list-style-none pl-0">
-              {filtered.filter(item => !this.isPinned(item)).map((item, i, arr) => {
-                const id = item['x-github-delivery']
-                return <ListItem key={id} pinned={false} togglePinned={this.togglePinned} item={item} last={i === arr.length - 1} />
-              })}
-            </ul>
+              </div>
+            </HotKeys>
           </div>
         ) : <Blank />}
       </main>

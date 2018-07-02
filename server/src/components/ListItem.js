@@ -24,7 +24,9 @@ export default class ListItem extends Component {
   }
 
   copy () {
-    const copied = copy(JSON.stringify(this.props.item))
+    const { item } = this.props
+    const event = { event: item['x-github-event'], payload: item.body }
+    const copied = copy(JSON.stringify(event))
     this.setState({ copied })
   }
 

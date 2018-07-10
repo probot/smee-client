@@ -16,8 +16,10 @@ module.exports = () => {
   const app = express()
   const pubFolder = path.join(__dirname, 'public')
 
-  Raven.config(process.env.SENTRY_DSN).install()
-  app.use(Raven.requestHandler())
+  if (process.env.SENTRY_DSN) {
+    Raven.config(process.env.SENTRY_DSN).install()
+    app.use(Raven.requestHandler())
+  }
 
   if (process.env.FORCE_HTTPS) {
     app.use(require('helmet')())
@@ -95,6 +97,9 @@ module.exports = () => {
     res.status(200).end()
   })
 
-  app.use(Raven.errorHandler())
+  if (process.env.SENTRY_DSN) {
+    app.use(Raven.errorHandler())
+  }
+
   return app
 }

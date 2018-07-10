@@ -1,6 +1,36 @@
 const createServer = require('../server')
 const request = require('supertest')
 const EventSource = require('eventsource')
+const Raven = require('raven')
+
+describe('Sentry tests', () => {
+  let app, server
+  beforeEach(() => {
+    app = createServer()
+    server = app.listen(0, () => {})
+    Raven.captureException = jest.fn()
+  })
+
+  it('Starts if SENTRY_DSN is not set', () => {
+    expect(server).toBeTruthy()
+  })
+
+  it('reports errors to Sentry', () => {
+    process.env.SENTRY_DSN = 'https://user:pw@sentry.io/1234'
+    request(server).get('/not/a/valid/url')
+    expect(Raven.captureException).toHaveBeenCalled()
+  })
+
+  it('with an invalid SETRY_DSN', () => {
+    process.env.SENTRY_DSN = 1234
+    expect(createServer).toThrow('Invalid Sentry DSN: 1234')
+  })
+
+  afterEach(() => {
+    server && server.close()
+    delete process.env.SENTRY_DSN
+  })
+})
 
 describe('server', () => {
   let app, server, events, url, channel

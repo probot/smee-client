@@ -82,5 +82,10 @@
     "testPathIgnorePatterns": [
       "/node_modules/"
     ]
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
   }
 }

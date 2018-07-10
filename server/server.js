@@ -97,6 +97,10 @@ module.exports = () => {
     res.status(200).end()
   })
 
+  app.get('/not/a/valid/url', (req, res) => {
+    throw new Error('an error')
+  })
+
   if (process.env.SENTRY_DSN) {
     app.use(Raven.errorHandler())
   }

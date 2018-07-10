@@ -15,9 +15,13 @@ describe('Sentry tests', () => {
     expect(server).toBeTruthy()
   })
 
-  it('reports errors to Sentry', () => {
+  it('reports errors to Sentry', async () => {
     process.env.SENTRY_DSN = 'https://user:pw@sentry.io/1234'
-    request(server).get('/not/a/valid/url')
+
+    // Pass a route that errors, just to test it
+    app = createServer(a => a.get('/not/a/valid/url', () => { throw new Error('test') }))
+
+    await request(app).get('/not/a/valid/url')
     expect(Raven.captureException).toHaveBeenCalled()
   })
 

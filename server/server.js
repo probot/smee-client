@@ -11,10 +11,13 @@ const KeepAlive = require('./keep-alive')
 // Tiny logger to prevent logs in tests
 const log = process.env.NODE_ENV === 'test' ? _ => _ : console.log
 
-module.exports = () => {
+module.exports = (testRoute) => {
   const events = new EventEmitter()
   const app = express()
   const pubFolder = path.join(__dirname, 'public')
+
+  // Used for testing route error handling
+  if (testRoute) testRoute(app)
 
   if (process.env.SENTRY_DSN) {
     Raven.config(process.env.SENTRY_DSN).install()
@@ -95,10 +98,6 @@ module.exports = () => {
   app.post('/:channel/redeliver', (req, res) => {
     events.emit(req.params.channel, req.body)
     res.status(200).end()
-  })
-
-  app.get('/not/a/valid/url', (req, res) => {
-    throw new Error('an error')
   })
 
   if (process.env.SENTRY_DSN) {

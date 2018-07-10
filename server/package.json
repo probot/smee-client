@@ -44,6 +44,7 @@
     "prop-types": "^15.6.0",
     "purify-css": "^1.2.5",
     "purifycss-webpack": "^0.7.0",
+    "raven": "^2.6.3",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-json-view": "^1.13.2",
@@ -80,6 +81,11 @@
     ],
     "testPathIgnorePatterns": [
       "/node_modules/"
+    ]
+  },
+  "standard": {
+    "env": [
+      "jest"
     ]
   }
 }

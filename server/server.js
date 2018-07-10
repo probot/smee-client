@@ -4,16 +4,25 @@ const crypto = require('crypto')
 const bodyParser = require('body-parser')
 const EventEmitter = require('events')
 const path = require('path')
+const Raven = require('raven')
 
 const KeepAlive = require('./keep-alive')
 
 // Tiny logger to prevent logs in tests
 const log = process.env.NODE_ENV === 'test' ? _ => _ : console.log
 
-module.exports = () => {
+module.exports = (testRoute) => {
   const events = new EventEmitter()
   const app = express()
   const pubFolder = path.join(__dirname, 'public')
+
+  // Used for testing route error handling
+  if (testRoute) testRoute(app)
+
+  if (process.env.SENTRY_DSN) {
+    Raven.config(process.env.SENTRY_DSN).install()
+    app.use(Raven.requestHandler())
+  }
 
   if (process.env.FORCE_HTTPS) {
     app.use(require('helmet')())
@@ -90,6 +99,10 @@ module.exports = () => {
     events.emit(req.params.channel, req.body)
     res.status(200).end()
   })
+
+  if (process.env.SENTRY_DSN) {
+    app.use(Raven.errorHandler())
+  }
 
   return app
 }

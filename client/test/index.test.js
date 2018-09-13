@@ -53,7 +53,7 @@ describe('client', () => {
     })
 
     test('POST /:channel forwards to target url', async (done) => {
-      const payload = {payload: true}
+      const payload = { payload: true }
 
       // Expect request to target
       const forward = nock('http://example.com').post('/foo/bar', payload).reply(200)

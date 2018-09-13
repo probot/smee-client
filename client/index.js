@@ -3,7 +3,7 @@ const EventSource = require('eventsource')
 const superagent = require('superagent')
 
 class Client {
-  constructor ({source, target, logger = console}) {
+  constructor ({ source, target, logger = console }) {
     this.source = source
     this.target = target
     this.logger = logger

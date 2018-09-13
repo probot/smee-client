@@ -20,7 +20,7 @@ async function setup () {
     source = await Client.createChannel()
   }
 
-  const client = new Client({source, target})
+  const client = new Client({ source, target })
   client.start()
 }
 

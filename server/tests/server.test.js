@@ -83,7 +83,7 @@ describe('server', () => {
 
   describe('events', () => {
     it('emits events', async (done) => {
-      const payload = {payload: true}
+      const payload = { payload: true }
 
       await request(server).post(channel)
         .set('X-Foo', 'bar')
@@ -101,7 +101,7 @@ describe('server', () => {
     })
 
     it('POST /:channel/redeliver re-emits a payload', async (done) => {
-      const payload = {payload: true}
+      const payload = { payload: true }
 
       await request(server).post(channel + '/redeliver')
         .send(payload)

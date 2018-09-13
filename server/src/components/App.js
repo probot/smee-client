@@ -134,10 +134,10 @@ export default class App extends Component {
             <h1 className="f4">Webhook Deliveries</h1>
             <div className="flex-items-right tooltipped tooltipped-w" aria-label={stateString + ' to event stream'}>
               {this.state.connection
-              ? <PulseIcon
-                style={{fill: '#6cc644'}} />
-              : <AlertIcon
-                style={{fill: 'yellow'}} />
+                ? <PulseIcon
+                  style={{ fill: '#6cc644' }} />
+                : <AlertIcon
+                  style={{ fill: 'yellow' }} />
               }
             </div>
           </div>

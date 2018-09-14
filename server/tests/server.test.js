@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 const createServer = require('../server')
 const request = require('supertest')
 const EventSource = require('eventsource')

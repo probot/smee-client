@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { InfoIcon } from 'react-octicons'
+import Octicon, { Info } from '@githubprimer/octicons-react'
 import hljs from 'highlight.js'
 
 export default class Blank extends Component {
@@ -22,7 +22,7 @@ events.close()`
         <div className="Box p-3 mt-4 mb-6">
           <div className="d-flex flex-items-center mb-2">
             <label htmlFor="url">Webhook Proxy URL</label>
-            <span className="ml-2 tooltipped tooltipped-n text-gray-light" aria-label="Tell your service of choice to send webhook payloads to this URL."><InfoIcon /></span>
+            <span className="ml-2 tooltipped tooltipped-n text-gray-light" aria-label="Tell your service of choice to send webhook payloads to this URL."><Octicon icon={Info} /></span>
           </div>
           <input
             type="text"

@@ -49,9 +49,7 @@
     "react-json-view": "^1.13.2",
     "react-octicons": "^0.2.0",
     "sass-loader": "^7.1.0",
-    "style-loader": "^0.23.0",
-    "webpack": "^4.19.1",
-    "webpack-cli": "^3.1.0"
+    "style-loader": "^0.23.0"
   },
   "devDependencies": {
     "babel-jest": "^21.2.0",
@@ -71,7 +69,9 @@
     "nodemon": "^1.12.1",
     "raf": "^3.4.0",
     "react-test-renderer": "^16.2.0",
-    "supertest": "^3.0.0"
+    "supertest": "^3.0.0",
+    "webpack": "^4.27.1",
+    "webpack-cli": "^3.1.2"
   },
   "engines": {
     "node": "8.9.1"

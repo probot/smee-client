@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Octicon, { Info } from '@githubprimer/octicons-react'
-import hljs from 'highlight.js'
+import CodeExample from './CodeExample'
 
 export default class Blank extends Component {
   render () {
@@ -56,7 +56,7 @@ events.close()`
               $ npm install --save smee-client
             </pre>
             <p>Then:</p>
-            <pre className="js" dangerouslySetInnerHTML={{ __html: hljs.highlight('javascript', code).value }} />
+            <CodeExample />
 
             <h3 className="mt-3">Using Probot's built-in support</h3>
             <pre>

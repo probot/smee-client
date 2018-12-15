@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { object, bool, func } from 'prop-types'
-import moment from 'moment'
 import ReactJson from 'react-json-view'
 import EventIcon from './EventIcon'
 import Octicon, { KebabHorizontal, Clippy, Sync, Pin } from '@githubprimer/octicons-react'
 import EventDescription from './EventDescription'
 import copy from 'copy-to-clipboard'
+import fromNow from 'date-fns/distance_in_words_to_now'
 
 export default class ListItem extends Component {
   static propTypes = {
@@ -57,7 +57,7 @@ export default class ListItem extends Component {
             <EventIcon event={event} action={payload.action} />
           </div>
           <span className="input-monospace">{event}</span>
-          <time className="f6" style={{ marginLeft: 'auto' }}>{moment(item.timestamp).fromNow()}</time>
+          <time className="f6" style={{ marginLeft: 'auto' }}>{fromNow(item.timestamp)}</time>
           <button onClick={this.toggleExpanded} className="ellipsis-expander ml-2"><Octicon icon={KebabHorizontal} height={12} /></button>
         </div>
 

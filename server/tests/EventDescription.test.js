@@ -1,13 +1,11 @@
 import React from 'react'
 import EventDescription from '../src/components/EventDescription'
 import { shallow } from 'enzyme'
-import moment from 'moment-timezone'
 
 describe('<EventDescription />', () => {
   let props
 
   beforeEach(() => {
-    moment.tz.setDefault('UTC')
     props = {
       event: 'issues',
       timestamp: 1513148474751,

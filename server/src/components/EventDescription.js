@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { string, object, number } from 'prop-types'
-import moment from 'moment-timezone'
+import format from 'date-fns/format'
 
 export default class EventDescription extends Component {
   static propTypes = {
@@ -12,7 +12,7 @@ export default class EventDescription extends Component {
   render () {
     const { event, payload, timestamp } = this.props
 
-    const formattedTime = moment(timestamp).format('dddd, MMMM Do YYYY, h:mm:ss a')
+    const formattedTime = format(timestamp, 'dddd, MMMM Do YYYY, h:mm:ss a')
     const onARepo = payload.repository && payload.repository.full_name
     const onRepos = payload.repositories && payload.repositories.every(r => r.full_name)
 

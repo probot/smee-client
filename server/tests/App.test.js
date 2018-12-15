@@ -21,14 +21,19 @@ describe('<App />', () => {
 
     Object.defineProperties(window, {
       localStorage: {
-        value: localStorage
+        value: localStorage,
+        writable: true
       },
       EventSource: {
-        value: EventSource
+        value: EventSource,
+        writable: true
+      },
+      location: {
+        value: {
+          pathname: '/CHANNEL'
+        }
       }
     })
-
-    Object.defineProperty(location, 'pathname', { value: '/CHANNEL' })
 
     console.log = consoleLog = jest.fn()
 

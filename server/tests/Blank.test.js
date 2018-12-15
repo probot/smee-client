@@ -4,7 +4,13 @@ import { shallow } from 'enzyme'
 
 describe('<Blank />', () => {
   beforeEach(() => {
-    Object.defineProperty(location, 'href', { value: 'https:/smee.io/CHANNEL' })
+    Object.defineProperties(window, {
+      location: {
+        value: {
+          href: 'https:/smee.io/CHANNEL'
+        }
+      }
+    })
   })
 
   describe('render', () => {

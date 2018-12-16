@@ -74,7 +74,7 @@
     "webpack-cli": "^3.1.2"
   },
   "engines": {
-    "node": "8.9.1"
+    "node": "10.x.x"
   },
   "jest": {
     "setupFiles": [

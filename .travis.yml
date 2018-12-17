@@ -3,13 +3,10 @@ sudo: false
 language: node_js
 
 node_js:
-  - "8"
+  - "10"
 
 notifications:
   disabled: true
-
-before_install:
-  - npm install -g npm@5
 
 env:
   - TEST_DIR=client

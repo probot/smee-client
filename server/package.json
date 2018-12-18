@@ -82,7 +82,8 @@
     ],
     "testPathIgnorePatterns": [
       "/node_modules/"
-    ]
+    ],
+    "testURL": "https://smee.io/CHANNEL"
   },
   "standard": {
     "env": [

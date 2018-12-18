@@ -4,7 +4,6 @@ const autoprefixer = require('autoprefixer')
 const glob = require('glob-all')
 const PurifyCSSPlugin = require('purifycss-webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const devMode = process.env.NODE_ENV !== 'production'
 
 const browsers = [
   'last 2 versions',
@@ -27,7 +26,7 @@ const cfg = {
   plugins: [
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     // new webpack.optimize.UglifyJsPlugin(),
-    new MiniCssExtractPlugin('[name].min.css')
+    new MiniCssExtractPlugin({ filename: '[name].min.css' })
   ],
   module: {
     rules: [{
@@ -39,7 +38,7 @@ const cfg = {
     }, {
       test: /\.scss$/,
       use: [
-        devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+        MiniCssExtractPlugin.loader,
         'css-loader',
         {
           loader: 'postcss-loader',

@@ -26,6 +26,7 @@
     "connect-sse": "^1.2.0",
     "copy-to-clipboard": "^3.0.8",
     "copy-webpack-plugin": "^4.2.0",
+    "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "css-loader": "^1.0.0",
     "eventsource": "^1.0.5",

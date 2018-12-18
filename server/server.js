@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const EventEmitter = require('events')
 const path = require('path')
 const Raven = require('raven')
+const cors = require('cors')
 
 const KeepAlive = require('./keep-alive')
 
@@ -14,6 +15,10 @@ const log = process.env.NODE_ENV === 'test' ? _ => _ : console.log
 module.exports = (testRoute) => {
   const events = new EventEmitter()
   const app = express()
+  // Allow CORS
+  app.use(cors())
+  // Allow CORS preflight
+  app.options('*', cors())
   const pubFolder = path.join(__dirname, 'public')
 
   // Used for testing route error handling
@@ -70,9 +75,6 @@ module.exports = (testRoute) => {
     // Setup interval to ping every 30 seconds to keep the connection alive
     const keepAlive = new KeepAlive(() => res.json({}, 'ping'), 30 * 1000)
     keepAlive.start()
-
-    // Allow CORS
-    res.setHeader('Access-Control-Allow-Origin', '*')
 
     // Listen for events on this channel
     events.on(channel, send)

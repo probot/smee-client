@@ -8,10 +8,10 @@
   "scripts": {
     "start": "node ./index.js",
     "start-dev": "concurrently \"nodemon --ignore src/ ./index.js\" \"webpack -w\"",
-    "build": "webpack -p",
+    "build": "./node_modules/.bin/webpack -p",
     "test": "jest --coverage && eslint '**/*.js'",
     "test:update": "jest -u",
-    "postinstall": "npm run build"
+    "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "@babel/core": "^7.2.2",

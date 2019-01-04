@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node ./index.js",
     "start-dev": "concurrently \"nodemon --ignore src/ ./index.js\" \"webpack -w\"",
-    "build": "./node_modules/.bin/webpack -p",
+    "build": "webpack -p",
     "test": "jest --coverage && eslint '**/*.js'",
     "test:update": "jest -u",
     "postinstall": "npm run build"
@@ -70,8 +70,8 @@
     "nodemon": "^1.12.1",
     "raf": "^3.4.0",
     "supertest": "^3.0.0",
-    "webpack": "^4.27.1",
-    "webpack-cli": "^3.1.2"
+    "webpack": "^4.28.3",
+    "webpack-cli": "^3.2.0"
   },
   "engines": {
     "node": "10.x.x"

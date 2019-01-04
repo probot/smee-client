@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ListItem from './ListItem'
 import get from 'get-value'
-import { AlertIcon, PulseIcon, SearchIcon, PinIcon } from 'react-octicons'
+import Octicon, { Alert, Pulse, Search, Pin } from '@githubprimer/octicons-react'
 import Blank from './Blank'
 
 export default class App extends Component {
@@ -134,9 +134,9 @@ export default class App extends Component {
             <h1 className="f4">Webhook Deliveries</h1>
             <div className="flex-items-right tooltipped tooltipped-w" aria-label={stateString + ' to event stream'}>
               {this.state.connection
-                ? <PulseIcon
+                ? <Octicon icon={Pulse}
                   style={{ fill: '#6cc644' }} />
-                : <AlertIcon
+                : <Octicon icon={Alert}
                   style={{ fill: 'yellow' }} />
               }
             </div>
@@ -147,7 +147,7 @@ export default class App extends Component {
           <div className="container-md py-3 p-responsive">
             <div className="mb-2">
               <div className="d-flex flex-items-end mb-2">
-                <label htmlFor="search" className="d-flex flex-items-center f6 text-gray"><SearchIcon height={12} width={12} className="mr-1" /> Filter by</label>
+                <label htmlFor="search" className="d-flex flex-items-center f6 text-gray"><Octicon icon={Search} height={12} width={12} className="mr-1" /> Filter by</label>
                 &nbsp;<a className="f6" href="https://github.com/jonschlinkert/get-value" target="_blank" rel="noopener noreferrer">get-value syntax</a>
 
                 <button onClick={this.clear} className="btn btn-sm btn-danger" style={{ marginLeft: 'auto' }}>Clear deliveries</button>
@@ -163,7 +163,7 @@ export default class App extends Component {
             </div>
             {pinnedDeliveries.length > 0 && (
               <React.Fragment>
-                <h6 className="d-flex flex-items-center text-gray mb-1"><PinIcon height={12} width={12} className="mr-1" /> Pinned</h6>
+                <h6 className="d-flex flex-items-center text-gray mb-1"><Octicon icon={Pin} height={12} width={12} className="mr-1" /> Pinned</h6>
                 <ul className="Box list-style-none pl-0 mb-2">
                   {filtered.filter(this.isPinned).map((item, i, arr) => {
                     const id = item['x-github-delivery']

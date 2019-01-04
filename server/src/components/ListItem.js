@@ -3,7 +3,7 @@ import { object, bool, func } from 'prop-types'
 import moment from 'moment'
 import ReactJson from 'react-json-view'
 import EventIcon from './EventIcon'
-import { KebabHorizontalIcon, ClippyIcon, SyncIcon, PinIcon } from 'react-octicons'
+import Octicon, { KebabHorizontal, Clippy, Sync, Pin } from '@githubprimer/octicons-react'
 import EventDescription from './EventDescription'
 import copy from 'copy-to-clipboard'
 
@@ -58,7 +58,7 @@ export default class ListItem extends Component {
           </div>
           <span className="input-monospace">{event}</span>
           <time className="f6" style={{ marginLeft: 'auto' }}>{moment(item.timestamp).fromNow()}</time>
-          <button onClick={this.toggleExpanded} className="ellipsis-expander ml-2"><KebabHorizontalIcon height={12} /></button>
+          <button onClick={this.toggleExpanded} className="ellipsis-expander ml-2"><Octicon icon={KebabHorizontal} height={12} /></button>
         </div>
 
         {expanded && (
@@ -74,19 +74,19 @@ export default class ListItem extends Component {
                   onClick={() => togglePinned(id)}
                   className={`btn btn-sm tooltipped tooltipped-s ${pinned && 'text-blue'}`}
                   aria-label="Pin this delivery"
-                ><PinIcon /></button>
+                ><Octicon icon={Pin} /></button>
                 <button
                   onBlur={() => this.setState({ copied: false })}
                   onClick={this.copy}
                   className="ml-2 btn btn-sm tooltipped tooltipped-s js-copy-btn"
                   aria-label={copied ? 'Copied!' : 'Copy payload to clipboard'}
-                ><ClippyIcon /></button>
+                ><Octicon icon={Clippy} /></button>
                 <button
                   onBlur={() => this.setState({ redelivered: false })}
                   onClick={this.redeliver}
                   className="ml-2 btn btn-sm tooltipped tooltipped-s js-redeliver-btn"
                   aria-label={redelivered ? 'Sent!' : 'Redeliver this payload'}
-                ><SyncIcon /></button>
+                ><Octicon icon={Sync} /></button>
               </div>
             </div>
             <hr className="mt-3" />

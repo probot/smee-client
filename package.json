@@ -1,7 +1,43 @@
 {
-  "private": true,
+  "name": "smee-client",
+  "version": "1.0.2",
+  "description": "Client to proxy webhooks to local host",
+  "main": "index.js",
+  "bin": {
+    "smee": "./bin/smee.js"
+  },
   "scripts": {
-    "postinstall": "npm install --prefix server",
-    "start": "npm start --prefix server"
+    "test": "jest --coverage && standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/probot/smee.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/probot/smee/issues"
+  },
+  "homepage": "https://github.com/probot/smee#readme",
+  "dependencies": {
+    "commander": "^2.12.2",
+    "eventsource": "^1.0.5",
+    "morgan": "^1.9.0",
+    "superagent": "^3.8.3",
+    "validator": "^10.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
+    "jest": "^23.1.0",
+    "nock": "^9.3.3",
+    "standard": "^12.0.1",
+    "supertest": "^3.1.0"
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
   }
 }

@@ -121,6 +121,16 @@ describe('<App />', () => {
       expect(wrapper.state('log').length).toBe(1)
       expect(localStorage.setItem).not.toHaveBeenCalled()
     })
+
+    it('ignores duplicate check when no x-github-delivery header is supplied', () => {
+      const item = { 'body': { value: 'Test body 1' } }
+      const message = { data: JSON.stringify(item) }
+      wrapper.setState({ log: [item] })
+      wrapper.instance().onmessage(message)
+
+      expect(wrapper.state('log').length).toBe(2)
+      expect(localStorage.setItem).toHaveBeenCalled()
+    })
   })
 
   describe('clear', () => {

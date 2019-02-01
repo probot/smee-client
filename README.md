@@ -1,6 +1,6 @@
-# smee-client
-
-Client and CLI for smee.io, a service that delivers webhooks to your local development environment.
+<h3 align="center">smee-client</h3>
+<p align="center">Client and CLI for smee.io, a service that delivers webhooks to your local development environment.</p>
+<p align="center"><a href="https://npmjs.com/package/smee-client"><img src="https://img.shields.io/npm/v/smee-client/latest.svg" alt="NPM"></a> <a href="https://travis-ci.com/probot/smee-client"><img src="https://badgen.now.sh/travis/probot/smee-client" alt="Build Status"></a> <a href="https://codecov.io/gh/probot/smee-client/"><img src="https://badgen.now.sh/codecov/c/github/probot/smee-client" alt="Codecov"></a></p>
 
 ## Installation
 
@@ -37,5 +37,4 @@ const events = smee.start()
 
 // Stop forwarding events
 events.close()
-
 ```

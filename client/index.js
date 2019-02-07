@@ -20,7 +20,7 @@ class Client {
 
     let target = url.parse(this.target, true)
     let mergedQuery = Object.assign(target.query, data.query)
-    target.search = querystring.stringify(mergedquery)
+    target.search = querystring.stringify(mergedQuery)
 
     delete data.query
 

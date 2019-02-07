@@ -7,7 +7,7 @@ const Client = require('..')
 program
   .usage('[options]')
   .option('-u, --url <url>', 'URL of the webhook proxy service. Default: https://smee.io/new')
-  .option('-t, --target <target>', 'URL of the target service the events will forwarded to. Default: http://127.0.0.1:port/path')
+  .option('-t, --target <target>', 'Full URL (including protocol and path) of the target service the events will forwarded to. Default: http://127.0.0.1:PORT/PATH')
   .option('-p, --port <n>', 'Local HTTP server port', process.env.PORT || 3000)
   .option('-P, --path <path>', 'URL path to post proxied requests to`', '/')
   .parse(process.argv)

@@ -48,6 +48,10 @@ module.exports = (testRoute) => {
   })
 
   app.get('/:channel', (req, res, next) => {
+    if (process.env.BANNED_CHANNELS.includes(req.param.channel)) {
+      return res.send(404)
+    }
+
     if (req.accepts('html')) {
       res.sendFile(path.join(pubFolder, 'webhooks.html'))
     } else {

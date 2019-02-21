@@ -61,6 +61,8 @@ module.exports = (testRoute) => {
       next()
     }
   }, sse, (req, res) => {
+    const { channel } = req.params
+
     function send (data) {
       res.json(data)
       keepAlive.reset()
@@ -71,8 +73,6 @@ module.exports = (testRoute) => {
       keepAlive.stop()
       log('Client disconnected', channel, events.listenerCount(channel))
     }
-
-    const channel = req.params.channel
 
     // Setup interval to ping every 30 seconds to keep the connection alive
     const keepAlive = new KeepAlive(() => res.json({}, 'ping'), 30 * 1000)

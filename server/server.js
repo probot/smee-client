@@ -48,11 +48,13 @@ module.exports = (testRoute) => {
   })
 
   app.get('/:channel', (req, res, next) => {
-    if (process.env.BANNED_CHANNELS && process.env.BANNED_CHANNELS === req.params.channel) {
-      return res.send(404)
+    const bannedChannels = process.env.BANNED_CHANNELS && process.env.BANNED_CHANNELS.split(',')
+    if (bannedChannels.includes(req.params.channel)) {
+      return res.send('Channel has been disabled due to too many connections.').status(403)
     }
 
     if (req.accepts('html')) {
+      log('Client connected to web', channel, events.listenerCount(channel))
       res.sendFile(path.join(pubFolder, 'webhooks.html'))
     } else {
       next()
@@ -86,7 +88,7 @@ module.exports = (testRoute) => {
 
     res.json({}, 'ready')
 
-    log('Client connected', channel, events.listenerCount(channel))
+    log('Client connected to sse', channel, events.listenerCount(channel))
   })
 
   app.post('/:channel', (req, res) => {

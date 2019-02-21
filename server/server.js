@@ -48,7 +48,7 @@ module.exports = (testRoute) => {
   })
 
   app.get('/:channel', (req, res, next) => {
-    if (process.env.BANNED_CHANNELS && process.env.BANNED_CHANNELS.includes(req.params.channel)) {
+    if (process.env.BANNED_CHANNELS && process.env.BANNED_CHANNELS === req.params.channel) {
       return res.send(404)
     }
 

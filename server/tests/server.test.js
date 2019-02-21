@@ -83,6 +83,13 @@ describe('server', () => {
       expect(res.status).toBe(200)
       expect(res.text).toMatchSnapshot()
     })
+
+    it('returns a 403 for banned channels', async () => {
+      process.env.BANNED_CHANNELS = 'hello,imbanned,goodbye'
+      const res = await request(server).get(`/imbanned`)
+      expect(res.status).toBe(403)
+      delete process.env.BANNED_CHANNELS
+    })
   })
 
   describe('events', () => {

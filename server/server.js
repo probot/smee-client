@@ -48,12 +48,21 @@ module.exports = (testRoute) => {
   })
 
   app.get('/:channel', (req, res, next) => {
+    const { channel } = req.params
+    const bannedChannels = process.env.BANNED_CHANNELS && process.env.BANNED_CHANNELS.split(',')
+    if (bannedChannels && bannedChannels.includes(channel)) {
+      return res.status(403).send('Channel has been disabled due to too many connections.')
+    }
+
     if (req.accepts('html')) {
+      log('Client connected to web', channel, events.listenerCount(channel))
       res.sendFile(path.join(pubFolder, 'webhooks.html'))
     } else {
       next()
     }
   }, sse, (req, res) => {
+    const { channel } = req.params
+
     function send (data) {
       res.json(data)
       keepAlive.reset()
@@ -64,8 +73,6 @@ module.exports = (testRoute) => {
       keepAlive.stop()
       log('Client disconnected', channel, events.listenerCount(channel))
     }
-
-    const channel = req.params.channel
 
     // Setup interval to ping every 30 seconds to keep the connection alive
     const keepAlive = new KeepAlive(() => res.json({}, 'ping'), 30 * 1000)
@@ -82,7 +89,7 @@ module.exports = (testRoute) => {
 
     res.json({}, 'ready')
 
-    log('Client connected', channel, events.listenerCount(channel))
+    log('Client connected to sse', channel, events.listenerCount(channel))
   })
 
   app.post('/:channel', (req, res) => {

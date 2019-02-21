@@ -48,9 +48,10 @@ module.exports = (testRoute) => {
   })
 
   app.get('/:channel', (req, res, next) => {
+    const { channel } = req.params
     const bannedChannels = process.env.BANNED_CHANNELS && process.env.BANNED_CHANNELS.split(',')
-    if (bannedChannels && bannedChannels.includes(req.params.channel)) {
-      return res.send('Channel has been disabled due to too many connections.').status(403)
+    if (bannedChannels && bannedChannels.includes(channel)) {
+      return res.status(403).send('Channel has been disabled due to too many connections.')
     }
 
     if (req.accepts('html')) {

@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
 const program = require('commander')
+const { version } = require('../package.json')
 
 const Client = require('..')
 
 program
+  .version(version, '-v, --version')
   .usage('[options]')
   .option('-u, --url <url>', 'URL of the webhook proxy service. Default: https://smee.io/new')
   .option('-t, --target <target>', 'Full URL (including protocol and path) of the target service the events will forwarded to. Default: http://127.0.0.1:PORT/PATH')

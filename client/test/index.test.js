@@ -12,19 +12,19 @@ const logger = {
 }
 
 describe('client', () => {
-  let proxy, host, client, channel
+  let path, host, client, channel
 
   const targetUrl = 'http://example.com/foo/bar'
 
   beforeEach((done) => {
-    proxy = createServer().listen(0, () => {
-      host = `http://127.0.0.1:${proxy.address().port}`
+    path = createServer().listen(0, () => {
+      host = `http://127.0.0.1:${path.address().port}`
       done()
     })
   })
 
   afterEach(() => {
-    proxy && proxy.close()
+    path && path.close()
     client && client.close()
   })
 
@@ -65,7 +65,7 @@ describe('client', () => {
       })
 
       // Send request to proxy server
-      await request(proxy).post(channel).send(payload).expect(200)
+      await request(path).post(channel).send(payload).expect(200)
     })
   })
 
@@ -78,6 +78,20 @@ describe('client', () => {
       const channel = await Client.createChannel()
       expect(channel).toEqual('https://smee.io/abc123')
       expect(req.isDone()).toBe(true)
+    })
+  })
+
+  describe('using proxy', () => {
+    test('Creates event source if proxy is specified', async () => {
+      channel = '/fake-channel'
+      eventSource = client = new Client({
+        source: `${host}${channel}`,
+        target: targetUrl,
+        proxy: 'hello:123@proxy.com',
+        logger
+      }).start()
+      
+      // Somehow check if eventsource has the proxy defined?
     })
   })
 })

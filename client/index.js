@@ -3,10 +3,11 @@ const EventSource = require('eventsource')
 const superagent = require('superagent')
 
 class Client {
-  constructor ({ source, target, logger = console }) {
+  constructor ({ source, target, proxy, logger = console }) {
     this.source = source
     this.target = target
     this.logger = logger
+    this.proxy = proxy
 
     if (!validator.isURL(this.source)) {
       throw new Error('The provided URL is invalid.')
@@ -42,7 +43,7 @@ class Client {
   }
 
   start () {
-    const events = new EventSource(this.source)
+    const events = this.proxy ? new EventSource(this.source, { proxy: this.proxy }) : new EventSource(this.source)
 
     // Reconnect immediately
     events.reconnectInterval = 0
@@ -53,7 +54,6 @@ class Client {
 
     this.logger.info(`Forwarding ${this.source} to ${this.target}`)
     this.events = events
-
     return events
   }
 }

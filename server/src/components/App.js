@@ -21,15 +21,18 @@ export default class App extends Component {
       log: ref ? JSON.parse(ref) : [],
       pinnedDeliveries: pinnedRef ? JSON.parse(pinnedRef) : [],
       filter: '',
-      connection: false
+      connection: false,
+      loading: true
     }
 
     this.togglePinned = this.togglePinned.bind(this)
     this.isPinned = this.isPinned.bind(this)
+    this.fetchCachedItems = this.fetchCachedItems.bind(this)
   }
 
   componentDidMount () {
     this.setupEventSource()
+    this.fetchCachedItems()
   }
 
   setupEventSource () {
@@ -39,6 +42,20 @@ export default class App extends Component {
     this.events.onopen = this.onopen.bind(this)
     this.events.onmessage = this.onmessage.bind(this)
     this.events.onerror = this.onerror.bind(this)
+  }
+
+  fetchCachedItems () {
+    fetch(`/${this.channel}/cache`)
+      .then(res => res.json())
+      .then(items => {
+        const idProp = 'x-github-delivery'
+        const newItems = items.filter(item => {
+          const id = item[idProp]
+          return this.state.log.every(log => log[idProp] !== id)
+        })
+        console.log(newItems)
+        this.setState({ log: [...this.state.log, ...newItems], loading: false })
+      })
   }
 
   onopen (data) {
@@ -112,7 +129,9 @@ export default class App extends Component {
   }
 
   render () {
-    const { log, filter, pinnedDeliveries } = this.state
+    const { loading, log, filter, pinnedDeliveries } = this.state
+    if (loading) return null
+
     let filtered = log
     if (filter) {
       filtered = log.filter(l => {

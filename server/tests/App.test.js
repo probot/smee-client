@@ -123,7 +123,7 @@ describe('<App />', () => {
     })
 
     it('ignores duplicate check when no x-github-delivery header is supplied', () => {
-      const item = { 'body': { value: 'Test body 1' } }
+      const item = { body: { value: 'Test body 1' }, timestamp: Date.now() }
       const message = { data: JSON.stringify(item) }
       wrapper.setState({ log: [item] })
       wrapper.instance().onmessage(message)

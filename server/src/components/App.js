@@ -166,7 +166,7 @@ export default class App extends Component {
                 <h6 className="d-flex flex-items-center text-gray mb-1"><Octicon icon={Pin} height={12} width={12} className="mr-1" /> Pinned</h6>
                 <ul className="Box list-style-none pl-0 mb-2">
                   {filtered.filter(this.isPinned).map((item, i, arr) => {
-                    const id = item['x-github-delivery']
+                    const id = item['x-github-delivery'] || item.timestamp
                     return <ListItem key={id} pinned togglePinned={this.togglePinned} item={item} last={i === arr.length - 1} />
                   })}
                 </ul>

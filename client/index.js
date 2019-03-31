@@ -1,6 +1,8 @@
 const validator = require('validator')
 const EventSource = require('eventsource')
 const superagent = require('superagent')
+const url = require('url')
+const querystring = require('querystring')
 
 class Client {
   constructor ({ source, target, logger = console }) {
@@ -16,7 +18,13 @@ class Client {
   onmessage (msg) {
     const data = JSON.parse(msg.data)
 
-    const req = superagent.post(this.target).send(data.body)
+    const target = url.parse(this.target, true)
+    const mergedQuery = Object.assign(target.query, data.query)
+    target.search = querystring.stringify(mergedQuery)
+
+    delete data.query
+
+    const req = superagent.post(target).send(data.body)
 
     delete data.body
 

@@ -67,6 +67,25 @@ describe('client', () => {
       // Send request to proxy server
       await request(proxy).post(channel).send(payload).expect(200)
     })
+
+    test('POST /:channel forwards query string to target url', async (done) => {
+      const queryParams = {
+        param1: 'testData1',
+        param2: 'testData2'
+      }
+
+      // Expect request to target
+      const forward = nock('http://example.com').post('/foo/bar').query(queryParams).reply(200)
+
+      // Test is done when this is called
+      client.addEventListener('message', (msg) => {
+        expect(forward.isDone()).toBe(true)
+        done()
+      })
+
+      // Send request to proxy server with query string
+      await request(proxy).post(channel).query(queryParams).send()
+    })
   })
 
   describe('createChannel', () => {

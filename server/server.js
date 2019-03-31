@@ -96,6 +96,7 @@ module.exports = (testRoute) => {
     events.emit(req.params.channel, {
       ...req.headers,
       body: req.body,
+      query: req.query,
       timestamp: Date.now()
     })
     res.status(200).end()

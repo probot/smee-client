@@ -1,5 +1,8 @@
 const Redis = require('ioredis')
 
+// Sixty seconds * 10 = 10 minutes
+const KEY_EXPIRY = 60 * 10
+
 module.exports = class Cache {
   constructor () {
     this.redis = new Redis(process.env.REDIS_URL || { host: 'localhost', port: 6379 })
@@ -7,7 +10,7 @@ module.exports = class Cache {
 
   async setForChannel (channel, id, payload) {
     const key = `${channel}:${id}`
-    return this.redis.set(key, JSON.stringify(payload), 'ex', '10')
+    return this.redis.set(key, JSON.stringify(payload), 'EX', KEY_EXPIRY)
   }
 
   async getAllForChannel (channel) {

@@ -95,16 +95,17 @@ module.exports = (testRoute) => {
   })
 
   app.post('/:channel', async (req, res) => {
-    const timestamp = Date.now()
-    events.emit(req.params.channel, {
+    const payload = {
       ...req.headers,
       body: req.body,
-      timestamp
-    })
+      timestamp: Date.now()
+    }
 
-    const id = req.headers['x-github-delivery'] || req.headers['X-GitHub-Delivery'] || timestamp
+    events.emit(req.params.channel, payload)
     res.status(200).end()
-    cache.setForChannel(req.params.channel, id, req.body)
+
+    const id = req.headers['x-github-delivery'] || req.headers['X-GitHub-Delivery'] || payload.timestamp
+    cache.setForChannel(req.params.channel, id, payload)
   })
 
   // Resend payload via the event emitter

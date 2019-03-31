@@ -37,6 +37,10 @@ describe('<App />', () => {
 
     console.log = consoleLog = jest.fn()
 
+    window.fetch = jest.fn(() => Promise.resolve({
+      json: jest.fn(() => Promise.resolve([]))
+    }))
+
     wrapper = shallow(<App />)
   })
 

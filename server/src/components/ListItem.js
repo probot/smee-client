@@ -48,7 +48,7 @@ export default class ListItem extends Component {
 
     const event = item['x-github-event']
     const payload = item.body
-    const id = item['x-github-delivery']
+    const id = item['x-github-delivery'] || item.timestamp
 
     return (
       <li className={`p-3 ${last ? '' : 'border-bottom'}`}>

@@ -68,7 +68,7 @@ export default class App extends Component {
 
     // Prevent duplicates in the case of redelivered payloads
     const idProp = 'x-github-delivery'
-    if (this.state.log.findIndex(l => l[idProp] === json[idProp]) === -1) {
+    if (json[idProp] === undefined || this.state.log.findIndex(l => l[idProp] === json[idProp]) === -1) {
       this.setState({
         log: [json, ...this.state.log]
       }, () => {
@@ -166,7 +166,7 @@ export default class App extends Component {
                 <h6 className="d-flex flex-items-center text-gray mb-1"><Octicon icon={Pin} height={12} width={12} className="mr-1" /> Pinned</h6>
                 <ul className="Box list-style-none pl-0 mb-2">
                   {filtered.filter(this.isPinned).map((item, i, arr) => {
-                    const id = item['x-github-delivery']
+                    const id = item['x-github-delivery'] || item.timestamp
                     return <ListItem key={id} pinned togglePinned={this.togglePinned} item={item} last={i === arr.length - 1} />
                   })}
                 </ul>
@@ -175,7 +175,7 @@ export default class App extends Component {
             <h6 className="d-flex flex-items-center text-gray mb-1">All</h6>
             <ul className="Box list-style-none pl-0">
               {filtered.filter(item => !this.isPinned(item)).map((item, i, arr) => {
-                const id = item['x-github-delivery']
+                const id = item['x-github-delivery'] || item.timestamp
                 return <ListItem key={id} pinned={false} togglePinned={this.togglePinned} item={item} last={i === arr.length - 1} />
               })}
             </ul>

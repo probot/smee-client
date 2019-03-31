@@ -25,6 +25,8 @@ module.exports = class Cache {
         const values = await Promise.all(keys.map(async key => JSON.parse(await this.redis.get(key))))
         return resolve(values)
       })
+
+      stream.on('error', reject)
     })
   }
 }

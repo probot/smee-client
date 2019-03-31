@@ -6,6 +6,7 @@ const EventEmitter = require('events')
 const path = require('path')
 const Raven = require('raven')
 
+const Cache = require('./redis')
 const KeepAlive = require('./keep-alive')
 
 // Tiny logger to prevent logs in tests
@@ -15,6 +16,7 @@ module.exports = (testRoute) => {
   const events = new EventEmitter()
   const app = express()
   const pubFolder = path.join(__dirname, 'public')
+  const cache = new Cache()
 
   // Used for testing route error handling
   if (testRoute) testRoute(app)
@@ -92,19 +94,29 @@ module.exports = (testRoute) => {
     log('Client connected to sse', channel, events.listenerCount(channel))
   })
 
-  app.post('/:channel', (req, res) => {
+  app.post('/:channel', async (req, res) => {
+    const timestamp = Date.now()
     events.emit(req.params.channel, {
       ...req.headers,
       body: req.body,
-      timestamp: Date.now()
+      timestamp
     })
+
+    const id = req.headers['x-github-delivery'] || req.headers['X-GitHub-Delivery'] || timestamp
     res.status(200).end()
+    cache.setForChannel(req.params.channel, id, req.body)
   })
 
   // Resend payload via the event emitter
   app.post('/:channel/redeliver', (req, res) => {
     events.emit(req.params.channel, req.body)
     res.status(200).end()
+  })
+
+  // Get all payloads stored in Redis for a given channel
+  app.get('/:channel/cache', async (req, res) => {
+    const values = await cache.getAllForChannel(req.params.channel)
+    res.json(values)
   })
 
   if (process.env.SENTRY_DSN) {

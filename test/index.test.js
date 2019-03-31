@@ -1,4 +1,5 @@
 const Client = require('..')
+const nock = require('nock')
 
 describe('client', () => {
   describe('createChannel', () => {

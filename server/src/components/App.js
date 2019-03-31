@@ -53,8 +53,15 @@ export default class App extends Component {
           const id = item[idProp]
           return this.state.log.every(log => log[idProp] !== id)
         })
-        console.log(newItems)
-        this.setState({ log: [...this.state.log, ...newItems], loading: false })
+
+        const withLocalStorage = [...this.state.log, ...newItems]
+        const sortedLog = withLocalStorage.sort((a, b) => {
+          if (a.timestamp > b.timestamp) return 1
+          if (a.timestamp < b.timestamp) return -1
+          return 0
+        })
+
+        this.setState({ log: sortedLog, loading: false })
       })
   }
 

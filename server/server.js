@@ -124,5 +124,6 @@ module.exports = (testRoute) => {
     app.use(Raven.errorHandler())
   }
 
+  app.set('cache', cache)
   return app
 }

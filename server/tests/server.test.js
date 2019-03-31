@@ -127,4 +127,14 @@ describe('server', () => {
       })
     })
   })
+
+  it('GET /:channel/cache returns an array of cached payloads', async () => {
+    const res = await request(server).get(channel + '/cache')
+    expect(Array.isArray(res.body)).toBe(true)
+  })
+
+  afterEach((done) => {
+    app.get('cache').redis.disconnect()
+    done()
+  })
 })

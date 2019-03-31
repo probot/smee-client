@@ -7,7 +7,7 @@ module.exports = class Cache {
 
   async setForChannel (channel, id, payload) {
     const key = `${channel}:${id}`
-    return this.redis.set(key, JSON.stringify(payload))
+    return this.redis.set(key, JSON.stringify(payload), 'ex', '10')
   }
 
   async getAllForChannel (channel) {

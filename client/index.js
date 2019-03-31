@@ -19,7 +19,7 @@ class Client {
     const data = JSON.parse(msg.data)
 
     let target = url.parse(this.target, true)
-    let mergedQuery = Object.assign(target.query, data.query)
+    const mergedQuery = Object.assign(target.query, data.query)
     target.search = querystring.stringify(mergedQuery)
 
     delete data.query

@@ -18,7 +18,7 @@ class Client {
   onmessage (msg) {
     const data = JSON.parse(msg.data)
 
-    let target = url.parse(this.target, true)
+    const target = url.parse(this.target, true)
     const mergedQuery = Object.assign(target.query, data.query)
     target.search = querystring.stringify(mergedQuery)
 

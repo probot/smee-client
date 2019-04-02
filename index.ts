@@ -1,11 +1,17 @@
-const validator = require('validator')
-const EventSource = require('eventsource')
-const superagent = require('superagent')
-const url = require('url')
-const querystring = require('querystring')
+import validator = require('validator')
+import EventSource = require('eventsource')
+import superagent = require('superagent')
+import url = require('url')
+import querystring = require('querystring')
 
 class Client {
-  constructor ({ source, target, logger = console }) {
+  source: string;
+  target: string;
+  logger: Console;
+  events!: EventSource;
+  static createChannel: () => Promise<superagent.SuperAgentRequest>
+
+  constructor ({ source, target, logger = console }: { source: string, target: string, logger?: Console }) {
     this.source = source
     this.target = target
     this.logger = logger
@@ -15,7 +21,7 @@ class Client {
     }
   }
 
-  onmessage (msg) {
+  onmessage (msg: any) {
     const data = JSON.parse(msg.data)
 
     const target = url.parse(this.target, true)
@@ -53,7 +59,7 @@ class Client {
     const events = new EventSource(this.source);
 
     // Reconnect immediately
-    events.reconnectInterval = 0 // This isn't a valid property of EventSource
+    (events as any).reconnectInterval = 0 // This isn't a valid property of EventSource
 
     events.addEventListener('message', this.onmessage.bind(this))
     events.addEventListener('open', this.onopen.bind(this))

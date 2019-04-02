@@ -24,7 +24,7 @@ class Client {
 
     delete data.query
 
-    const req = superagent.post(target).send(data.body)
+    const req = superagent.post(url.format(target)).send(data.body)
 
     delete data.body
 
@@ -36,7 +36,7 @@ class Client {
       if (err) {
         this.logger.error(err)
       } else {
-        this.logger.info(`${req.method} ${req.url} - ${res.statusCode}`)
+        this.logger.info(`${req.method} ${req.url} - ${res.status}`)
       }
     })
   }
@@ -45,15 +45,15 @@ class Client {
     this.logger.info('Connected', this.events.url)
   }
 
-  onerror (err) {
+  onerror (err: any) {
     this.logger.error(err)
   }
 
   start () {
-    const events = new EventSource(this.source)
+    const events = new EventSource(this.source);
 
     // Reconnect immediately
-    events.reconnectInterval = 0
+    events.reconnectInterval = 0 // This isn't a valid property of EventSource
 
     events.addEventListener('message', this.onmessage.bind(this))
     events.addEventListener('open', this.onopen.bind(this))
@@ -67,9 +67,9 @@ class Client {
 }
 
 Client.createChannel = async () => {
-  return superagent.head('https://smee.io/new').redirects(0).catch((err, res) => {
+  return superagent.head('https://smee.io/new').redirects(0).catch((err) => {
     return err.response.headers.location
   })
 }
 
-module.exports = Client
+export = Client

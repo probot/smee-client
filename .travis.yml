@@ -8,20 +8,14 @@ node_js:
 notifications:
   disabled: true
 
-env:
-  - TEST_DIR=client
-  - TEST_DIR=server
-
 install:
   - npm install -g codecov
-  - npm install --prefix client
-  - npm install --prefix server
+  - npm install
 
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
 
 script:
-  - cd $TEST_DIR
   - npm test
   - codecov

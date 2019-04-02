@@ -1,31 +1,42 @@
-# smee &middot; [![Build Status](https://img.shields.io/travis/probot/smee/master.svg)](https://travis-ci.org/probot/smee) [![Codecov](https://img.shields.io/codecov/c/github/probot/smee.svg)](https://codecov.io/gh/probot/smee/)
+<h2 align="center">smee-client</h2>
+<p align="center">Client and CLI for smee.io, a service that delivers webhooks to your local development environment.</p>
+<p align="center"><a href="https://npmjs.com/package/smee-client"><img src="https://img.shields.io/npm/v/smee-client/latest.svg" alt="NPM"></a> <a href="https://travis-ci.com/probot/smee-client"><img src="https://badgen.now.sh/travis/probot/smee-client" alt="Build Status"></a> <a href="https://codecov.io/gh/probot/smee-client/"><img src="https://badgen.now.sh/codecov/c/github/probot/smee-client" alt="Codecov"></a></p>
 
-**smee** is a web application that receives payloads then sends them, via the [EventSource](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) API, to other clients.
+<p align="center"><a href="https://github.com/probot/smee.io">Looking for <strong>probot/smee.io</strong>?</a></p>
 
-## How it works
+## Installation
 
-1. Go to https://smee.io/new, which will redirect you to a randomly generated channel. You must be using a browser that supports [Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events).
-
-1. Use that new page's URL as your App's Webhook URL
-
-1. Use the [client](./client) to proxy events and send them to a path on your local device, or set it as your Probot App's `WEBHOOK_PROXY_URL` environment variable.
-
-1. Watch events come in to the web UI
-
-1. Profit!
-
-## Motivation
-
-One of the most cumbersome parts of building a GitHub App with [Probot](https://probot.github.io) is dealing with webhook deliveries. When working locally, for your app to receive webhooks you'd need to expose it to the internet - that's where we've used [localtunnel](https://localtunnel.me). However, it's not very reliable or fast and is more than many apps need to simply collect webhook events.
-
-This also gave us a way to build our own UI around the needs of a Probot App. Together with the GitHub App UI, we now have a better way to get the full picture of what goes on in an app in development.
-
-## Setup
+Install the client with:
 
 ```
-# Install dependencies
-npm install
+$ npm install -g smee-client
+```
 
-# Run the server
-npm start
+## Usage
+
+### CLI
+
+The `smee` command will forward webhooks from smee.io to your local development environment.
+
+```
+$ smee
+```
+
+Run `smee --help` for usage.
+
+### Node Client
+
+```js
+const SmeeClient = require('smee-client')
+
+const smee = new SmeeClient({
+  source: 'https://smee.io/abc123',
+  target: 'http://localhost:3000/events',
+  logger: console
+})
+
+const events = smee.start()
+
+// Stop forwarding events
+events.close()
 ```

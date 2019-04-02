@@ -9,7 +9,6 @@ class Client {
   target: string;
   logger: Console;
   events!: EventSource;
-  static createChannel: () => Promise<superagent.SuperAgentRequest>
 
   constructor ({ source, target, logger = console }: { source: string, target: string, logger?: Console }) {
     this.source = source
@@ -19,6 +18,12 @@ class Client {
     if (!validator.isURL(this.source)) {
       throw new Error('The provided URL is invalid.')
     }
+  }
+
+  static async createChannel () {
+    return superagent.head('https://smee.io/new').redirects(0).catch((err) => {
+      return err.response.headers.location
+    })
   }
 
   onmessage (msg: any) {
@@ -70,12 +75,6 @@ class Client {
 
     return events
   }
-}
-
-Client.createChannel = async () => {
-  return superagent.head('https://smee.io/new').redirects(0).catch((err) => {
-    return err.response.headers.location
-  })
 }
 
 export = Client

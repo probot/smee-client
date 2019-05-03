@@ -5,9 +5,10 @@ const url = require('url')
 const querystring = require('querystring')
 
 class Client {
-  constructor ({ source, target, logger = console }) {
+  constructor ({ source, target, headers, logger = console }) {
     this.source = source
     this.target = target
+    this.headers = headers
     this.logger = logger
 
     if (!validator.isURL(this.source)) {
@@ -24,7 +25,7 @@ class Client {
 
     delete data.query
 
-    const req = superagent.post(target).send(data.body)
+    const req = superagent.post(target).set(this.headers).send(data.body)
 
     delete data.body
 

@@ -22,6 +22,7 @@
   "dependencies": {
     "commander": "^2.19.0",
     "eventsource": "^1.0.7",
+    "log-timestamp": "^0.3.0",
     "morgan": "^1.9.1",
     "superagent": "^5.0.2",
     "validator": "^10.11.0"

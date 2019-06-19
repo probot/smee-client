@@ -4,6 +4,9 @@ const superagent = require('superagent')
 const url = require('url')
 const querystring = require('querystring')
 
+// add timestamps in front of log messages in UTC format
+require('log-timestamp');
+
 class Client {
   constructor ({ source, target, proxy, logger = console }) {
     this.source = source
@@ -18,6 +21,8 @@ class Client {
 
   onmessage (msg) {
     const data = JSON.parse(msg.data)
+	var payload = JSON.stringify(data.body)
+    this.logger.info(`Webhook payload received: ${payload}`) 
 
     const target = url.parse(this.target, true)
     const mergedQuery = Object.assign(target.query, data.query)
@@ -61,7 +66,7 @@ class Client {
     events.addEventListener('message', this.onmessage.bind(this))
     events.addEventListener('open', this.onopen.bind(this))
     events.addEventListener('error', this.onerror.bind(this))
-
+    this.logger.info (`kuku`)
     this.logger.info(`Forwarding ${this.source} to ${this.target}`)
     this.events = events
 

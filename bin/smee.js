@@ -12,6 +12,7 @@ program
   .option('-t, --target <target>', 'Full URL (including protocol and path) of the target service the events will forwarded to. Default: http://127.0.0.1:PORT/PATH')
   .option('-p, --port <n>', 'Local HTTP server port', process.env.PORT || 3000)
   .option('-P, --path <path>', 'URL path to post proxied requests to`', '/')
+  .option('-pr, --proxy <proxy>', 'URL to proxy (typically useful behind a corporate firewall)')
   .parse(process.argv)
 
 let target
@@ -28,7 +29,8 @@ async function setup () {
     source = await Client.createChannel()
   }
 
-  const client = new Client({ source, target })
+  const proxy = program.proxy
+  const client = new Client({ source, target, proxy })
   client.start()
 }
 

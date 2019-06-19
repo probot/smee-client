@@ -5,10 +5,11 @@ const url = require('url')
 const querystring = require('querystring')
 
 class Client {
-  constructor ({ source, target, logger = console }) {
+  constructor ({ source, target, proxy, logger = console }) {
     this.source = source
     this.target = target
     this.logger = logger
+	this.proxy = proxy
 
     if (!validator.isURL(this.source)) {
       throw new Error('The provided URL is invalid.')
@@ -50,7 +51,9 @@ class Client {
   }
 
   start () {
-    const events = new EventSource(this.source)
+	var eventSourceInitDict = {https: {rejectUnauthorized: false}};  
+  this.logger.info(`source ${this.source}`)
+  const events = this.proxy ? new EventSource(this.source, {https: {proxy: this.proxy, rejectUnauthorized: false} } ) : new EventSource(this.source)
 
     // Reconnect immediately
     events.reconnectInterval = 0

@@ -66,7 +66,6 @@ class Client {
     events.addEventListener('message', this.onmessage.bind(this))
     events.addEventListener('open', this.onopen.bind(this))
     events.addEventListener('error', this.onerror.bind(this))
-    this.logger.info (`kuku`)
     this.logger.info(`Forwarding ${this.source} to ${this.target}`)
     this.events = events
 

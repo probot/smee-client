@@ -23,7 +23,7 @@ class Client {
     const data = JSON.parse(msg.data)
 	var payload = JSON.stringify(data.body)
 	var remoteAdd = JSON.stringify(msg.origin)
-    this.logger.info(`Webhook payload received from ${remoteAdd}: ${payload}`) 
+    this.logger.info(`[UTC] Webhook payload received from ${remoteAdd}: ${payload}`) 
 
     const target = url.parse(this.target, true)
     const mergedQuery = Object.assign(target.query, data.query)
@@ -43,13 +43,13 @@ class Client {
       if (err) {
         this.logger.error(err)
       } else {
-        this.logger.info(`${req.method} ${req.url} - ${res.statusCode}`)
+        this.logger.info(`[UTC] ${req.method} ${req.url} - ${res.statusCode}`)
       }
     })
   }
 
   onopen () {
-    this.logger.info('Connected', this.events.url)
+    this.logger.info('[UTC] Connected', this.events.url)
   }
 
   onerror (err) {
@@ -58,7 +58,7 @@ class Client {
 
   start () {
 	var eventSourceInitDict = {https: {rejectUnauthorized: false}};  
-  this.logger.info(`source ${this.source}`)
+  this.logger.info(`[UTC] source ${this.source}`)
   const events = this.proxy ? new EventSource(this.source, {https: {proxy: this.proxy, rejectUnauthorized: false} } ) : new EventSource(this.source)
 
     // Reconnect immediately
@@ -67,7 +67,7 @@ class Client {
     events.addEventListener('message', this.onmessage.bind(this))
     events.addEventListener('open', this.onopen.bind(this))
     events.addEventListener('error', this.onerror.bind(this))
-    this.logger.info(`Forwarding ${this.source} to ${this.target}`)
+    this.logger.info(`[UTC] Forwarding ${this.source} to ${this.target}`)
     this.events = events
 
     return events

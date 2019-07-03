@@ -22,7 +22,8 @@ class Client {
   onmessage (msg) {
     const data = JSON.parse(msg.data)
 	var payload = JSON.stringify(data.body)
-    this.logger.info(`Webhook payload received: ${payload}`) 
+	var remoteAdd = JSON.stringify(msg.origin)
+    this.logger.info(`Webhook payload received from ${remoteAdd}: ${payload}`) 
 
     const target = url.parse(this.target, true)
     const mergedQuery = Object.assign(target.query, data.query)

@@ -57,10 +57,10 @@ class Client {
   }
 
   start () {
-	var eventSourceInitDict = {https: {rejectUnauthorized: false}};  
-  this.logger.info(`[UTC] source ${this.source}`)
-  const events = this.proxy ? new EventSource(this.source, {https: {proxy: this.proxy, rejectUnauthorized: false} } ) : new EventSource(this.source)
-
+	// Suport working behind corporate proxy, uses enviroment variable http_proxy, https_proxy
+    require('global-tunnel-ng').initialize()
+    this.logger.info(`[UTC] source ${this.source}`)
+    const events = new EventSource(this.source)
     // Reconnect immediately
     events.reconnectInterval = 0
 

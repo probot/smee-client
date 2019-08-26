@@ -31,6 +31,7 @@ async function setup () {
 
   const proxy = program.proxy
   const client = new Client({ source, target, proxy })
+  
   client.start()
 }
 

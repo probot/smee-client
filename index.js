@@ -8,11 +8,10 @@ const querystring = require('querystring')
 require('log-timestamp');
 
 class Client {
-  constructor ({ source, target, proxy, logger = console }) {
+  constructor ({ source, target, logger = console }) {
     this.source = source
     this.target = target
     this.logger = logger
-	this.proxy = proxy
 
     if (!validator.isURL(this.source)) {
       throw new Error('The provided URL is invalid.')

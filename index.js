@@ -55,9 +55,18 @@ class Client {
     this.logger.error(err)
   }
 
-  start () {
-	// Suport working behind corporate proxy, uses enviroment variable http_proxy, https_proxy
-    require('global-tunnel-ng').initialize()
+  start () {	
+	// Suport working behind corporate proxy
+    const MAJOR_NODEJS_VERSION = parseInt(process.version.slice(1).split('.')[0], 10);
+
+    if (MAJOR_NODEJS_VERSION >= 10) {
+  // `global-agent` works with Node.js v10 and above. Proxy env should be defined "export GLOBAL_AGENT_HTTP_PROXY=http://127.0.0.1:8080"
+      require('global-agent').bootstrap()
+    } else {
+  // `global-tunnel-ng` works only with Node.js v10 and below. Uses npm proxy settings
+      require('global-tunnel-ng').initialize()
+    }	
+	
     this.logger.info(`[UTC] source ${this.source}`)
     const events = new EventSource(this.source)
     // Reconnect immediately

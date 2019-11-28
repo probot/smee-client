@@ -29,7 +29,7 @@ class Client {
     delete data.body
 
     Object.keys(data).forEach(key => {
-      if (key != 'host') {
+      if (key !== 'host') {
         req.set(key, data[key])
       }
     })

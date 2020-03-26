@@ -50,7 +50,17 @@ class Client {
   }
 
   start () {
-    const events = new EventSource(this.source)
+    var reject = false;
+    if(process.env.NODE_TLS_REJECT_UNAUTHORIZED)
+    {
+      reject = true;
+    }
+    else
+    {
+      reject = true;
+    }
+
+    const events = new EventSource(this.source,{rejectUnauthorized: reject})
 
     // Reconnect immediately
     events.reconnectInterval = 0

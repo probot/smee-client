@@ -26,11 +26,15 @@ class Client {
 
     const req = superagent.post(target).send(data.body)
 
+    const data_len = JSON.stringify(data.body).length
+
     delete data.body
 
     Object.keys(data).forEach(key => {
       req.set(key, data[key])
     })
+
+    req.set('content-length', `${data_len}`)
 
     req.end((err, res) => {
       if (err) {

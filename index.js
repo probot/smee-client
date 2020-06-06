@@ -20,13 +20,19 @@ class Client {
 
     const target = url.parse(this.target, true)
     const mergedQuery = Object.assign(target.query, data.query)
+    var req
     target.search = querystring.stringify(mergedQuery)
 
     delete data.query
 
-    const req = superagent.post(target).send(data.body)
-
-    delete data.body
+    if ('rawdata' in data) {
+      delete data.body
+      req = superagent.post(target).send(data.rawdata)
+      delete data.rawdata
+    } else {
+      req = superagent.post(target).send(data.body)
+      delete data.body
+    }
 
     Object.keys(data).forEach(key => {
       req.set(key, data[key])

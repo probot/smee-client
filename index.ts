@@ -4,16 +4,24 @@ import superagent = require('superagent')
 import url = require('url')
 import querystring = require('querystring')
 
+type Severity = 'info' | 'error'
+
+interface Options {
+  source: string
+  target: string
+  logger?: Pick<Console, Severity>
+}
+
 class Client {
   source: string;
   target: string;
-  logger: Console;
+  logger: Pick<Console, Severity>;
   events!: EventSource;
 
-  constructor ({ source, target, logger = console }: { source: string, target: string, logger?: Console }) {
+  constructor ({ source, target, logger = console }: Options) {
     this.source = source
     this.target = target
-    this.logger = logger
+    this.logger = logger!
 
     if (!validator.isURL(this.source)) {
       throw new Error('The provided URL is invalid.')

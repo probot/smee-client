@@ -6,20 +6,19 @@
   "bin": {
     "smee": "./bin/smee.js"
   },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "bin",
+    "lib"
+  ],
   "scripts": {
     "test": "jest --coverage && standard",
     "build": "tsc -p tsconfig.json"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/probot/smee.git"
-  },
+  "repository": "https://github.com/probot/smee",
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/probot/smee/issues"
-  },
-  "homepage": "https://github.com/probot/smee#readme",
   "dependencies": {
     "commander": "^2.19.0",
     "eventsource": "^1.0.7",

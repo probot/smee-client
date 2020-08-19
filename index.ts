@@ -1,21 +1,40 @@
-const validator = require('validator')
-const EventSource = require('eventsource')
-const superagent = require('superagent')
-const url = require('url')
-const querystring = require('querystring')
+import validator = require('validator')
+import EventSource = require('eventsource')
+import superagent = require('superagent')
+import url = require('url')
+import querystring = require('querystring')
+
+type Severity = 'info' | 'error'
+
+interface Options {
+  source: string
+  target: string
+  logger?: Pick<Console, Severity>
+}
 
 class Client {
-  constructor ({ source, target, logger = console }) {
+  source: string;
+  target: string;
+  logger: Pick<Console, Severity>;
+  events!: EventSource;
+
+  constructor ({ source, target, logger = console }: Options) {
     this.source = source
     this.target = target
-    this.logger = logger
+    this.logger = logger!
 
     if (!validator.isURL(this.source)) {
       throw new Error('The provided URL is invalid.')
     }
   }
 
-  onmessage (msg) {
+  static async createChannel () {
+    return superagent.head('https://smee.io/new').redirects(0).catch((err) => {
+      return err.response.headers.location
+    })
+  }
+
+  onmessage (msg: any) {
     const data = JSON.parse(msg.data)
 
     const target = url.parse(this.target, true)
@@ -24,7 +43,7 @@ class Client {
 
     delete data.query
 
-    const req = superagent.post(target).send(data.body)
+    const req = superagent.post(url.format(target)).send(data.body)
 
     delete data.body
 
@@ -36,7 +55,7 @@ class Client {
       if (err) {
         this.logger.error(err)
       } else {
-        this.logger.info(`${req.method} ${req.url} - ${res.statusCode}`)
+        this.logger.info(`${req.method} ${req.url} - ${res.status}`)
       }
     })
   }
@@ -45,15 +64,15 @@ class Client {
     this.logger.info('Connected', this.events.url)
   }
 
-  onerror (err) {
+  onerror (err: any) {
     this.logger.error(err)
   }
 
   start () {
-    const events = new EventSource(this.source)
+    const events = new EventSource(this.source);
 
     // Reconnect immediately
-    events.reconnectInterval = 0
+    (events as any).reconnectInterval = 0 // This isn't a valid property of EventSource
 
     events.addEventListener('message', this.onmessage.bind(this))
     events.addEventListener('open', this.onopen.bind(this))
@@ -66,10 +85,4 @@ class Client {
   }
 }
 
-Client.createChannel = async () => {
-  return superagent.head('https://smee.io/new').redirects(0).catch((err, res) => {
-    return err.response.headers.location
-  })
-}
-
-module.exports = Client
+export = Client

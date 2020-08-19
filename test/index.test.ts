@@ -1,5 +1,5 @@
-const Client = require('..')
-const nock = require('nock')
+import Client = require('..')
+import nock = require('nock')
 
 describe('client', () => {
   describe('createChannel', () => {

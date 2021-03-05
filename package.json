@@ -16,7 +16,7 @@
     "test": "jest --coverage && standard",
     "build": "tsc -p tsconfig.json"
   },
-  "repository": "https://github.com/probot/smee",
+  "repository": "github:probot/smee-client",
   "author": "",
   "license": "ISC",
   "dependencies": {

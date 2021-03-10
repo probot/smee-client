@@ -52,7 +52,6 @@ class Client {
     Object.keys(data).forEach(key => {
       req.set(key, data[key])
     })
-
     req.set('content-length', `${bodyLength}`)
 
     req.end((err, res) => {

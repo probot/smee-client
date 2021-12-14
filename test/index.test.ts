@@ -12,5 +12,25 @@ describe('client', () => {
       expect(channel).toEqual('https://smee.io/abc123')
       expect(req.isDone()).toBe(true)
     })
+  }),
+  describe('onmessage', () => {
+    test('forwards host header correctly', () => {
+      const scope = nock('https://example.com')
+          .matchHeader('host', 'example.com')
+          .post('/target-path')
+          .reply(201, '')
+
+      const logger = {info: (msg: any) => {}}
+
+      const client = new Client({
+        source: 'https://smee.io/example',
+        target: 'https://example.com/target-path',
+        logger: <Console>logger
+      });
+
+      client.onmessage({data:'{}'})
+
+      expect(scope.isDone()).toBe(true)
+    })
   })
 })

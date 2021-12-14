@@ -43,6 +43,8 @@ class Client {
 
     delete data.query
 
+    data.host = target.hostname
+
     const req = superagent.post(url.format(target)).send(data.body)
 
     delete data.body

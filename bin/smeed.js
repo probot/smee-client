@@ -23,45 +23,45 @@ if (program.target) {
   target = `http://127.0.0.1:${program.port}${program.path}`
 }
 
-async function setupFromFile(file){
-    let data = await readfile(file);
-    let config = JSON.parse(data);
-    let forward = config.forward;
-    if(!Array.isArray(forward)){
-        if(!forward.source || !forward.target){
-            console.log(config);
-            throw new Error("config.forward must either be an array or an object with source and target");
-        }
-        forward = [forward];
+async function setupFromFile (file) {
+  let data = await readfile(file)
+  let config = JSON.parse(data)
+  let forward = config.forward
+  if (!Array.isArray(forward)) {
+    if (!forward.source || !forward.target) {
+      console.log(config)
+      throw new Error('config.forward must either be an array or an object with source and target')
     }
-    let clients = [];
-    for(var each of forward){
-        if(!each.source || !each.target){
-            console.log(config);
-            throw new Error("config.forward[] each object must have source and target");
-        }
-        let {source, target} = each;
-        console.log(`Configured forwarding from ${source} --> ${target}`);
-        clients.push(new Client({source, target}));
+    forward = [forward]
+  }
+  let clients = []
+  for (var each of forward) {
+    if (!each.source || !each.target) {
+      console.log(config)
+      throw new Error('config.forward[] each object must have source and target')
     }
-    return clients;
+    let { source, target } = each
+    console.log(`Configured forwarding from ${source} --> ${target}`)
+    clients.push(new Client({ source, target }))
+  }
+  return clients
 }
 
 async function setup () {
-  let file = program.file;
+  let file = program.file
 
-  if(file){
-      let clients = await setupFromFile(file);
-      clients.forEach(x => x.start());
+  if (file) {
+    let clients = await setupFromFile(file)
+    clients.forEach(x => x.start())
   } else {
-      let source = program.url
+    let source = program.url
 
-      if (!source) {
-        source = await Client.createChannel()
-      }
+    if (!source) {
+      source = await Client.createChannel()
+    }
 
-      const client = new Client({ source, target })
-      client.start()
+    const client = new Client({ source, target })
+    client.start()
   }
 }
 

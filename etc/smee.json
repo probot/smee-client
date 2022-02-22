@@ -1,0 +1,9 @@
+{
+  "forward":[
+    {
+        "description": "This is a test",
+        "source": "https://smee.io/liBXD7weWK1DmMf4",
+        "target": "http://localhost:1234/test"
+    }
+  ]
+}

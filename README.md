@@ -1,9 +1,55 @@
 # smee-client Docker Container
 
-Includes stability fixes, dependency updates, and build pipelines. 
+This fork of `smee-client` includes stability fixes, dependency updates, and a github ci pipeline. 
+In contrast to other containerized forks, this one uses file-based configuration to enable more 
+than one smee fowarders per client container. 
+
+## Using the container
+
+This repo publishes images to DockerHub with the tag [theshadow27/smee-client](https://hub.docker.com/repository/docker/theshadow27/smee-client/general)
+so it is easy to use in a Docker near you. 
 
 
-# Original README Follows
+### Create the config file `etc/smee.json`:
+
+You can have as many syncs as needed within this file.
+
+``` json
+{
+    "forward":[
+      {
+          "description": "Forwarding for custom wordpress rest hook",
+          "source": "https://smee.io/zh2TGe8dg1AZWxC",
+          "target": "http://wordpress/wp-json/myrestsvc/v1/sync_stuff"
+      },
+      {
+          "description": "Forwarding jenkins bitbucket plugin",
+          "source": "https://smee.io/dy9LCOji6kH2A1f",
+          "target": "http://jenkins/bitbucket-scmsource-hook/notify"
+      }
+    ]
+  }
+```
+
+### Add the container to `docker-compose.json`:
+
+``` yaml
+version: '3.9'
+services:
+ 
+ ... 
+ 
+ smee-client:
+    image: theshadow27/smee-client:latest
+    container_name: smee-client
+    volumes:
+      - ./etc/smee.json:/usr/src/smee.io/etc/smee.json:ro
+```
+
+
+
+
+# Original README for the node-js `smee-client` Follows
 
 <h2 align="center">smee-client</h2>
 <p align="center">Client and CLI for smee.io, a service that delivers webhooks to your local development environment.</p>

@@ -1,28 +1,35 @@
 name: Docker Image CI
+# see https://github.com/docker/build-push-action
+# see https://timdeschryver.dev/blog/how-to-set-up-a-dynamic-ci-cd-pipeline-with-github-actions#running-on-multiple-environments
+# see https://github.com/marketplace/actions/semantic-release-action
 
 on:
   push:
-    branches: [ master ]
+    branches: [ 'master' ]
+    tags:  [ 'v*' ]
   pull_request:
-    branches: [ master ]
+    branches: [ 'master' ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
-    # - name: Build the Docker image
-    #   run:  docker build . --file Dockerfile --tag "smee-client:latest" 
+    - name: CI Release
+      uses: codfish/semantic-release-action@v1
+      id: semantic
+      if: github.event_name != 'pull_request' &&  github.ref == 'refs/heads/master' && github.repository == 'theshadow27/smee-client'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     - name: Login to DockerHub
       uses: docker/login-action@v1 
+      if: steps.semantic.outputs.new-release-published == 'true'
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Build and push
       uses: docker/build-push-action@v2
       with:
-        push: true
-        tags: theshadow27/smee-client:latest
+        push: ${{steps.semantic.outputs.new-release-published == 'true'}}
+        tags: theshadow27/smee-client:latest,theshadow27/smee-client:${{ steps.semantic.outputs.release-version }}

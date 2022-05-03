@@ -28,10 +28,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",
-    "@types/eventsource": "^1.1.0",
+    "@types/eventsource": "^1.1.8",
     "@types/jest": "^24.0.11",
     "@types/nock": "^9.3.1",
-    "@types/superagent": "^4.1.1",
+    "@types/superagent": "^4.1.15",
     "@types/validator": "^10.11.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^24.5.0",

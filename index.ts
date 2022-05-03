@@ -1,8 +1,8 @@
-import validator = require('validator')
-import EventSource = require('eventsource')
-import superagent = require('superagent')
-import url = require('url')
-import querystring = require('querystring')
+import validator from 'validator'
+import EventSource from 'eventsource'
+import superagent from 'superagent'
+import url from 'url'
+import querystring from 'querystring'
 
 type Severity = 'info' | 'error'
 

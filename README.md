@@ -24,6 +24,16 @@ $ smee
 
 Run `smee --help` for usage.
 
+### CLI with proxy
+
+Smee client uses [global agent](https://www.npmjs.com/package/global-agent) to do proxied connections 
+
+```
+export GLOBAL_AGENT_HTTP_PROXY=http://127.0.0.1:8080
+$ smee
+```
+
+
 ### Node Client
 
 ```js

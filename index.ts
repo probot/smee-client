@@ -3,6 +3,7 @@ import EventSource from 'eventsource'
 import superagent from 'superagent'
 import url from 'url'
 import querystring from 'querystring'
+import 'global-agent/bootstrap'
 
 type Severity = 'info' | 'error'
 

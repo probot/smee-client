@@ -50,5 +50,10 @@
   },
   "jest": {
     "preset": "ts-jest"
+  },
+  "renovate": {
+    "extends": [
+      "github>octokit/.github"
+    ]
   }
 }

@@ -30,7 +30,7 @@
     "@babel/core": "^7.4.0",
     "@types/eventsource": "^1.1.8",
     "@types/jest": "^24.0.11",
-    "@types/nock": "^9.3.1",
+    "@types/nock": "^10.0.0",
     "@types/superagent": "^4.1.15",
     "@types/validator": "^13.0.0",
     "babel-core": "^7.0.0-bridge.0",

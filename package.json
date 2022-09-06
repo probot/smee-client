@@ -21,7 +21,7 @@
   "license": "ISC",
   "dependencies": {
     "commander": "^2.19.0",
-    "eventsource": "^1.1.0",
+    "eventsource": "^2.0.0",
     "morgan": "^1.9.1",
     "superagent": "^8.0.0",
     "validator": "^13.7.0"

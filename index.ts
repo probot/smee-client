@@ -18,7 +18,7 @@ class Client {
   logger: Pick<Console, Severity>;
   events!: EventSource;
 
-  constructor ({ source, target, logger = console }: Options) {
+  constructor({ source, target, logger = console }: Options) {
     this.source = source
     this.target = target
     this.logger = logger!
@@ -28,13 +28,13 @@ class Client {
     }
   }
 
-  static async createChannel () {
+  static async createChannel() {
     return superagent.head('https://smee.io/new').redirects(0).catch((err) => {
       return err.response.headers.location
     })
   }
 
-  onmessage (msg: any) {
+  onmessage(msg: any) {
     const data = JSON.parse(msg.data)
 
     const target = url.parse(this.target, true)
@@ -48,6 +48,9 @@ class Client {
     delete data.body
 
     Object.keys(data).forEach(key => {
+      if (key === 'content-length') {
+        return;
+      }
       req.set(key, data[key])
     })
 
@@ -60,15 +63,15 @@ class Client {
     })
   }
 
-  onopen () {
+  onopen() {
     this.logger.info('Connected', this.events.url)
   }
 
-  onerror (err: any) {
+  onerror(err: any) {
     this.logger.error(err)
   }
 
-  start () {
+  start() {
     const events = new EventSource(this.source);
 
     // Reconnect immediately

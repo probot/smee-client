@@ -43,6 +43,9 @@ class Client {
 
     delete data.query
 
+    // Remove the host header, leaving it causes issues with SNI and TLS verification
+    delete data.host
+
     const req = superagent.post(url.format(target)).send(data.body)
 
     delete data.body

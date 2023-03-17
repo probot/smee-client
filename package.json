@@ -20,7 +20,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "commander": "^9.0.0",
+    "commander": "^10.0.0",
     "eventsource": "^2.0.0",
     "morgan": "^1.9.1",
     "superagent": "^8.0.0",

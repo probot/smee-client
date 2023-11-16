@@ -1,16 +1,11 @@
-import Client = require('..')
-import nock = require('nock')
+import Client from "../index"
+import { describe, test, expect } from "vitest"
 
 describe('client', () => {
   describe('createChannel', () => {
     test('returns a new channel', async () => {
-      const req = nock('https://smee.io').head('/new').reply(302, '', {
-        Location: 'https://smee.io/abc123'
-      })
-
       const channel = await Client.createChannel()
-      expect(channel).toEqual('https://smee.io/abc123')
-      expect(req.isDone()).toBe(true)
+      expect(channel).toMatch(/https:\/\/smee\.io\/[0-9a-zA-Z]{10,}/)
     })
   })
 })

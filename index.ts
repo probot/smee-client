@@ -29,9 +29,11 @@ class Client {
   }
 
   static async createChannel () {
-    return superagent.head('https://smee.io/new').redirects(0).catch((err) => {
-      return err.response.headers.location
-    })
+    const response = await fetch('https://smee.io/new', {
+      method: 'HEAD',
+      redirect: 'manual'
+    });
+    return response.headers.get('location')
   }
 
   onmessage (msg: any) {

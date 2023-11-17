@@ -1,6 +1,5 @@
 import validator from 'validator'
 import EventSource from 'eventsource'
-import superagent from 'superagent'
 import url from 'url'
 import querystring from 'querystring'
 
@@ -10,18 +9,21 @@ interface Options {
   source: string
   target: string
   logger?: Pick<Console, Severity>
+  fetch?: any
 }
 
 class Client {
   source: string;
   target: string;
+  fetch: typeof global.fetch;
   logger: Pick<Console, Severity>;
   events!: EventSource;
 
-  constructor({ source, target, logger = console }: Options) {
+  constructor({ source, target, logger = console, fetch = global.fetch }: Options) {
     this.source = source
     this.target = target
     this.logger = logger!
+    this.fetch = fetch
 
     if (!validator.isURL(this.source)) {
       throw new Error('The provided URL is invalid.')
@@ -40,30 +42,38 @@ class Client {
     return address
   }
 
-  onmessage(msg: any) {
+  async onmessage(msg: any) {
     const data = JSON.parse(msg.data)
 
     const target = url.parse(this.target, true)
-    const mergedQuery = Object.assign(target.query, data.query)
+    const mergedQuery = { ...target.query, ...data.query }
     target.search = querystring.stringify(mergedQuery)
 
     delete data.query
 
-    const req = superagent.post(url.format(target)).send(data.body)
-
+    const body = JSON.stringify(data.body)
     delete data.body
 
+    const headers: { [key: string]: any } = {}
+
     Object.keys(data).forEach(key => {
-      req.set(key, data[key])
+      headers[key] = data[key]
     })
 
-    req.end((err, res) => {
-      if (err) {
-        this.logger.error(err)
-      } else {
-        this.logger.info(`${req.method} ${req.url} - ${res.status}`)
-      }
-    })
+    headers['content-length'] = Buffer.byteLength(body)
+
+    try {
+      const response = await this.fetch(url.format(target), {
+        method: 'POST',
+        mode: data['sec-fetch-mode'],
+        cache: 'default',
+        body,
+        headers,
+      })
+      this.logger.info(`POST ${response.url} - ${response.status}`)
+    } catch (err) {
+      this.logger.error(err)
+    }
   }
 
   onopen() {

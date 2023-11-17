@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",
-    "@types/eventsource": "^1.1.8",
+    "@types/eventsource": "1.1.8",
     "@types/jest": "^29.0.0",
     "@types/nock": "^10.0.0",
     "@types/superagent": "^4.1.15",

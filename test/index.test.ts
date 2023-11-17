@@ -23,6 +23,18 @@ describe('client', () => {
     })
   })
 
+  describe('constructor', () => {
+    describe('source', () => {
+      test('throws if source is not a valid URL', () => {
+        expect(() => new Client({
+          source: 'mailto:do-not-reply@example.com',
+          target: 'https://example.com',
+        })
+        ).toThrow('The provided URL is invalid.')
+      })
+    })
+  })
+
   describe('onmessage', () => {
     test('returns a new channel', async () => {
       expect.assertions(2)
@@ -97,7 +109,7 @@ describe('client', () => {
         }
       })
 
-      const a = await fetch(source, {
+      await fetch(source, {
         method: 'POST',
         body: JSON.stringify({ hello: 'world' }),
         headers: {
@@ -106,6 +118,6 @@ describe('client', () => {
       })
 
       await finishedPromise.promise
-    }, { timeout: 100000})
+    })
   })
 })

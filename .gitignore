@@ -7,6 +7,5 @@ server/public/main.min.*
 coverage
 .vscode
 index.js
-index.js.map
 *.d.ts
 *.tsbuildinfo

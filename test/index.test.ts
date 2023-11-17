@@ -7,5 +7,18 @@ describe('client', () => {
       const channel = await Client.createChannel()
       expect(channel).toMatch(/https:\/\/smee\.io\/[0-9a-zA-Z]{10,}/)
     })
+
+    test('throws if could not create a new channel', async () => {
+      expect(Client.createChannel({
+        // @ts-ignore
+        fetch: async () => {
+          return {
+            headers: {
+              get: () => null
+            }
+          }
+        }
+      })).rejects.toThrow('Failed to create channel')
+    })
   })
 })

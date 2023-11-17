@@ -14,6 +14,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "lint": "standard",
+    "lint:fix": "standard --fix",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:dev": "vitest --ui --coverage"

@@ -18,7 +18,7 @@ class Client {
   logger: Pick<Console, Severity>;
   events!: EventSource;
 
-  constructor ({ source, target, logger = console }: Options) {
+  constructor({ source, target, logger = console }: Options) {
     this.source = source
     this.target = target
     this.logger = logger!
@@ -28,15 +28,19 @@ class Client {
     }
   }
 
-  static async createChannel () {
+  static async createChannel({ fetch = global.fetch } = {}) {
     const response = await fetch('https://smee.io/new', {
       method: 'HEAD',
       redirect: 'manual'
     });
-    return response.headers.get('location')
+    const address = response.headers.get('location')
+    if (!address) {
+      throw new Error('Failed to create channel')
+    }
+    return address
   }
 
-  onmessage (msg: any) {
+  onmessage(msg: any) {
     const data = JSON.parse(msg.data)
 
     const target = url.parse(this.target, true)
@@ -62,15 +66,15 @@ class Client {
     })
   }
 
-  onopen () {
+  onopen() {
     this.logger.info('Connected', this.events.url)
   }
 
-  onerror (err: any) {
+  onerror(err: any) {
     this.logger.error(err)
   }
 
-  start () {
+  start() {
     const events = new EventSource(this.source);
 
     // Reconnect immediately

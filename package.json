@@ -13,8 +13,8 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "lint": "standard",
-    "lint:fix": "standard --fix",
+    "lint": "prettier --check \"index.ts\" \"test/**/*.ts\" package.json tsconfig.json --end-of-line auto",
+    "lint:fix": "prettier --write \"index.ts\" \"test/**/*.ts\" package.json tsconfig.json --end-of-line auto",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:dev": "vitest --ui --coverage"
@@ -33,7 +33,7 @@
     "@types/validator": "^13.11.6",
     "@vitest/coverage-v8": "^0.34.6",
     "fastify": "^4.24.3",
-    "standard": "^17.0.0",
+    "prettier": "^3.1.0",
     "typescript": "^5.0.0",
     "vitest": "^0.34.6"
   },

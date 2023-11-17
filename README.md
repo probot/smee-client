@@ -8,7 +8,7 @@
 
 Install the client with:
 
-```
+```sh
 npm install -g smee-client
 ```
 
@@ -18,7 +18,7 @@ npm install -g smee-client
 
 The `smee` command will forward webhooks from smee.io to your local development environment.
 
-```
+```sh
 smee
 ```
 

@@ -57,7 +57,7 @@ class Client {
     delete data.query;
 
     // Remove the host header, leaving it causes issues with SNI and TLS verification
-    delete data.host
+    delete data.host;
 
     const body = JSON.stringify(data.body);
     delete data.body;

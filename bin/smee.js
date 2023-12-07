@@ -14,15 +14,14 @@ program
   .option('-P, --path <path>', 'URL path to post proxied requests to`', '/')
   .parse(process.argv)
 
-let target
-if (program.target) {
-  target = program.target
-} else {
-  target = `http://127.0.0.1:${program.port}${program.path}`
-}
+const opts = program.opts()
+
+const {
+  target = `http://127.0.0.1:${opts.port}${opts.path}`
+} = opts
 
 async function setup () {
-  let source = program.url
+  let source = opts.url
 
   if (!source) {
     source = await Client.createChannel()

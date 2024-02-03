@@ -18,8 +18,8 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "lib": ["es2023", "dom"],
-    "moduleResolution": "node16"
+    "moduleResolution": "node16",
   },
   "include": ["./*"],
-  "files": ["index.ts"]
+  "files": ["index.ts"],
 }

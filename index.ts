@@ -66,6 +66,7 @@ class Client {
     });
 
     headers["content-length"] = Buffer.byteLength(body);
+    headers["content-type"] = "application/json";
 
     try {
       const response = await this.fetch(url.format(target), {

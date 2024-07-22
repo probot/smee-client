@@ -40,3 +40,25 @@ const events = smee.start()
 // Stop forwarding events
 events.close()
 ```
+
+#### Proxy Servers
+
+By default, the `SmeeClient` API client does not make use of the standard proxy server environment variables. To add support for proxy servers you will need to provide an https client that supports them such as [`undici.ProxyAgent()`](https://undici.nodejs.org/#/docs/api/ProxyAgent).
+
+For example, this would use a `ProxyAgent` to make requests through a proxy server:
+
+```js
+const { fetch: undiciFetch, ProxyAgent } = require('undici');
+const SmeeClient = require('smee-client');
+
+const myFetch = (url, options) => {
+  return undiciFetch(url, {
+    ...options,
+    dispatcher: new ProxyAgent(<your_proxy_url>)
+  })
+};
+
+const smee = new SmeeClient({
+  fetch: myFetch
+});
+```

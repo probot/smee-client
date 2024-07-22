@@ -65,6 +65,10 @@ class Client {
       headers[key] = data[key];
     });
 
+    // Don't forward the host header. As it causes issues with some servers
+    // See https://github.com/probot/smee-client/issues/295
+    // See https://github.com/probot/smee-client/issues/187
+    delete headers["host"];
     headers["content-length"] = Buffer.byteLength(body);
     headers["content-type"] = "application/json";
 

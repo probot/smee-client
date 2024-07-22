@@ -13,8 +13,8 @@
     "esModuleInterop": true,
     "declaration": true,
     "allowJs": true,
-    "lib": ["es2023", "dom"],
+    "lib": ["es2023", "dom"]
   },
   "include": ["./*"],
-  "files": ["index.ts"],
+  "files": ["index.ts"]
 }

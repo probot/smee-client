@@ -2,8 +2,6 @@
   "extends": "@octokit/tsconfig",
 
   "compilerOptions": {
-    "module": "ES2020",
-    "verbatimModuleSyntax": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "pretty": true,
@@ -14,8 +12,6 @@
     "esModuleInterop": true,
     "declaration": true,
     "allowJs": true,
-    "lib": ["es2023"],
-    "moduleResolution": "Node"
   },
   "include": ["./*"],
   "files": ["index.ts"]

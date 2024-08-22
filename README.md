@@ -27,7 +27,7 @@ Run `smee --help` for usage.
 ### Node Client
 
 ```js
-const SmeeClient = require('smee-client')
+import SmeeClient from 'smee-client'
 
 const smee = new SmeeClient({
   source: 'https://smee.io/abc123',

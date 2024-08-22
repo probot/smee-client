@@ -1,5 +1,5 @@
 import validator from "validator";
-import EventSource from "eventsource";
+import { EventSource } from "undici";
 import url from "url";
 import querystring from "querystring";
 
@@ -111,4 +111,4 @@ class Client {
   }
 }
 
-export = Client;
+export default Client;

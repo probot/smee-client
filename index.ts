@@ -1,15 +1,13 @@
 import validator from "validator";
 import {
+  fetch as undiciFetch,
   EventSource,
   EnvHttpProxyAgent,
-  setGlobalDispatcher,
   type ErrorEvent,
   type MessageEvent,
 } from "undici";
 import url from "url";
 import querystring from "querystring";
-
-setGlobalDispatcher(new EnvHttpProxyAgent());
 
 type Severity = "info" | "error";
 
@@ -31,7 +29,7 @@ class Client {
     source,
     target,
     logger = console,
-    fetch = global.fetch,
+    fetch = undiciFetch,
   }: Options) {
     this.source = source;
     this.target = target;
@@ -43,10 +41,11 @@ class Client {
     }
   }
 
-  static async createChannel({ fetch = global.fetch } = {}) {
+  static async createChannel({ fetch = undiciFetch } = {}) {
     const response = await fetch("https://smee.io/new", {
       method: "HEAD",
       redirect: "manual",
+      dispatcher: new EnvHttpProxyAgent(),
     });
     const address = response.headers.get("location");
     if (!address) {
@@ -103,7 +102,7 @@ class Client {
   }
 
   start() {
-    const events = new EventSource(this.source);
+    const events = new EventSource(this.source, { dispatcher: new EnvHttpProxyAgent() });
 
     // Reconnect immediately
     (events as any).reconnectInterval = 0; // This isn't a valid property of EventSource

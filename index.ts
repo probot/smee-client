@@ -101,7 +101,9 @@ class Client {
   }
 
   start() {
-    const events = new EventSource(this.source, { dispatcher: new EnvHttpProxyAgent() });
+    const events = new EventSource(this.source, {
+      dispatcher: new EnvHttpProxyAgent(),
+    });
 
     // Reconnect immediately
     (events as any).reconnectInterval = 0; // This isn't a valid property of EventSource

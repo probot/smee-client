@@ -1,7 +1,9 @@
 import validator from "validator";
-import { EventSource } from "undici";
+import { EventSource, EnvHttpProxyAgent, setGlobalDispatcher, type ErrorEvent, type MessageEvent } from "undici";
 import url from "url";
 import querystring from "querystring";
+
+setGlobalDispatcher(new EnvHttpProxyAgent());
 
 type Severity = "info" | "error";
 
@@ -47,7 +49,7 @@ class Client {
     return address;
   }
 
-  async onmessage(msg: any) {
+  async onmessage(msg: MessageEvent<string>) {
     const data = JSON.parse(msg.data);
 
     const target = url.parse(this.target, true);
@@ -76,7 +78,7 @@ class Client {
       const response = await this.fetch(url.format(target), {
         method: "POST",
         mode: data["sec-fetch-mode"],
-        cache: "default",
+        //cache: "default", // This isn't a valid property of RequestInit for the fetch API on Node.js
         body,
         headers,
       });
@@ -90,7 +92,7 @@ class Client {
     this.logger.info("Connected", this.events.url);
   }
 
-  onerror(err: any) {
+  onerror(err: ErrorEvent) {
     this.logger.error(err);
   }
 

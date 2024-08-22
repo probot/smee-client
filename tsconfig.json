@@ -11,7 +11,7 @@
     "noImplicitAny": true,
     "esModuleInterop": true,
     "declaration": true,
-    "allowJs": true,
+    "allowJs": true
   },
   "include": ["./*"],
   "files": ["index.ts"]

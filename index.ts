@@ -83,7 +83,6 @@ class Client {
       const response = await this.fetch(url.format(target), {
         method: "POST",
         mode: data["sec-fetch-mode"],
-        //cache: "default", // This isn't a valid property of RequestInit for the fetch API on Node.js
         body,
         headers,
       });

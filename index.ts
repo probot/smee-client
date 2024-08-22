@@ -1,5 +1,11 @@
 import validator from "validator";
-import { EventSource, EnvHttpProxyAgent, setGlobalDispatcher, type ErrorEvent, type MessageEvent } from "undici";
+import {
+  EventSource,
+  EnvHttpProxyAgent,
+  setGlobalDispatcher,
+  type ErrorEvent,
+  type MessageEvent,
+} from "undici";
 import url from "url";
 import querystring from "querystring";
 

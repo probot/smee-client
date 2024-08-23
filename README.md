@@ -40,3 +40,7 @@ const events = smee.start()
 // Stop forwarding events
 events.close()
 ```
+
+#### Proxy Servers
+
+By default, the `SmeeClient` API client makes use of the standard proxy server environment variables.

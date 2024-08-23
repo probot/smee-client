@@ -93,7 +93,7 @@ class Client {
   }
 
   onopen() {
-    this.#logger.info("Connected", this.events.url);
+    this.#logger.info("Connected", this.#events.url);
   }
 
   onerror(err: ErrorEvent) {

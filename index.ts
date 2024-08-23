@@ -36,7 +36,7 @@ class Client {
     this.#logger = logger!;
     this.#fetch = fetch;
 
-    if (!validator.isURL(this.source)) {
+    if (!validator.isURL(this.#source)) {
       throw new Error("The provided URL is invalid.");
     }
   }

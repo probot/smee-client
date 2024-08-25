@@ -18,7 +18,7 @@ interface Options {
   fetch?: any;
 }
 
-const proxyAgent = new EnvHttpProxyAgent()
+const proxyAgent = new EnvHttpProxyAgent();
 
 class Client {
   #source: string;

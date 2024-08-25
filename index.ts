@@ -18,10 +18,12 @@ interface Options {
   fetch?: any;
 }
 
+const proxyAgent = new EnvHttpProxyAgent()
+
 class Client {
   #source: string;
   #target: string;
-  #fetch: typeof global.fetch;
+  #fetch: typeof undiciFetch;
   #logger: Pick<Console, Severity>;
   #events!: EventSource;
 
@@ -45,7 +47,7 @@ class Client {
     const response = await fetch("https://smee.io/new", {
       method: "HEAD",
       redirect: "manual",
-      dispatcher: new EnvHttpProxyAgent(),
+      dispatcher: proxyAgent,
     });
     const address = response.headers.get("location");
     if (!address) {
@@ -85,6 +87,7 @@ class Client {
         mode: data["sec-fetch-mode"],
         body,
         headers,
+        dispatcher: proxyAgent,
       });
       this.#logger.info(`POST ${response.url} - ${response.status}`);
     } catch (err) {
@@ -102,7 +105,7 @@ class Client {
 
   start() {
     const events = new EventSource(this.#source, {
-      dispatcher: new EnvHttpProxyAgent(),
+      dispatcher: proxyAgent,
     });
 
     // Reconnect immediately

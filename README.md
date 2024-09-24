@@ -44,6 +44,7 @@ events.close()
 #### Proxy
 
 By default, the Smee client does not make use of the standard proxy server environment variables. To add support for proxy servers you will need to provide an https client that supports them such as [`undici.EnvHttpProxyAgent()`](https://undici.nodejs.org/#/docs/api/EnvHttpProxyAgent).
+
 Afterwards, you will be able to use the standard proxy server environment variables.
 
 For example, this would use a `EnvHttpProxyAgent` to make requests through a proxy server:

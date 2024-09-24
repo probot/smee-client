@@ -14,8 +14,8 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "lint": "prettier --check \"index.ts\" \"test/**/*.ts\" package.json tsconfig.json --end-of-line auto",
-    "lint:fix": "prettier --write \"index.ts\" \"test/**/*.ts\" package.json tsconfig.json --end-of-line auto",
+    "lint": "prettier --check \"index.ts\" \"test/**/*.ts\" bin/smee.js package.json tsconfig.json --end-of-line auto",
+    "lint:fix": "prettier --write \"index.ts\" \"test/**/*.ts\" bin/smee.js package.json tsconfig.json --end-of-line auto",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:dev": "vitest --ui --coverage"

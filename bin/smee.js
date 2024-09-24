@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-const { program } = require('commander')
-const { version } = require('../package.json')
+import { program } from 'commander'
+import { readFile } from 'node:fs/promises'
+import Client from '../index.js'
 
-const Client = require('..')
+const { version } = JSON.parse(await readFile(new URL('../package.json', import.meta.url)))
 
 program
   .version(version, '-v, --version')

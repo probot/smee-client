@@ -95,7 +95,9 @@ class Client {
   }
 
   start() {
-    const events = new EventSource(this.source);
+    const events = new EventSource(this.source, {
+      proxy: process.env.HTTP_PROXY || process.env.HTTPS_PROXY,
+    });
 
     // Reconnect immediately
     (events as any).reconnectInterval = 0; // This isn't a valid property of EventSource

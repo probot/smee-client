@@ -6,8 +6,8 @@ import {
   type ErrorEvent,
   type MessageEvent,
 } from "undici";
-import url from "url";
-import querystring from "querystring";
+import url from "node:url";
+import querystring from "node:querystring";
 
 type Severity = "info" | "error";
 

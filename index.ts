@@ -78,6 +78,10 @@ class Client {
     // See https://github.com/probot/smee-client/issues/295
     // See https://github.com/probot/smee-client/issues/187
     delete headers["host"];
+    // Don't forward the rawdata header. As it causes issues with some servers
+    // See https://github.com/probot/smee-client/issues/320
+    delete headers["rawdata"];
+
     headers["content-length"] = Buffer.byteLength(body);
     headers["content-type"] = "application/json";
 

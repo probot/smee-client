@@ -1,4 +1,4 @@
-import Client from "../index";
+import Client from "../index.ts";
 import { describe, test, expect } from "vitest";
 import { fastify as Fastify } from "fastify";
 

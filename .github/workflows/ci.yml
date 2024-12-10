@@ -94,7 +94,6 @@ jobs:
         node-version:
           - 18
           - 20
-          - 21
           - 22
         os:
           - ubuntu-latest

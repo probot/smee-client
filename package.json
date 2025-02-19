@@ -3,6 +3,7 @@
   "version": "0.0.0-development",
   "description": "Client to proxy webhooks to localhost",
   "main": "index.js",
+  "type": "module",
   "bin": {
     "smee": "./bin/smee.js"
   },
@@ -13,8 +14,8 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "lint": "prettier --check \"index.ts\" \"test/**/*.ts\" package.json tsconfig.json --end-of-line auto",
-    "lint:fix": "prettier --write \"index.ts\" \"test/**/*.ts\" package.json tsconfig.json --end-of-line auto",
+    "lint": "prettier --check \"index.ts\" \"test/**/*.ts\" bin/smee.js package.json tsconfig.json --end-of-line auto",
+    "lint:fix": "prettier --write \"index.ts\" \"test/**/*.ts\" bin/smee.js package.json tsconfig.json --end-of-line auto",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:dev": "vitest --ui --coverage"
@@ -24,12 +25,11 @@
   "license": "ISC",
   "dependencies": {
     "commander": "^12.0.0",
-    "eventsource": "^2.0.2",
+    "undici": "^6.19.8",
     "validator": "^13.11.0"
   },
   "devDependencies": {
     "@octokit/tsconfig": "^3.0.0",
-    "@types/eventsource": "^1.1.15",
     "@types/node": "^20.0.0",
     "@types/validator": "^13.11.6",
     "@vitest/coverage-v8": "^3.0.0",
@@ -37,5 +37,8 @@
     "prettier": "^3.1.0",
     "typescript": "^5.0.0",
     "vitest": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

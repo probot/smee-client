@@ -1,11 +1,11 @@
 import validator from "validator";
+import { fetch as undiciFetch, EnvHttpProxyAgent } from "undici";
 import {
-  fetch as undiciFetch,
   EventSource,
-  EnvHttpProxyAgent,
+  type FetchLike,
+  type FetchLikeInit,
   type ErrorEvent,
-  type MessageEvent,
-} from "undici";
+} from "eventsource";
 import url from "node:url";
 import querystring from "node:querystring";
 
@@ -56,7 +56,7 @@ class Client {
     return address;
   }
 
-  async onmessage(msg: MessageEvent<string>) {
+  async onmessage(msg: MessageEvent) {
     const data = JSON.parse(msg.data);
 
     const target = url.parse(this.#target, true);
@@ -104,8 +104,18 @@ class Client {
   }
 
   start() {
+    const customFetch: FetchLike = (
+      url: string | URL,
+      options?: FetchLikeInit,
+    ) => {
+      return this.#fetch(url, {
+        ...options,
+        dispatcher: proxyAgent,
+      });
+    };
+
     const events = new EventSource(this.#source, {
-      dispatcher: proxyAgent,
+      fetch: customFetch,
     });
 
     // Reconnect immediately

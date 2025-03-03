@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "bin": {
-    "smee": "./bin/smee.js"
+    "smee": "bin/smee.js"
   },
   "files": [
     "index.js",
@@ -20,7 +20,10 @@
     "test:coverage": "vitest run --coverage",
     "test:dev": "vitest --ui --coverage"
   },
-  "repository": "github:probot/smee-client",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/probot/smee-client.git"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {

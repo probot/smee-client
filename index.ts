@@ -1,4 +1,3 @@
-import validator from "validator";
 import { fetch as undiciFetch, EnvHttpProxyAgent } from "undici";
 import {
   EventSource,
@@ -20,6 +19,23 @@ interface Options {
 
 const proxyAgent = new EnvHttpProxyAgent();
 
+function validateURL(urlString: string): asserts urlString is string {
+  let url: URL;
+  try {
+    url = new URL(urlString);
+  } catch {
+    throw new Error("The provided URL is invalid.");
+  }
+
+  if (
+    !url.protocol ||
+    !["http:", "https:"].includes(url.protocol) ||
+    !url.host
+  ) {
+    throw new Error("The provided URL is invalid.");
+  }
+}
+
 class Client {
   #source: string;
   #target: string;
@@ -38,9 +54,7 @@ class Client {
     this.#logger = logger!;
     this.#fetch = fetch;
 
-    if (!validator.isURL(this.#source)) {
-      throw new Error("The provided URL is invalid.");
-    }
+    validateURL(this.#source);
   }
 
   static async createChannel({ fetch = undiciFetch } = {}) {

@@ -35,6 +35,13 @@ describe("client", () => {
               target: "https://example.com",
             }),
         ).toThrow("The provided URL is invalid.");
+        expect(
+          () =>
+            new Client({
+              source: "ftp://www.google.com/",
+              target: "https://example.com",
+            }),
+        ).toThrow("The provided URL is invalid.");
       });
     });
   });

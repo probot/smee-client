@@ -80,7 +80,7 @@ class Client {
     delete headers["host"];
     headers["content-length"] = Buffer.byteLength(body);
     headers["content-type"] = "application/json";
-
+    headers["expect"] = "";
     try {
       const response = await this.#fetch(url.format(target), {
         method: "POST",

@@ -16,6 +16,7 @@ interface Options {
   target: string;
   logger?: Pick<Console, Severity>;
   fetch?: any;
+  deleteHeaders?: Array<string>;
 }
 
 const proxyAgent = new EnvHttpProxyAgent();
@@ -24,19 +25,24 @@ class Client {
   #source: string;
   #target: string;
   #fetch: typeof undiciFetch;
+  #deleteHeaders: Array<string>;
+  
   #logger: Pick<Console, Severity>;
   #events!: EventSource;
+
 
   constructor({
     source,
     target,
     logger = console,
     fetch = undiciFetch,
+    deleteHeaders = []
   }: Options) {
     this.#source = source;
     this.#target = target;
     this.#logger = logger!;
     this.#fetch = fetch;
+    this.#deleteHeaders = deleteHeaders;
 
     if (!validator.isURL(this.#source)) {
       throw new Error("The provided URL is invalid.");
@@ -78,6 +84,7 @@ class Client {
     // See https://github.com/probot/smee-client/issues/295
     // See https://github.com/probot/smee-client/issues/187
     delete headers["host"];
+    this.#deleteHeaders.forEach((header) => delete headers[header]);
     headers["content-length"] = Buffer.byteLength(body);
     headers["content-type"] = "application/json";
 

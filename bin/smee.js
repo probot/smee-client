@@ -31,12 +31,12 @@ const { values: options } = parseArgs({
     },
     healthcheck: {
       type: "string",
-      short: "h"
+      short: "h",
     },
     maxPingDifference: {
       type: "string",
       short: "m",
-      default: "60"
+      default: "60",
     },
     path: {
       type: "string",
@@ -73,10 +73,15 @@ Options:
 
   async function setup() {
     const source = options.url ?? (await Client.createChannel());
-    const healthcheck = Number.parseInt(options.healthcheck, 10)
-    const maxPingDifference = Number.parseInt(options.maxPingDifference, 10)
+    const healthcheck = Number.parseInt(options.healthcheck, 10);
+    const maxPingDifference = Number.parseInt(options.maxPingDifference, 10);
 
-    const client = new Client({ source, target, healthcheck, maxPingDifference });
+    const client = new Client({
+      source,
+      target,
+      healthcheck,
+      maxPingDifference,
+    });
     client.start();
   }
 

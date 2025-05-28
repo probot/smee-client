@@ -147,7 +147,9 @@ class Client {
         const difference = (Date.now() - this.#lastPing) / 1000;
 
         if (difference > this.maxPingDifference) {
-          this.#logger.error(`Maximum ping difference exceeded. (Difference: ${difference.toFixed(4)}s, Maximum Allowed: ${this.maxPingDifference}s)`);
+          this.#logger.error(
+            `Maximum ping difference exceeded. (Difference: ${difference.toFixed(4)}s, Maximum Allowed: ${this.maxPingDifference}s)`,
+          );
           process.exit(1);
         }
       }, this.healthcheck * 1000);

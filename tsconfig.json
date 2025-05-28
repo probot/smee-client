@@ -2,7 +2,6 @@
   "extends": "@octokit/tsconfig",
 
   "compilerOptions": {
-    "verbatimModuleSyntax": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "pretty": true,
@@ -12,9 +11,8 @@
     "noImplicitAny": true,
     "esModuleInterop": true,
     "declaration": true,
-    "allowJs": true,
-    "lib": ["es2023", "dom"],
+    "allowJs": true
   },
   "include": ["./*"],
-  "files": ["index.ts"],
+  "files": ["index.ts"]
 }

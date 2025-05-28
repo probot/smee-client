@@ -1,6 +1,7 @@
 import Client from "../index.ts";
 import { describe, test, expect } from "vitest";
-import { fastify as Fastify } from "fastify";
+import { createServer, IncomingMessage } from "node:http";
+import { isIPv6, type AddressInfo } from "node:net";
 
 describe("client", () => {
   describe("createChannel", () => {
@@ -10,7 +11,7 @@ describe("client", () => {
     });
 
     test("throws if could not create a new channel", async () => {
-      expect(
+      await expect(
         Client.createChannel({
           // @ts-ignore
           fetch: async () => {
@@ -39,9 +40,26 @@ describe("client", () => {
     });
   });
 
+  function getPayload(request: IncomingMessage) {
+    return new Promise((resolve, reject) => {
+      let body = "";
+      request.on("error", reject);
+      request.on("data", onData);
+      request.on("end", onEnd);
+
+      function onData(chunk: Uint8Array) {
+        body += chunk;
+      }
+
+      function onEnd() {
+        resolve(body);
+      }
+    });
+  }
+
   describe("onmessage", () => {
     test("returns a new channel", async () => {
-      expect.assertions(2);
+      expect.assertions(7);
 
       let finishedPromise = {
         promise: undefined,
@@ -59,30 +77,36 @@ describe("client", () => {
       });
 
       let callCount = 0;
-      const fastify = Fastify();
 
-      fastify.route({
-        url: "/",
-        method: "POST",
-        handler: async (request, reply) => {
-          callCount++;
+      const server = createServer(async (req, res) => {
+        expect(req.method).toBe("POST");
+        expect(req.url).toBe("/");
 
-          expect(JSON.stringify(request.body)).toBe(
-            JSON.stringify({ hello: "world" }),
-          );
+        const body = await getPayload(req);
 
-          if (callCount === 2) {
-            finishedPromise.resolve!();
-          }
-          return reply
-            .send(request.body)
-            .header("content-type", "application/json");
-        },
+        expect(body).toBe(JSON.stringify({ hello: "world" }));
+
+        res.writeHead(200, { "content-type": "application/json" });
+        res.end(body);
+
+        ++callCount;
+
+        if (callCount === 2) {
+          finishedPromise.resolve!();
+        }
       });
 
-      const target = await fastify.listen();
+      await new Promise((resolve) => server.listen(resolve));
 
+      let { address: host, port } = server.address() as AddressInfo;
+
+      if (isIPv6(host)) {
+        host = `[${host}]`;
+      }
+
+      const target = `http://${host}:${port}`;
       const source = await Client.createChannel();
+
       const client = new Client({
         source,
         target,
@@ -126,6 +150,11 @@ describe("client", () => {
       });
 
       await finishedPromise.promise;
+
+      server.closeAllConnections();
+      server.close();
+
+      expect(callCount).toBe(2);
     });
   });
 });

@@ -3,7 +3,7 @@ import { fetch as undiciFetch, EnvHttpProxyAgent } from "undici";
 import {
   EventSource,
   type FetchLike,
-  type FetchLikeInit,
+  type EventSourceFetchInit,
   type ErrorEvent,
 } from "eventsource";
 import url from "node:url";
@@ -106,7 +106,7 @@ class Client {
   start() {
     const customFetch: FetchLike = (
       url: string | URL,
-      options?: FetchLikeInit,
+      options?: EventSourceFetchInit,
     ) => {
       return this.#fetch(url, {
         ...options,

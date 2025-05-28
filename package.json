@@ -27,7 +27,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "commander": "^12.0.0",
     "eventsource": "^4.0.0",
     "undici": "^7.0.0",
     "validator": "^13.11.0"

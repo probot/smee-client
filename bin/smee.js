@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { program } from "commander";
+import { parseArgs } from "node:util";
 import { readFile } from "node:fs/promises";
 import Client from "../index.js";
 
@@ -8,34 +8,63 @@ const { version } = JSON.parse(
   await readFile(new URL("../package.json", import.meta.url)),
 );
 
-program
-  .version(version, "-v, --version")
-  .usage("[options]")
-  .option(
-    "-u, --url <url>",
-    "URL of the webhook proxy service. Default: https://smee.io/new",
-  )
-  .option(
-    "-t, --target <target>",
-    "Full URL (including protocol and path) of the target service the events will forwarded to. Default: http://127.0.0.1:PORT/PATH",
-  )
-  .option("-p, --port <n>", "Local HTTP server port", process.env.PORT || 3000)
-  .option("-P, --path <path>", "URL path to post proxied requests to`", "/")
-  .parse(process.argv);
+const { values: options } = parseArgs({
+  options: {
+    version: {
+      type: "boolean",
+      short: "v",
+      default: false,
+    },
+    help: {
+      type: "boolean",
+      short: "h",
+      default: false,
+    },
+    url: {
+      type: "string",
+      short: "u",
+      default: "https://smee.io/new",
+    },
+    target: {
+      type: "string",
+      short: "t",
+    },
+    path: {
+      type: "string",
+      short: "P",
+      default: "/",
+    },
+    port: {
+      type: "string",
+      short: "p",
+      default: process.env.PORT || "3000",
+    },
+  },
+});
 
-const opts = program.opts();
+if (options.help) {
+  console.log(`Usage: smee [options]
 
-const { target = `http://127.0.0.1:${opts.port}${opts.path}` } = opts;
+Options:
+  -v, --version         Display the version number
+  -u, --url <url>       URL of the webhook proxy service. Default: https://smee.io/new
+  -t, --target <target> Full URL (including protocol and path) of the target service the events will forwarded to.
+                        Default: http://127.0.0.1:PORT/PATH
+  -p, --port <n>        Local HTTP server port. Default: 3000
+  -P, --path <path>     URL path to post proxied requests to. Default: "/"
+  -h, --help            Display this help message`);
+} else if (options.version) {
+  console.log(version);
+} else {
+  const { target = `http://127.0.0.1:${options.port}${options.path}` } =
+    options;
 
-async function setup() {
-  let source = opts.url;
+  async function setup() {
+    const source = options.url ?? (await Client.createChannel());
 
-  if (!source) {
-    source = await Client.createChannel();
+    const client = new Client({ source, target });
+    client.start();
   }
 
-  const client = new Client({ source, target });
-  client.start();
+  setup();
 }
-
-setup();

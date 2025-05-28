@@ -27,6 +27,7 @@ class Client {
   #target: string;
   healthcheck: number;
   maxPingDifference: number;
+  #lastPing: number;
   #fetch: typeof undiciFetch;
   #logger: Pick<Console, Severity>;
   #events!: EventSource;
@@ -43,6 +44,7 @@ class Client {
     this.#target = target;
     this.healthcheck = healthcheck;
     this.maxPingDifference = maxPingDifference;
+    this.#lastPing = Date.now();
     this.#logger = logger!;
     this.#fetch = fetch;
 
@@ -109,7 +111,7 @@ class Client {
 
   onping() {
     this.#logger.info(`Received a ping on ${new Date().toISOString()}`);
-    this.lastPing = Date.now();
+    this.#lastPing = Date.now();
   }
 
   onerror(err: ErrorEvent) {
@@ -142,16 +144,16 @@ class Client {
       events.addEventListener("ping", this.onping.bind(this));
 
       setInterval(() => {
-        const difference = (Date.now() - this.lastPing) / 1000;
+        const difference = (Date.now() - this.#lastPing) / 1000;
 
         if (difference > this.maxPingDifference) {
-          this.logger.error(`Maximum ping difference exceeded. (Difference: ${difference.toFixed(4)}s, Maximum Allowed: ${this.maxPingDifference}s)`);
+          this.#logger.error(`Maximum ping difference exceeded. (Difference: ${difference.toFixed(4)}s, Maximum Allowed: ${this.maxPingDifference}s)`);
           process.exit(1);
         }
       }, this.healthcheck * 1000);
     }
 
-    this.#logger.info(`Forwarding ${this.source} to ${this.target}`);
+    this.#logger.info(`Forwarding ${this.#source} to ${this.#target}`);
     this.#events = events;
 
     return events;

@@ -134,5 +134,5 @@ class Client {
 
 export {
   Client as default,
-  Client as 'module.exports' // For require(esm) compatibility
+  Client as "module.exports", // For require(esm) compatibility
 };

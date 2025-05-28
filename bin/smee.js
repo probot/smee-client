@@ -60,11 +60,7 @@ Options:
     options;
 
   async function setup() {
-    let source = options.url;
-
-    if (!source) {
-      source = await Client.createChannel();
-    }
+    const source = options.url ?? await Client.createChannel();
 
     const client = new Client({ source, target });
     client.start();

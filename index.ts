@@ -15,6 +15,7 @@ interface Options {
   source: string;
   target: string;
   logger?: Pick<Console, Severity>;
+  queryForwarding?: boolean;
   fetch?: any;
 }
 
@@ -25,20 +26,27 @@ class Client {
   #target: string;
   #fetch: typeof undiciFetch;
   #logger: Pick<Console, Severity>;
-  #events!: EventSource;
+  #events?: EventSource;
+  #queryForwarding: boolean = true;
 
   constructor({
     source,
     target,
     logger = console,
     fetch = undiciFetch,
+    queryForwarding = true,
   }: Options) {
     this.#source = source;
     this.#target = target;
     this.#logger = logger!;
     this.#fetch = fetch;
+    this.#queryForwarding = queryForwarding;
 
-    if (!validator.isURL(this.#source)) {
+    if (
+      !validator.isURL(this.#source, {
+        require_tld: false,
+      })
+    ) {
       throw new Error("The provided URL is invalid.");
     }
   }
@@ -60,8 +68,11 @@ class Client {
     const data = JSON.parse(msg.data);
 
     const target = url.parse(this.#target, true);
-    const mergedQuery = { ...target.query, ...data.query };
-    target.search = querystring.stringify(mergedQuery);
+
+    if (this.#queryForwarding) {
+      const mergedQuery = { ...target.query, ...data.query };
+      target.search = querystring.stringify(mergedQuery);
+    }
 
     delete data.query;
 
@@ -96,14 +107,14 @@ class Client {
   }
 
   onopen() {
-    this.#logger.info("Connected", this.#events.url);
+    // This method is not used in this implementation, but can be overridden if needed.
   }
 
   onerror(err: ErrorEvent) {
     this.#logger.error(err);
   }
 
-  start() {
+  async start(): Promise<EventSource> {
     const customFetch: FetchLike = (
       url: string | URL,
       options?: EventSourceFetchInit,
@@ -125,10 +136,36 @@ class Client {
     events.addEventListener("open", this.onopen.bind(this));
     events.addEventListener("error", this.onerror.bind(this));
 
+    const connected = new Promise<void>((resolve, reject) => {
+      events.addEventListener("open", () => {
+        this.#logger.info(`Connected to ${this.#source}`);
+        events.removeEventListener("error", reject);
+        resolve();
+      });
+      events.addEventListener("error", (err: ErrorEvent) => {
+        if (events.readyState === EventSource.CLOSED) {
+          this.#logger.error("Connection closed");
+        } else {
+          this.#logger.error("Error in connection", err);
+        }
+        reject(err);
+      });
+    });
+
     this.#logger.info(`Forwarding ${this.#source} to ${this.#target}`);
     this.#events = events;
 
+    await connected;
+
     return events;
+  }
+
+  async stop() {
+    if (this.#events) {
+      this.#events.close();
+      this.#events = null as any;
+      this.#logger.info("Connection closed");
+    }
   }
 }
 

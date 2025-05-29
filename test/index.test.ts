@@ -2,6 +2,7 @@ import Client from "../index.ts";
 import { describe, test, expect } from "vitest";
 import { createServer, IncomingMessage } from "node:http";
 import { isIPv6, type AddressInfo } from "node:net";
+import { VoidLogger } from "./void-logger.ts";
 
 describe("client", () => {
   describe("createChannel", () => {
@@ -110,6 +111,7 @@ describe("client", () => {
       const client = new Client({
         source,
         target,
+        logger: new VoidLogger(),
       });
 
       let readyPromise = {

@@ -41,9 +41,7 @@ describe("queryForwarding", () => {
       "message",
     );
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    smeeClient.stop();
+    await smeeClient.stop();
     await smeeServer.stop();
     await webhookServer.stop();
   });
@@ -83,9 +81,7 @@ describe("queryForwarding", () => {
       "message",
     );
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    smeeClient.stop();
+    await smeeClient.stop();
     await smeeServer.stop();
     await webhookServer.stop();
   });
@@ -125,9 +121,7 @@ describe("queryForwarding", () => {
       "message",
     );
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    smeeClient.stop();
+    await smeeClient.stop();
     await smeeServer.stop();
     await webhookServer.stop();
   });

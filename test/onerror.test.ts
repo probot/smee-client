@@ -208,6 +208,7 @@ describe("onerror", () => {
     }
 
     await smeeClient.stop();
+    await smeeServer.stop();
     await webhookServer.stop();
   });
 });

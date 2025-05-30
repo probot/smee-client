@@ -120,7 +120,7 @@ class Client {
 
   get onmessage() {
     if (this.#events === null) {
-      return this.#events_onmessage || null;
+      return this.#events_onmessage;
     }
     return this.#events.onmessage;
   }

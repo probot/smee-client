@@ -12,4 +12,9 @@ export class VoidLogger {
   error(...args: any[]): void {
     this.errorCalls.push(args);
   }
+
+  reset(): void {
+    this.infoCalls = [];
+    this.errorCalls = [];
+  }
 }

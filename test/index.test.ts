@@ -87,7 +87,7 @@ describe("client", () => {
         expect(reqBody.body).toEqual({ hello: "world" });
 
         res.writeHead(200, { "content-type": "application/json" });
-        res.end(JSON.stringify(reqBody.body));
+        res.end(JSON.stringify(reqBody));
 
         ++callCount;
 
@@ -132,10 +132,12 @@ describe("client", () => {
       client.start();
 
       await readyPromise.promise;
+      const payload = { hello: "world" };
+      const rawData = JSON.stringify(payload);
 
       await fetch(target + "/", {
         method: "POST",
-        body: JSON.stringify({ body: { hello: "world" } }),
+        body: JSON.stringify({ body: payload, rawdata: rawData }),
         headers: {
           "content-type": "application/json",
         },
@@ -143,7 +145,7 @@ describe("client", () => {
 
       await fetch(source, {
         method: "POST",
-        body: JSON.stringify({ body: { hello: "world" } }),
+        body: JSON.stringify(payload),
         headers: {
           "content-type": "application/json",
         },

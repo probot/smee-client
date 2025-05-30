@@ -71,7 +71,9 @@ Options:
   } = options;
 
   async function setup() {
-    const source = options.url ?? (await Client.createChannel());
+    const source = await Client.createChannel({
+      newChannelUrl: options.url,
+    });
 
     const client = new Client({ source, target, queryForwarding });
     client.start();

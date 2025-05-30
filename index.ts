@@ -35,7 +35,7 @@ class Client {
 
   #onopen: () => void = () => {};
 
-  #onmessage: (msg: MessageEvent) => void = async (msg) => {
+  #onmessage: (msg: MessageEvent) => Promise<void> = async (msg) => {
     const data = JSON.parse(msg.data);
 
     const target = url.parse(this.#target, true);
@@ -106,7 +106,7 @@ class Client {
   static async createChannel({
     fetch = undiciFetch,
     newChannelUrl = "https://smee.io/new",
-  } = {}) {
+  } = {}): Promise<string> {
     const response = await fetch(newChannelUrl, {
       method: "HEAD",
       redirect: "manual",

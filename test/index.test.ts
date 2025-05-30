@@ -1,12 +1,10 @@
-import { Buffer } from "node:buffer";
-import type { IncomingMessage, ServerResponse } from "node:http";
-
 import { describe, test, expect } from "vitest";
 
 import { VoidLogger } from "./void-logger.ts";
 import { WebhookServer } from "./webhook-server.ts";
 
 import Client from "../index.ts";
+import { getPayload } from "./get-payload.ts";
 
 describe("client", () => {
   describe("createChannel", () => {
@@ -45,23 +43,6 @@ describe("client", () => {
     });
   });
 
-  function getPayload(request: IncomingMessage) {
-    return new Promise((resolve, reject) => {
-      const body = [] as Buffer[];
-      request.on("error", reject);
-      request.on("data", onData);
-      request.on("end", onEnd);
-
-      function onData(chunk: Buffer) {
-        body.push(chunk);
-      }
-
-      function onEnd() {
-        resolve(Buffer.concat(body).toString("utf8"));
-      }
-    });
-  }
-
   describe("onmessage", () => {
     test("returns a new channel", async () => {
       expect.assertions(7);
@@ -84,7 +65,7 @@ describe("client", () => {
       let callCount = 0;
 
       const server = new WebhookServer({
-        handler: async (req: IncomingMessage, res: ServerResponse) => {
+        handler: async (req, res) => {
           expect(req.method).toBe("POST");
           expect(req.url).toBe("/");
 

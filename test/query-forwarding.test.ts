@@ -1,5 +1,3 @@
-import type { IncomingMessage, ServerResponse } from "node:http";
-
 import { describe, test, expect } from "vitest";
 
 import { SmeeServer } from "./smee-server.ts";
@@ -10,23 +8,19 @@ import Client from "../index.ts";
 
 describe("queryForwarding", () => {
   test("by default forwards query parameters from source to target", async () => {
-    const smeeServer = new SmeeServer();
-    const webhookServer = new WebhookServer();
+    const webhookServer = new WebhookServer({
+      handler: async (req, res) => {
+        const url = new URL(req.url!, `http://${req.headers.host}`);
 
-    await smeeServer.start();
-
-    webhookServer.handler = async (
-      req: IncomingMessage,
-      res: ServerResponse,
-    ) => {
-      const url = new URL(req.url!, `http://${req.headers.host}`);
-
-      expect(url.searchParams.get("foo")).toBe("bar");
-      expect(url.searchParams.get("baz")).toBe("qux");
-      res.writeHead(200).end("OK");
-    };
-
+        expect(url.searchParams.get("foo")).toBe("bar");
+        expect(url.searchParams.get("baz")).toBe("qux");
+        res.writeHead(200).end("OK");
+      },
+    });
     await webhookServer.start();
+
+    const smeeServer = new SmeeServer();
+    await smeeServer.start();
 
     const smeeClient = new Client({
       source: `http://${smeeServer.host}:${smeeServer.port}/events`,
@@ -55,23 +49,19 @@ describe("queryForwarding", () => {
   });
 
   test("forwards query parameters from source to target", async () => {
-    const smeeServer = new SmeeServer();
-    const webhookServer = new WebhookServer();
+    const webhookServer = new WebhookServer({
+      handler: async (req, res) => {
+        const url = new URL(req.url!, `http://${req.headers.host}`);
 
-    await smeeServer.start();
-
-    webhookServer.handler = async (
-      req: IncomingMessage,
-      res: ServerResponse,
-    ) => {
-      const url = new URL(req.url!, `http://${req.headers.host}`);
-
-      expect(url.searchParams.get("foo")).toBe("bar");
-      expect(url.searchParams.get("baz")).toBe("qux");
-      res.writeHead(200).end("OK");
-    };
-
+        expect(url.searchParams.get("foo")).toBe("bar");
+        expect(url.searchParams.get("baz")).toBe("qux");
+        res.writeHead(200).end("OK");
+      },
+    });
     await webhookServer.start();
+
+    const smeeServer = new SmeeServer();
+    await smeeServer.start();
 
     const smeeClient = new Client({
       source: `http://${smeeServer.host}:${smeeServer.port}/events`,
@@ -101,23 +91,19 @@ describe("queryForwarding", () => {
   });
 
   test("does not forward query parameters from source to target if queryForwarding is false", async () => {
-    const smeeServer = new SmeeServer();
-    const webhookServer = new WebhookServer();
+    const webhookServer = new WebhookServer({
+      handler: async (req, res) => {
+        const url = new URL(req.url!, `http://${req.headers.host}`);
 
-    await smeeServer.start();
-
-    webhookServer.handler = async (
-      req: IncomingMessage,
-      res: ServerResponse,
-    ) => {
-      const url = new URL(req.url!, `http://${req.headers.host}`);
-
-      expect(url.searchParams.get("foo")).toBe(null);
-      expect(url.searchParams.get("baz")).toBe(null);
-      res.writeHead(200).end("OK");
-    };
-
+        expect(url.searchParams.get("foo")).toBe(null);
+        expect(url.searchParams.get("baz")).toBe(null);
+        res.writeHead(200).end("OK");
+      },
+    });
     await webhookServer.start();
+
+    const smeeServer = new SmeeServer();
+    await smeeServer.start();
 
     const smeeClient = new Client({
       source: `http://${smeeServer.host}:${smeeServer.port}/events`,

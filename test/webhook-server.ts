@@ -5,6 +5,7 @@ import {
   type ServerResponse,
 } from "node:http";
 import getPort from "get-port";
+import type { AddressInfo } from "node:net";
 
 type WebhookServerOptions = {
   host?: string;
@@ -26,12 +27,14 @@ export class WebhookServer {
     this.#port = port ?? 0;
     this.#host = host ?? "localhost";
     this.#handler = handler || defaultHandler;
-
     this.#server = new HttpServer();
   }
 
   async start(): Promise<void> {
     this.#port = await getPort({ port: this.#port });
+    this.#server.removeAllListeners("request");
+    this.#server.on("request", this.#handler);
+
     return new Promise((resolve, reject) => {
       this.#server.listen(
         {
@@ -42,6 +45,13 @@ export class WebhookServer {
           if (err) {
             reject(err);
           } else {
+            const {
+              address: host,
+              port,
+              family,
+            } = this.#server.address() as AddressInfo;
+            this.#host = family === "IPv6" ? `[${host}]` : host;
+            this.#port = port;
             resolve();
           }
         },
@@ -51,6 +61,7 @@ export class WebhookServer {
 
   async stop(): Promise<void> {
     return new Promise((resolve, reject) => {
+      this.#server.closeAllConnections();
       this.#server.close((err?: Error) => {
         if (err) {
           reject(err);

@@ -1,10 +1,10 @@
 import { describe, test, expect } from "vitest";
 
-import { VoidLogger } from "./void-logger.ts";
-import { WebhookServer } from "./webhook-server.ts";
+import { VoidLogger } from "./helpers/void-logger.ts";
+import { WebhookServer } from "./helpers/webhook-server.ts";
 
 import Client from "../index.ts";
-import { getPayload } from "./get-payload.ts";
+import { getPayload } from "./helpers/get-payload.ts";
 
 describe("client", () => {
   describe("createChannel", () => {

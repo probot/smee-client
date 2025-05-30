@@ -1,8 +1,8 @@
 import { describe, test, expect } from "vitest";
 
-import { SmeeServer } from "./smee-server.ts";
-import { WebhookServer } from "./webhook-server.ts";
-import { VoidLogger } from "./void-logger.ts";
+import { SmeeServer } from "./helpers/smee-server.ts";
+import { WebhookServer } from "./helpers/webhook-server.ts";
+import { VoidLogger } from "./helpers/void-logger.ts";
 
 import Client from "../index.ts";
 

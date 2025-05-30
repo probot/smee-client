@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 
-import { WebhookServer } from "./webhook-server.ts";
+import { WebhookServer } from "./helpers/webhook-server.ts";
 
 import SmeeClient from "../index.ts";
 

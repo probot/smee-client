@@ -40,7 +40,7 @@ describe("client", () => {
     });
   });
 
-  function getPayload(request: IncomingMessage) {
+  function getPayload(request: IncomingMessage): Promise<string> {
     return new Promise((resolve, reject) => {
       let body = "";
       request.on("error", reject);
@@ -82,7 +82,7 @@ describe("client", () => {
         expect(req.method).toBe("POST");
         expect(req.url).toBe("/");
 
-        const body = await getPayload(req);
+        const { body } = JSON.parse(await getPayload(req));
 
         expect(body).toBe(JSON.stringify({ hello: "world" }));
 
@@ -135,7 +135,7 @@ describe("client", () => {
 
       await fetch(target + "/", {
         method: "POST",
-        body: JSON.stringify({ hello: "world" }),
+        body: JSON.stringify({ body: { hello: "world" } }),
         headers: {
           "content-type": "application/json",
         },
@@ -143,7 +143,7 @@ describe("client", () => {
 
       await fetch(source, {
         method: "POST",
-        body: JSON.stringify({ hello: "world" }),
+        body: JSON.stringify({ body: { hello: "world" } }),
         headers: {
           "content-type": "application/json",
         },

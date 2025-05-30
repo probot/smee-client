@@ -114,26 +114,7 @@ describe("client", () => {
         logger: new VoidLogger(),
       });
 
-      let readyPromise = {
-        promise: undefined,
-        reject: undefined,
-        resolve: undefined,
-      } as {
-        promise?: Promise<any>;
-        resolve?: (value?: any) => any;
-        reject?: (reason?: any) => any;
-      };
-
-      readyPromise.promise = new Promise((resolve, reject) => {
-        readyPromise.resolve = resolve;
-        readyPromise.reject = reject;
-      });
-
-      client.onopen = readyPromise.resolve!;
-      client.onerror = readyPromise.reject!;
-      client.start();
-
-      await readyPromise.promise;
+      await client.start();
 
       await fetch(target + "/", {
         method: "POST",

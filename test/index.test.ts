@@ -82,12 +82,12 @@ describe("client", () => {
         expect(req.method).toBe("POST");
         expect(req.url).toBe("/");
 
-        const { body } = JSON.parse(await getPayload(req));
+        const reqBody = JSON.parse(await getPayload(req));
 
-        expect(body).toBe(JSON.stringify({ hello: "world" }));
+        expect(reqBody.body).toEqual({ hello: "world" });
 
         res.writeHead(200, { "content-type": "application/json" });
-        res.end(body);
+        res.end(JSON.stringify(reqBody.body));
 
         ++callCount;
 

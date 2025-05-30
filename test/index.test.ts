@@ -1,7 +1,10 @@
-import Client from "../index.ts";
 import { describe, test, expect } from "vitest";
-import { createServer, IncomingMessage } from "node:http";
-import { isIPv6, type AddressInfo } from "node:net";
+
+import { VoidLogger } from "./helpers/void-logger.ts";
+import { WebhookServer } from "./helpers/webhook-server.ts";
+
+import Client from "../index.ts";
+import { getPayload } from "./helpers/get-payload.ts";
 
 describe("client", () => {
   describe("createChannel", () => {
@@ -40,23 +43,6 @@ describe("client", () => {
     });
   });
 
-  function getPayload(request: IncomingMessage) {
-    return new Promise((resolve, reject) => {
-      let body = "";
-      request.on("error", reject);
-      request.on("data", onData);
-      request.on("end", onEnd);
-
-      function onData(chunk: Uint8Array) {
-        body += chunk;
-      }
-
-      function onEnd() {
-        resolve(body);
-      }
-    });
-  }
-
   describe("onmessage", () => {
     test("returns a new channel", async () => {
       expect.assertions(7);
@@ -78,60 +64,42 @@ describe("client", () => {
 
       let callCount = 0;
 
-      const server = createServer(async (req, res) => {
-        expect(req.method).toBe("POST");
-        expect(req.url).toBe("/");
+      const server = new WebhookServer({
+        handler: async (req, res) => {
+          try {
+            expect(req.method).toBe("POST");
+            expect(req.url).toBe("/");
 
-        const body = await getPayload(req);
+            const body = await getPayload(req);
 
-        expect(body).toBe(JSON.stringify({ hello: "world" }));
+            expect(body).toBe(JSON.stringify({ hello: "world" }));
 
-        res.writeHead(200, { "content-type": "application/json" });
-        res.end(body);
+            res.writeHead(200, { "content-type": "application/json" });
+            res.end(body);
 
-        ++callCount;
+            ++callCount;
 
-        if (callCount === 2) {
-          finishedPromise.resolve!();
-        }
+            if (callCount === 2) {
+              finishedPromise.resolve!();
+            }
+          } catch (err) {
+            finishedPromise.reject!(err);
+          }
+        },
       });
 
-      await new Promise((resolve) => server.listen(resolve));
+      await server.start();
 
-      let { address: host, port } = server.address() as AddressInfo;
-
-      if (isIPv6(host)) {
-        host = `[${host}]`;
-      }
-
-      const target = `http://${host}:${port}`;
+      const target = server.url;
       const source = await Client.createChannel();
 
       const client = new Client({
         source,
         target,
+        logger: new VoidLogger(),
       });
 
-      let readyPromise = {
-        promise: undefined,
-        reject: undefined,
-        resolve: undefined,
-      } as {
-        promise?: Promise<any>;
-        resolve?: (value?: any) => any;
-        reject?: (reason?: any) => any;
-      };
-
-      readyPromise.promise = new Promise((resolve, reject) => {
-        readyPromise.resolve = resolve;
-        readyPromise.reject = reject;
-      });
-
-      client.onopen = readyPromise.resolve!;
-      client.onerror = readyPromise.reject!;
-      client.start();
-
-      await readyPromise.promise;
+      await client.start();
 
       await fetch(target + "/", {
         method: "POST",
@@ -151,8 +119,7 @@ describe("client", () => {
 
       await finishedPromise.promise;
 
-      server.closeAllConnections();
-      server.close();
+      await server.stop();
 
       expect(callCount).toBe(2);
     });

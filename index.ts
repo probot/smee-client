@@ -32,6 +32,7 @@ class Client {
   #onerror: (err: ErrorEvent) => void = (err) => {
     this.#logger.error("Error in connection", err);
   };
+
   #onopen: () => void = () => {};
 
   #onmessage: (msg: MessageEvent) => void = async (msg) => {

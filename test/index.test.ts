@@ -66,20 +66,24 @@ describe("client", () => {
 
       const server = new WebhookServer({
         handler: async (req, res) => {
-          expect(req.method).toBe("POST");
-          expect(req.url).toBe("/");
+          try {
+            expect(req.method).toBe("POST");
+            expect(req.url).toBe("/");
 
-          const body = await getPayload(req);
+            const body = await getPayload(req);
 
-          expect(body).toBe(JSON.stringify({ hello: "world" }));
+            expect(body).toBe(JSON.stringify({ hello: "world" }));
 
-          res.writeHead(200, { "content-type": "application/json" });
-          res.end(body);
+            res.writeHead(200, { "content-type": "application/json" });
+            res.end(body);
 
-          ++callCount;
+            ++callCount;
 
-          if (callCount === 2) {
-            finishedPromise.resolve!();
+            if (callCount === 2) {
+              finishedPromise.resolve!();
+            }
+          } catch (err) {
+            finishedPromise.reject!(err);
           }
         },
       });

@@ -1,5 +1,7 @@
-import { describe, test, expect } from "vitest";
+import { Buffer } from "node:buffer";
 import type { IncomingMessage, ServerResponse } from "node:http";
+
+import { describe, test, expect } from "vitest";
 
 import { VoidLogger } from "./void-logger.ts";
 import { WebhookServer } from "./webhook-server.ts";
@@ -45,17 +47,17 @@ describe("client", () => {
 
   function getPayload(request: IncomingMessage) {
     return new Promise((resolve, reject) => {
-      let body = "";
+      const body = [] as Buffer[];
       request.on("error", reject);
       request.on("data", onData);
       request.on("end", onEnd);
 
-      function onData(chunk: Uint8Array) {
-        body += chunk;
+      function onData(chunk: Buffer) {
+        body.push(chunk);
       }
 
       function onEnd() {
-        resolve(body);
+        resolve(Buffer.concat(body).toString("utf8"));
       }
     });
   }

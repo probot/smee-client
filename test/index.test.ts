@@ -1,8 +1,10 @@
-import Client from "../index.ts";
 import { describe, test, expect } from "vitest";
-import { IncomingMessage, ServerResponse } from "node:http";
+import type { IncomingMessage, ServerResponse } from "node:http";
+
 import { VoidLogger } from "./void-logger.ts";
 import { WebhookServer } from "./webhook-server.ts";
+
+import Client from "../index.ts";
 
 describe("client", () => {
   describe("createChannel", () => {

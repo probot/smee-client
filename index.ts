@@ -51,8 +51,11 @@ class Client {
     }
   }
 
-  static async createChannel({ fetch = undiciFetch } = {}) {
-    const response = await fetch("https://smee.io/new", {
+  static async createChannel({
+    fetch = undiciFetch,
+    newChannelUrl = "https://smee.io/new",
+  } = {}) {
+    const response = await fetch(newChannelUrl, {
       method: "HEAD",
       redirect: "manual",
       dispatcher: proxyAgent,

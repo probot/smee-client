@@ -23,7 +23,7 @@ describe("queryForwarding", () => {
     await smeeServer.start();
 
     const smeeClient = new Client({
-      source: smeeServer.url,
+      source: smeeServer.channelUrl,
       target: webhookServer.url,
       logger: new VoidLogger(),
     });
@@ -64,7 +64,7 @@ describe("queryForwarding", () => {
     await smeeServer.start();
 
     const smeeClient = new Client({
-      source: smeeServer.url,
+      source: smeeServer.channelUrl,
       target: webhookServer.url,
       queryForwarding: true,
       logger: new VoidLogger(),
@@ -106,7 +106,7 @@ describe("queryForwarding", () => {
     await smeeServer.start();
 
     const smeeClient = new Client({
-      source: smeeServer.url,
+      source: smeeServer.channelUrl,
       target: webhookServer.url,
       queryForwarding: false,
       logger: new VoidLogger(),

@@ -47,7 +47,15 @@ export class SmeeServer {
       async (req: IncomingMessage, res: ServerResponse) => {
         const url = new URL(req.url!, `http://${this.#host}:${this.#port}`);
 
-        if (url.pathname === `/${this.#channelId}`) {
+        if (req.method === "HEAD" && url.pathname === "/new") {
+          res.writeHead(307, {
+            location: `http://${this.#host}:${this.#port}/${this.#channelId}`,
+          });
+          res.end();
+        } else if (
+          req.method === "GET" &&
+          url.pathname === `/${this.#channelId}`
+        ) {
           if (this.#emit) {
             // If there is an existing connection, close it before creating a new one
             this.#emit({}, "close");
@@ -116,6 +124,14 @@ export class SmeeServer {
   }
 
   get url(): string {
+    return `http://${this.#host}:${this.#port}`;
+  }
+
+  get channelUrl(): string {
     return `http://${this.#host}:${this.#port}/${this.#channelId}`;
+  }
+
+  get newUrl(): string {
+    return `http://${this.#host}:${this.#port}/new`;
   }
 }

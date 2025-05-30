@@ -86,7 +86,7 @@ describe("client", () => {
 
       await server.start();
 
-      const target = `http://${server.host}:${server.port}`;
+      const target = server.url;
       const source = await Client.createChannel();
 
       const client = new Client({

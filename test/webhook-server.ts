@@ -75,4 +75,8 @@ export class WebhookServer {
   get port(): number {
     return this.#port;
   }
+
+  get url(): string {
+    return `http://${this.#host}:${this.#port}`;
+  }
 }

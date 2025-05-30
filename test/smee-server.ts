@@ -36,6 +36,7 @@ export class SmeeServer {
   #server: ReturnType<typeof createServer>;
   #port: number;
   #host: string;
+  #channelId: string = Math.random().toString(36).substring(2, 15);
   #emit?: Awaited<ReturnType<typeof sse>>;
 
   constructor({ host, port }: SmeeServerOptions = {}) {
@@ -44,9 +45,9 @@ export class SmeeServer {
 
     this.#server = createServer(
       async (req: IncomingMessage, res: ServerResponse) => {
-        const path = new URL(req.url!, `http://${this.#host}:${this.#port}`);
+        const url = new URL(req.url!, `http://${this.#host}:${this.#port}`);
 
-        if (path.pathname === "/events") {
+        if (url.pathname === `/${this.#channelId}`) {
           if (this.#emit) {
             // If there is an existing connection, close it before creating a new one
             this.#emit({}, "close");
@@ -108,5 +109,13 @@ export class SmeeServer {
 
   get port(): number {
     return this.#port;
+  }
+
+  get channelId(): string {
+    return this.#channelId;
+  }
+
+  get url(): string {
+    return `http://${this.#host}:${this.#port}/${this.#channelId}`;
   }
 }

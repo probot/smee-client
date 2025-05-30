@@ -2,7 +2,7 @@ import { Buffer } from "node:buffer";
 import type { IncomingMessage } from "node:http";
 
 export function getPayload(request: IncomingMessage) {
-  return new Promise((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     const body = [] as Buffer[];
     request.on("error", reject);
     request.on("data", onData);

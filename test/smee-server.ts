@@ -94,11 +94,13 @@ export class SmeeServer {
 
     return new Promise((resolve, reject) => {
       this.#server.closeAllConnections();
+      this.#server.closeIdleConnections();
+
       this.#server.close((err?: Error) => {
         if (err) {
           reject(err);
         } else {
-          resolve();
+          queueMicrotask(() => resolve());
         }
       });
     });

@@ -40,7 +40,7 @@ describe("client", () => {
     });
   });
 
-  function getPayload(request: IncomingMessage) {
+  function getPayload(request: IncomingMessage): Promise<string> {
     return new Promise((resolve, reject) => {
       let body = "";
       request.on("error", reject);
@@ -82,12 +82,12 @@ describe("client", () => {
         expect(req.method).toBe("POST");
         expect(req.url).toBe("/");
 
-        const body = await getPayload(req);
+        const reqBody = JSON.parse(await getPayload(req));
 
-        expect(body).toBe(JSON.stringify({ hello: "world" }));
+        expect(reqBody.body).toEqual({ hello: "world" });
 
         res.writeHead(200, { "content-type": "application/json" });
-        res.end(body);
+        res.end(JSON.stringify(reqBody));
 
         ++callCount;
 
@@ -132,10 +132,12 @@ describe("client", () => {
       client.start();
 
       await readyPromise.promise;
+      const payload = { hello: "world" };
+      const rawData = JSON.stringify(payload);
 
       await fetch(target + "/", {
         method: "POST",
-        body: JSON.stringify({ hello: "world" }),
+        body: JSON.stringify({ body: payload, rawdata: rawData }),
         headers: {
           "content-type": "application/json",
         },
@@ -143,7 +145,7 @@ describe("client", () => {
 
       await fetch(source, {
         method: "POST",
-        body: JSON.stringify({ hello: "world" }),
+        body: JSON.stringify(payload),
         headers: {
           "content-type": "application/json",
         },

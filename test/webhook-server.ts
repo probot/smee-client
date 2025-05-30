@@ -10,11 +10,7 @@ import type { AddressInfo } from "node:net";
 type WebhookServerOptions = {
   host?: string;
   port?: number;
-  handler?: (req: IncomingMessage, res: ServerResponse) => void;
-};
-
-const defaultHandler = (req: IncomingMessage, res: ServerResponse) => {
-  res.writeHead(404).end("Not Found");
+  handler: (req: IncomingMessage, res: ServerResponse) => void | Promise<void>;
 };
 
 export class WebhookServer {
@@ -23,10 +19,10 @@ export class WebhookServer {
   #host: string;
   #handler: (req: IncomingMessage, res: ServerResponse) => void;
 
-  constructor({ host, port, handler }: WebhookServerOptions = {}) {
+  constructor({ host, port, handler }: WebhookServerOptions) {
     this.#port = port ?? 0;
     this.#host = host ?? "localhost";
-    this.#handler = handler || defaultHandler;
+    this.#handler = handler;
     this.#server = new HttpServer();
   }
 
@@ -70,12 +66,6 @@ export class WebhookServer {
         }
       });
     });
-  }
-
-  set handler(handler: (req: IncomingMessage, res: ServerResponse) => void) {
-    this.#server.removeListener("request", this.#handler);
-    this.#handler = handler;
-    this.#server.on("request", this.#handler);
   }
 
   get host(): string {

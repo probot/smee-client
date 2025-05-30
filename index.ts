@@ -14,6 +14,8 @@ type Severity = "info" | "error";
 interface Options {
   source: string;
   target: string;
+  healthcheck: number;
+  maxPingDifference: number;
   logger?: Pick<Console, Severity>;
   fetch?: any;
 }
@@ -23,6 +25,9 @@ const proxyAgent = new EnvHttpProxyAgent();
 class Client {
   #source: string;
   #target: string;
+  healthcheck: number;
+  maxPingDifference: number;
+  #lastPing: number;
   #fetch: typeof undiciFetch;
   #logger: Pick<Console, Severity>;
   #events!: EventSource;
@@ -30,11 +35,16 @@ class Client {
   constructor({
     source,
     target,
+    healthcheck,
+    maxPingDifference,
     logger = console,
     fetch = undiciFetch,
   }: Options) {
     this.#source = source;
     this.#target = target;
+    this.healthcheck = healthcheck;
+    this.maxPingDifference = maxPingDifference;
+    this.#lastPing = Date.now();
     this.#logger = logger!;
     this.#fetch = fetch;
 
@@ -99,6 +109,11 @@ class Client {
     this.#logger.info("Connected", this.#events.url);
   }
 
+  onping() {
+    this.#logger.info(`Received a ping on ${new Date().toISOString()}`);
+    this.#lastPing = Date.now();
+  }
+
   onerror(err: ErrorEvent) {
     this.#logger.error(err);
   }
@@ -124,6 +139,21 @@ class Client {
     events.addEventListener("message", this.onmessage.bind(this));
     events.addEventListener("open", this.onopen.bind(this));
     events.addEventListener("error", this.onerror.bind(this));
+
+    if (this.healthcheck) {
+      events.addEventListener("ping", this.onping.bind(this));
+
+      setInterval(() => {
+        const difference = (Date.now() - this.#lastPing) / 1000;
+
+        if (difference > this.maxPingDifference) {
+          this.#logger.error(
+            `Maximum ping difference exceeded. (Difference: ${difference.toFixed(4)}s, Maximum Allowed: ${this.maxPingDifference}s)`,
+          );
+          process.exit(1);
+        }
+      }, this.healthcheck * 1000);
+    }
 
     this.#logger.info(`Forwarding ${this.#source} to ${this.#target}`);
     this.#events = events;

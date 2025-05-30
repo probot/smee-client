@@ -65,11 +65,8 @@ class Client {
 
     delete data.query;
 
-    const body = data.body;
+    const body = JSON.stringify(data.body);
     delete data.body;
-
-    const rawData = data.rawdata;
-    delete data.rawdata;
 
     const headers: { [key: string]: any } = {};
 
@@ -88,8 +85,7 @@ class Client {
       const response = await this.#fetch(url.format(target), {
         method: "POST",
         mode: data["sec-fetch-mode"],
-        // Take advantage of the `rawData` field to send the original request body in order to be able to verify the signature
-        body: JSON.stringify({ body, rawData }),
+        body,
         headers,
         dispatcher: proxyAgent,
       });

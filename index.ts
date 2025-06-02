@@ -29,7 +29,7 @@ class Client {
   #logger: Pick<Console, Severity>;
   #events: EventSource | null = null;
   #queryForwarding: boolean = true;
-  #maxConnectionTimeout: number; // 10 seconds
+  #maxConnectionTimeout: number;
 
   #onerror: (err: ErrorEvent) => void = (err) => {
     this.#logger.error("Error in connection", err);
@@ -216,6 +216,25 @@ class Client {
       events.addEventListener("error", onStartError, { once: true });
     });
 
+    const timeoutConnection = new Promise<void>((_, reject) => {
+      setTimeout(async () => {
+        if (events.readyState === EventSource.OPEN) {
+          // If the connection is already open, we don't need to reject
+          return;
+        }
+
+        this.#logger.error(
+          `Connection to ${this.#source} timed out after ${this.#maxConnectionTimeout}ms`,
+        );
+        reject(
+          new Error(
+            `Connection to ${this.#source} timed out after ${this.#maxConnectionTimeout}ms`,
+          ),
+        );
+        await this.stop();
+      }, this.#maxConnectionTimeout)?.unref();
+    });
+
     this.#events = events;
 
     events.addEventListener("message", this.#onmessage.bind(this));
@@ -232,7 +251,7 @@ class Client {
       events.onerror = this.#events_onerror;
     }
 
-    await establishConnection;
+    await Promise.race([establishConnection, timeoutConnection]);
 
     return events;
   }

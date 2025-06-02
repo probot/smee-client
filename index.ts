@@ -52,7 +52,7 @@ class Client {
 
   #onopen: () => void = () => {};
 
-  #onmessage: (msg: MessageEvent) => void = async (msg) => {
+  #onmessage: (msg: MessageEvent) => Promise<void> = async (msg) => {
     const data = JSON.parse(msg.data);
 
     const target = new URL(this.#target);
@@ -120,7 +120,7 @@ class Client {
   static async createChannel({
     fetch = undiciFetch,
     newChannelUrl = "https://smee.io/new",
-  } = {}) {
+  } = {}): Promise<string> {
     const response = await fetch(newChannelUrl, {
       method: "HEAD",
       redirect: "manual",
@@ -256,4 +256,7 @@ class Client {
   }
 }
 
-export default Client;
+export {
+  Client as default,
+  Client as "module.exports", // For require(esm) compatibility
+};

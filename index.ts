@@ -17,6 +17,7 @@ interface Options {
   logger?: Pick<Console, Severity>;
   queryForwarding?: boolean;
   fetch?: any;
+  maxConnectionTimeout?: number;
 }
 
 const proxyAgent = new EnvHttpProxyAgent();
@@ -28,6 +29,7 @@ class Client {
   #logger: Pick<Console, Severity>;
   #events: EventSource | null = null;
   #queryForwarding: boolean = true;
+  #maxConnectionTimeout: number; // 10 seconds
 
   #onerror: (err: ErrorEvent) => void = (err) => {
     this.#logger.error("Error in connection", err);
@@ -86,6 +88,7 @@ class Client {
     target,
     logger = console,
     fetch = undiciFetch,
+    maxConnectionTimeout = 10000,
     queryForwarding = true,
   }: Options) {
     this.#source = source;
@@ -93,6 +96,7 @@ class Client {
     this.#logger = logger!;
     this.#fetch = fetch;
     this.#queryForwarding = queryForwarding;
+    this.#maxConnectionTimeout = maxConnectionTimeout;
 
     if (
       !validator.isURL(this.#source, {
@@ -192,8 +196,8 @@ class Client {
     // Reconnect immediately
     (events as any).reconnectInterval = 0; // This isn't a valid property of EventSource
 
-    const connected = new Promise<void>((resolve, reject) => {
-      const onError = (err: ErrorEvent) => {
+    const establishConnection = new Promise<void>((resolve, reject) => {
+      const onStartError = (err: ErrorEvent) => {
         if (events.readyState === EventSource.CLOSED) {
           this.#logger.error("Connection closed");
         } else {
@@ -204,10 +208,12 @@ class Client {
 
       events.addEventListener("open", () => {
         this.#logger.info(`Connected to ${this.#source}`);
-        events.removeEventListener("error", onError);
+        events.removeEventListener("error", onStartError);
+
+        this.#logger.info(`Forwarding ${this.#source} to ${this.#target}`);
         resolve();
       });
-      events.addEventListener("error", onError);
+      events.addEventListener("error", onStartError, { once: true });
     });
 
     this.#events = events;
@@ -226,9 +232,7 @@ class Client {
       events.onerror = this.#events_onerror;
     }
 
-    this.#logger.info(`Forwarding ${this.#source} to ${this.#target}`);
-
-    await connected;
+    await establishConnection;
 
     return events;
   }

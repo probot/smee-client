@@ -37,10 +37,10 @@ describe("onopen", () => {
 
     expect(logger.infoCalls.length).toBe(2);
     expect(logger.infoCalls[0][0]).toBe(
-      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
+      `Connected to ${smeeServer.channelUrl}`,
     );
     expect(logger.infoCalls[1][0]).toBe(
-      `Connected to ${smeeServer.channelUrl}`,
+      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
     );
 
     await smeeClient.stop();
@@ -82,12 +82,12 @@ describe("onopen", () => {
     expect(logger.errorCalls.length).toBe(0);
 
     expect(logger.infoCalls.length).toBe(3);
-    expect(logger.infoCalls[0][0]).toBe(
-      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
-    );
-    expect(logger.infoCalls[1][0]).toBe("Correct open handler");
-    expect(logger.infoCalls[2][0]).toBe(
+    expect(logger.infoCalls[0][0]).toBe("Correct open handler");
+    expect(logger.infoCalls[1][0]).toBe(
       `Connected to ${smeeServer.channelUrl}`,
+    );
+    expect(logger.infoCalls[2][0]).toBe(
+      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
     );
 
     await smeeClient.stop();
@@ -132,10 +132,10 @@ describe("onopen", () => {
 
     expect(logger.infoCalls.length).toBe(2);
     expect(logger.infoCalls[0][0]).toBe(
-      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
+      `Connected to ${smeeServer.channelUrl}`,
     );
     expect(logger.infoCalls[1][0]).toBe(
-      `Connected to ${smeeServer.channelUrl}`,
+      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
     );
 
     await smeeClient.stop();
@@ -179,12 +179,12 @@ describe("onopen", () => {
     expect(logger.errorCalls.length).toBe(0);
 
     expect(logger.infoCalls.length).toBe(4);
-    expect(logger.infoCalls[0][0]).toBe(
-      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
-    );
-    expect(logger.infoCalls[1][0]).toBe("Wrong open handler");
-    expect(logger.infoCalls[2][0]).toBe(
+    expect(logger.infoCalls[0][0]).toBe("Wrong open handler");
+    expect(logger.infoCalls[1][0]).toBe(
       `Connected to ${smeeServer.channelUrl}`,
+    );
+    expect(logger.infoCalls[2][0]).toBe(
+      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
     );
     expect(logger.infoCalls[3][0]).toBe(`Connection closed`);
 
@@ -194,12 +194,12 @@ describe("onopen", () => {
     await smeeClient.stop();
 
     expect(logger.infoCalls.length).toBe(4);
-    expect(logger.infoCalls[0][0]).toBe(
-      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
-    );
-    expect(logger.infoCalls[1][0]).toBe("Correct open handler");
-    expect(logger.infoCalls[2][0]).toBe(
+    expect(logger.infoCalls[0][0]).toBe("Correct open handler");
+    expect(logger.infoCalls[1][0]).toBe(
       `Connected to ${smeeServer.channelUrl}`,
+    );
+    expect(logger.infoCalls[2][0]).toBe(
+      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
     );
     expect(logger.infoCalls[3][0]).toBe(`Connection closed`);
 
@@ -253,12 +253,12 @@ describe("onopen", () => {
     await smeeClient.stop();
 
     expect(logger.infoCalls.length).toBe(4);
-    expect(logger.infoCalls[0][0]).toBe(
-      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
-    );
-    expect(logger.infoCalls[1][0]).toBe("Correct open handler");
-    expect(logger.infoCalls[2][0]).toBe(
+    expect(logger.infoCalls[0][0]).toBe("Correct open handler");
+    expect(logger.infoCalls[1][0]).toBe(
       `Connected to ${smeeServer.channelUrl}`,
+    );
+    expect(logger.infoCalls[2][0]).toBe(
+      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
     );
     expect(logger.infoCalls[3][0]).toBe(`Connection closed`);
 

@@ -30,6 +30,7 @@ class Client {
   #events: EventSource | null = null;
   #queryForwarding: boolean = true;
   #maxConnectionTimeout: number;
+  #forward: boolean = false;
 
   #onerror: (err: ErrorEvent) => void = (err) => {
     this.#logger.error("Error in connection", err);
@@ -38,6 +39,10 @@ class Client {
   #onopen: () => void = () => {};
 
   #onmessage: (msg: MessageEvent) => Promise<void> = async (msg) => {
+    if (!this.#forward) {
+      return;
+    }
+
     const data = JSON.parse(msg.data);
 
     const target = url.parse(this.#target, true);
@@ -97,6 +102,7 @@ class Client {
     this.#fetch = fetch;
     this.#queryForwarding = queryForwarding;
     this.#maxConnectionTimeout = maxConnectionTimeout;
+    this.#forward = false;
 
     if (
       !validator.isURL(this.#source, {
@@ -210,7 +216,7 @@ class Client {
         this.#logger.info(`Connected to ${this.#source}`);
         events.removeEventListener("error", onStartError);
 
-        this.#logger.info(`Forwarding ${this.#source} to ${this.#target}`);
+        this.#startForwarding();
         resolve();
       });
       events.addEventListener("error", onStartError, { once: true });
@@ -260,8 +266,45 @@ class Client {
     if (this.#events) {
       this.#events.close();
       this.#events = null as any;
+      this.#stopForwarding();
       this.#logger.info("Connection closed");
     }
+  }
+
+  #startForwarding() {
+    if (this.#forward === true) {
+      return;
+    }
+    this.#forward = true;
+    this.#logger.info(`Forwarding ${this.#source} to ${this.#target}`);
+  }
+
+  startForwarding() {
+    if (this.#forward === true) {
+      this.#logger.info(
+        `Forwarding ${this.#source} to ${this.#target} is already enabled`,
+      );
+      return;
+    }
+    this.#startForwarding();
+  }
+
+  #stopForwarding() {
+    if (this.#forward === false) {
+      return;
+    }
+    this.#forward = false;
+    this.#logger.info(`Stopped forwarding ${this.#source} to ${this.#target}`);
+  }
+
+  stopForwarding() {
+    if (this.#forward === false) {
+      this.#logger.info(
+        `Forwarding ${this.#source} to ${this.#target} is already disabled`,
+      );
+      return;
+    }
+    this.#stopForwarding();
   }
 }
 

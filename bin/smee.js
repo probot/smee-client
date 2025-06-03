@@ -23,7 +23,6 @@ const { values: options } = parseArgs({
     url: {
       type: "string",
       short: "u",
-      default: "https://smee.io/new",
     },
     target: {
       type: "string",
@@ -71,9 +70,7 @@ Options:
   } = options;
 
   async function setup() {
-    const source = await Client.createChannel({
-      newChannelUrl: options.url,
-    });
+    const source = options.url || (await Client.createChannel());
 
     const client = new Client({ source, target, queryForwarding });
     client.start();

@@ -30,7 +30,7 @@ class Client {
   #logger: Pick<Console, Severity>;
   #events: EventSource | null = null;
   #queryForwarding: boolean = true;
-  #maxConnectionTimeout: number;
+  #maxConnectionTimeout: number | undefined;
   #forward: boolean | undefined = undefined;
 
   #onerror: (err: ErrorEvent) => void = (err) => {
@@ -94,7 +94,7 @@ class Client {
     target,
     logger = console,
     fetch = undiciFetch,
-    maxConnectionTimeout = 10000,
+    maxConnectionTimeout,
     queryForwarding = true,
     forward,
   }: Options) {
@@ -226,25 +226,6 @@ class Client {
       events.addEventListener("error", onStartError, { once: true });
     });
 
-    const timeoutConnection = new Promise<void>((_, reject) => {
-      setTimeout(async () => {
-        if (events.readyState === EventSource.OPEN) {
-          // If the connection is already open, we don't need to reject
-          return;
-        }
-
-        this.#logger.error(
-          `Connection to ${this.#source} timed out after ${this.#maxConnectionTimeout}ms`,
-        );
-        reject(
-          new Error(
-            `Connection to ${this.#source} timed out after ${this.#maxConnectionTimeout}ms`,
-          ),
-        );
-        await this.stop();
-      }, this.#maxConnectionTimeout)?.unref();
-    });
-
     this.#events = events;
 
     events.addEventListener("message", this.#onmessage.bind(this));
@@ -261,7 +242,29 @@ class Client {
       events.onerror = this.#events_onerror;
     }
 
-    await Promise.race([establishConnection, timeoutConnection]);
+    if (this.#maxConnectionTimeout !== undefined) {
+      const timeoutConnection = new Promise<void>((_, reject) => {
+        setTimeout(async () => {
+          if (events.readyState === EventSource.OPEN) {
+            // If the connection is already open, we don't need to reject
+            return;
+          }
+
+          this.#logger.error(
+            `Connection to ${this.#source} timed out after ${this.#maxConnectionTimeout}ms`,
+          );
+          reject(
+            new Error(
+              `Connection to ${this.#source} timed out after ${this.#maxConnectionTimeout}ms`,
+            ),
+          );
+          await this.stop();
+        }, this.#maxConnectionTimeout)?.unref();
+      });
+      await Promise.race([establishConnection, timeoutConnection]);
+    } else {
+      await establishConnection;
+    }
 
     return events;
   }

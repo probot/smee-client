@@ -18,6 +18,7 @@ interface Options {
   queryForwarding?: boolean;
   fetch?: any;
   maxConnectionTimeout?: number;
+  forward?: boolean;
 }
 
 const proxyAgent = new EnvHttpProxyAgent();
@@ -30,7 +31,7 @@ class Client {
   #events: EventSource | null = null;
   #queryForwarding: boolean = true;
   #maxConnectionTimeout: number;
-  #forward: boolean = false;
+  #forward: boolean | undefined = undefined;
 
   #onerror: (err: ErrorEvent) => void = (err) => {
     this.#logger.error("Error in connection", err);
@@ -95,6 +96,7 @@ class Client {
     fetch = undiciFetch,
     maxConnectionTimeout = 10000,
     queryForwarding = true,
+    forward,
   }: Options) {
     this.#source = source;
     this.#target = target;
@@ -102,7 +104,7 @@ class Client {
     this.#fetch = fetch;
     this.#queryForwarding = queryForwarding;
     this.#maxConnectionTimeout = maxConnectionTimeout;
-    this.#forward = false;
+    this.#forward = forward;
 
     if (
       !validator.isURL(this.#source, {
@@ -216,7 +218,9 @@ class Client {
         this.#logger.info(`Connected to ${this.#source}`);
         events.removeEventListener("error", onStartError);
 
-        this.#startForwarding();
+        if (this.#forward !== false) {
+          this.#startForwarding();
+        }
         resolve();
       });
       events.addEventListener("error", onStartError, { once: true });
@@ -264,9 +268,10 @@ class Client {
 
   async stop() {
     if (this.#events) {
+      this.#stopForwarding();
       this.#events.close();
       this.#events = null as any;
-      this.#stopForwarding();
+      this.#forward = undefined;
       this.#logger.info("Connection closed");
     }
   }
@@ -290,7 +295,7 @@ class Client {
   }
 
   #stopForwarding() {
-    if (this.#forward === false) {
+    if (this.#forward !== true) {
       return;
     }
     this.#forward = false;
@@ -298,7 +303,7 @@ class Client {
   }
 
   stopForwarding() {
-    if (this.#forward === false) {
+    if (this.#forward !== true) {
       this.#logger.info(
         `Forwarding ${this.#source} to ${this.#target} is already disabled`,
       );

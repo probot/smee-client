@@ -51,10 +51,10 @@ describe("onmessage", () => {
 
     expect(logger.infoCalls.length).toBe(4);
     expect(logger.infoCalls[0][0]).toBe(
-      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
+      `Connected to ${smeeServer.channelUrl}`,
     );
     expect(logger.infoCalls[1][0]).toBe(
-      `Connected to ${smeeServer.channelUrl}`,
+      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
     );
     expect(logger.infoCalls[2][0]).toBe(`Custom message handler`);
     expect(logger.infoCalls[3][0]).toBe(`POST ${webhookServer.url}/ - 200`);
@@ -109,10 +109,10 @@ describe("onmessage", () => {
 
     expect(logger.infoCalls.length).toBe(3);
     expect(logger.infoCalls[0][0]).toBe(
-      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
+      `Connected to ${smeeServer.channelUrl}`,
     );
     expect(logger.infoCalls[1][0]).toBe(
-      `Connected to ${smeeServer.channelUrl}`,
+      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
     );
     expect(logger.infoCalls[2][0]).toBe(`POST ${webhookServer.url}/ - 200`);
 
@@ -164,10 +164,10 @@ describe("onmessage", () => {
 
     expect(logger.infoCalls.length).toBe(4);
     expect(logger.infoCalls[0][0]).toBe(
-      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
+      `Connected to ${smeeServer.channelUrl}`,
     );
     expect(logger.infoCalls[1][0]).toBe(
-      `Connected to ${smeeServer.channelUrl}`,
+      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
     );
     expect(logger.infoCalls[2][0]).toBe("Custom message handler");
     expect(logger.infoCalls[3][0]).toBe(`POST ${webhookServer.url}/ - 200`);

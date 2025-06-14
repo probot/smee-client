@@ -21,7 +21,7 @@ interface Options {
 
 const proxyAgent = new EnvHttpProxyAgent();
 
-class Client {
+class SmeeClient {
   #source: string;
   #target: string;
   #fetch: typeof undiciFetch;
@@ -243,6 +243,7 @@ class Client {
 }
 
 export {
-  Client as default,
-  Client as "module.exports", // For require(esm) compatibility
+  SmeeClient as default,
+  SmeeClient as "module.exports", // For require(esm) compatibility
+  SmeeClient
 };

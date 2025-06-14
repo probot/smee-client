@@ -30,7 +30,11 @@ class SmeeClient {
   #queryForwarding: boolean = true;
 
   #onerror: (err: ErrorEvent) => void = (err) => {
-    this.#logger.error("Error in connection", err);
+    if (this.#events?.readyState === EventSource.CLOSED) {
+      this.#logger.error("Connection closed");
+    } else {
+      this.#logger.error("Error in connection", err);
+    }
   };
 
   #onopen: () => void = () => {};
@@ -193,21 +197,12 @@ class SmeeClient {
     (events as any).reconnectInterval = 0; // This isn't a valid property of EventSource
 
     const connected = new Promise<void>((resolve, reject) => {
-      const onError = (err: ErrorEvent) => {
-        if (events.readyState === EventSource.CLOSED) {
-          this.#logger.error("Connection closed");
-        } else {
-          this.#logger.error("Error in connection", err);
-        }
-        reject(err);
-      };
-
       events.addEventListener("open", () => {
         this.#logger.info(`Connected to ${this.#source}`);
-        events.removeEventListener("error", onError);
+        events.removeEventListener("error", reject);
         resolve();
       });
-      events.addEventListener("error", onError);
+      events.addEventListener("error", reject);
     });
 
     this.#events = events;

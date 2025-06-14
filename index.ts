@@ -245,5 +245,5 @@ class SmeeClient {
 export {
   SmeeClient as default,
   SmeeClient as "module.exports", // For require(esm) compatibility
-  SmeeClient
+  SmeeClient,
 };

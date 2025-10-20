@@ -28,13 +28,11 @@
   "license": "ISC",
   "dependencies": {
     "eventsource": "^4.0.0",
-    "undici": "^7.0.0",
-    "validator": "^13.11.0"
+    "undici": "^7.0.0"
   },
   "devDependencies": {
     "@octokit/tsconfig": "^4.0.0",
     "@types/node": "^20.0.0",
-    "@types/validator": "^13.11.6",
     "@vitest/coverage-v8": "^3.0.0",
     "get-port": "^7.1.0",
     "prettier": "^3.1.0",

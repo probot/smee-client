@@ -132,6 +132,7 @@ class SmeeClient {
     this.#maxConnectionTimeout = maxConnectionTimeout;
     this.#forward = forward;
   }
+
   static async createChannel({
     fetch = undiciFetch,
     newChannelUrl = "https://smee.io/new",

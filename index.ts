@@ -208,11 +208,11 @@ class SmeeClient {
     // Reconnect immediately
     (events as any).reconnectInterval = 0; // This isn't a valid property of EventSource
 
-    const connected = new Promise<void>((resolve, reject) => {
+    const establishConnection = new Promise<void>((resolve, reject) => {
       events.addEventListener("open", () => {
         this.#logger.info(`Connected to ${this.#source}`);
         events.removeEventListener("error", reject);
- 
+
         if (this.#forward !== false) {
           this.#startForwarding();
         }

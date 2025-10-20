@@ -23,7 +23,7 @@ interface Options {
 
 const proxyAgent = new EnvHttpProxyAgent();
 
-class Client {
+class SmeeClient {
   #source: string;
   #target: string;
   #fetch: typeof undiciFetch;
@@ -34,7 +34,11 @@ class Client {
   #forward: boolean | undefined = undefined;
 
   #onerror: (err: ErrorEvent) => void = (err) => {
-    this.#logger.error("Error in connection", err);
+    if (this.#events?.readyState === EventSource.CLOSED) {
+      this.#logger.error("Connection closed");
+    } else {
+      this.#logger.error("Error in connection", err);
+    }
   };
 
   #onopen: () => void = () => {};
@@ -204,26 +208,17 @@ class Client {
     // Reconnect immediately
     (events as any).reconnectInterval = 0; // This isn't a valid property of EventSource
 
-    const establishConnection = new Promise<void>((resolve, reject) => {
-      const onStartError = (err: ErrorEvent) => {
-        if (events.readyState === EventSource.CLOSED) {
-          this.#logger.error("Connection closed");
-        } else {
-          this.#logger.error("Error in connection", err);
-        }
-        reject(err);
-      };
-
+    const connected = new Promise<void>((resolve, reject) => {
       events.addEventListener("open", () => {
         this.#logger.info(`Connected to ${this.#source}`);
-        events.removeEventListener("error", onStartError);
-
+        events.removeEventListener("error", reject);
+ 
         if (this.#forward !== false) {
           this.#startForwarding();
         }
         resolve();
       });
-      events.addEventListener("error", onStartError, { once: true });
+      events.addEventListener("error", reject);
     });
 
     this.#events = events;
@@ -317,6 +312,7 @@ class Client {
 }
 
 export {
-  Client as default,
-  Client as "module.exports", // For require(esm) compatibility
+  SmeeClient as default,
+  SmeeClient as "module.exports", // For require(esm) compatibility
+  SmeeClient,
 };

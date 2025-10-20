@@ -44,10 +44,10 @@ describe("connection", () => {
 
     expect(logger.infoCalls.length).toBe(2);
     expect(logger.infoCalls[0][0]).toBe(
-      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
+      `Connected to ${smeeServer.channelUrl}`,
     );
     expect(logger.infoCalls[1][0]).toBe(
-      `Connected to ${smeeServer.channelUrl}`,
+      `Forwarding ${smeeServer.channelUrl} to ${webhookServer.url}`,
     );
 
     await smeeClient.stop();

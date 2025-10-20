@@ -14,6 +14,8 @@ interface Options {
   logger?: Pick<Console, Severity>;
   queryForwarding?: boolean;
   fetch?: any;
+  maxConnectionTimeout?: number;
+  forward?: boolean;
 }
 
 const proxyAgent = new EnvHttpProxyAgent();
@@ -38,21 +40,31 @@ function validateURL(urlString: string): asserts urlString is string {
   }
 }
 
-class Client {
+class SmeeClient {
   #source: string;
   #target: string;
   #fetch: typeof undiciFetch;
   #logger: Pick<Console, Severity>;
   #events: EventSource | null = null;
   #queryForwarding: boolean = true;
+  #maxConnectionTimeout: number | undefined;
+  #forward: boolean | undefined = undefined;
 
   #onerror: (err: ErrorEvent) => void = (err) => {
-    this.#logger.error("Error in connection", err);
+    if (this.#events?.readyState === EventSource.CLOSED) {
+      this.#logger.error("Connection closed");
+    } else {
+      this.#logger.error("Error in connection", err);
+    }
   };
 
   #onopen: () => void = () => {};
 
   #onmessage: (msg: MessageEvent) => Promise<void> = async (msg) => {
+    if (!this.#forward) {
+      return;
+    }
+
     const data = JSON.parse(msg.data);
 
     const target = new URL(this.#target);
@@ -105,7 +117,9 @@ class Client {
     target,
     logger = console,
     fetch = undiciFetch,
+    maxConnectionTimeout,
     queryForwarding = true,
+    forward,
   }: Options) {
     validateURL(target);
     validateURL(source);
@@ -115,8 +129,9 @@ class Client {
     this.#logger = logger!;
     this.#fetch = fetch;
     this.#queryForwarding = queryForwarding;
+    this.#maxConnectionTimeout = maxConnectionTimeout;
+    this.#forward = forward;
   }
-
   static async createChannel({
     fetch = undiciFetch,
     newChannelUrl = "https://smee.io/new",
@@ -206,22 +221,17 @@ class Client {
     // Reconnect immediately
     (events as any).reconnectInterval = 0; // This isn't a valid property of EventSource
 
-    const connected = new Promise<void>((resolve, reject) => {
-      const onError = (err: ErrorEvent) => {
-        if (events.readyState === EventSource.CLOSED) {
-          this.#logger.error("Connection closed");
-        } else {
-          this.#logger.error("Error in connection", err);
-        }
-        reject(err);
-      };
-
+    const establishConnection = new Promise<void>((resolve, reject) => {
       events.addEventListener("open", () => {
         this.#logger.info(`Connected to ${this.#source}`);
-        events.removeEventListener("error", onError);
+        events.removeEventListener("error", reject);
+
+        if (this.#forward !== false) {
+          this.#startForwarding();
+        }
         resolve();
       });
-      events.addEventListener("error", onError);
+      events.addEventListener("error", reject);
     });
 
     this.#events = events;
@@ -240,23 +250,82 @@ class Client {
       events.onerror = this.#events_onerror;
     }
 
-    this.#logger.info(`Forwarding ${this.#source} to ${this.#target}`);
+    if (this.#maxConnectionTimeout !== undefined) {
+      const timeoutConnection = new Promise<void>((_, reject) => {
+        setTimeout(async () => {
+          if (events.readyState === EventSource.OPEN) {
+            // If the connection is already open, we don't need to reject
+            return;
+          }
 
-    await connected;
+          this.#logger.error(
+            `Connection to ${this.#source} timed out after ${this.#maxConnectionTimeout}ms`,
+          );
+          reject(
+            new Error(
+              `Connection to ${this.#source} timed out after ${this.#maxConnectionTimeout}ms`,
+            ),
+          );
+          await this.stop();
+        }, this.#maxConnectionTimeout)?.unref();
+      });
+      await Promise.race([establishConnection, timeoutConnection]);
+    } else {
+      await establishConnection;
+    }
 
     return events;
   }
 
   async stop() {
     if (this.#events) {
+      this.#stopForwarding();
       this.#events.close();
       this.#events = null as any;
+      this.#forward = undefined;
       this.#logger.info("Connection closed");
     }
+  }
+
+  #startForwarding() {
+    if (this.#forward === true) {
+      return;
+    }
+    this.#forward = true;
+    this.#logger.info(`Forwarding ${this.#source} to ${this.#target}`);
+  }
+
+  startForwarding() {
+    if (this.#forward === true) {
+      this.#logger.info(
+        `Forwarding ${this.#source} to ${this.#target} is already enabled`,
+      );
+      return;
+    }
+    this.#startForwarding();
+  }
+
+  #stopForwarding() {
+    if (this.#forward !== true) {
+      return;
+    }
+    this.#forward = false;
+    this.#logger.info(`Stopped forwarding ${this.#source} to ${this.#target}`);
+  }
+
+  stopForwarding() {
+    if (this.#forward !== true) {
+      this.#logger.info(
+        `Forwarding ${this.#source} to ${this.#target} is already disabled`,
+      );
+      return;
+    }
+    this.#stopForwarding();
   }
 }
 
 export {
-  Client as default,
-  Client as "module.exports", // For require(esm) compatibility
+  SmeeClient as default,
+  SmeeClient as "module.exports", // For require(esm) compatibility
+  SmeeClient,
 };

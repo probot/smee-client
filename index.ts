@@ -1,3 +1,4 @@
+import validator from "validator";
 import { fetch as undiciFetch, EnvHttpProxyAgent } from "undici";
 import {
   EventSource,
@@ -5,6 +6,8 @@ import {
   type EventSourceFetchInit,
   type ErrorEvent,
 } from "eventsource";
+import url from "node:url";
+import querystring from "node:querystring";
 
 type Severity = "info" | "error";
 
@@ -19,26 +22,6 @@ interface Options {
 }
 
 const proxyAgent = new EnvHttpProxyAgent();
-
-const trimTrailingSlash = (url: string): string => {
-  return url.lastIndexOf("/") === url.length - 1 ? url.slice(0, -1) : url;
-};
-
-function validateURL(urlString: string): asserts urlString is string {
-  if (URL.canParse(urlString) === false) {
-    throw new Error(`The provided URL is invalid.`);
-  }
-
-  const url = new URL(urlString);
-
-  if (!url.protocol || !["http:", "https:"].includes(url.protocol)) {
-    throw new Error(`The provided URL is invalid.`);
-  }
-
-  if (!url.host) {
-    throw new Error(`The provided URL is invalid.`);
-  }
-}
 
 class SmeeClient {
   #source: string;
@@ -67,13 +50,11 @@ class SmeeClient {
 
     const data = JSON.parse(msg.data);
 
-    const target = new URL(this.#target);
+    const target = url.parse(this.#target, true);
 
-    if (this.#queryForwarding && data.query) {
-      Object.keys(data.query).forEach((key) => {
-        target.searchParams.set(key, data.query[key]);
-      });
-      target.search = target.searchParams.toString();
+    if (this.#queryForwarding) {
+      const mergedQuery = { ...target.query, ...data.query };
+      target.search = querystring.stringify(mergedQuery);
     }
 
     delete data.query;
@@ -95,7 +76,7 @@ class SmeeClient {
     headers["content-type"] = "application/json";
 
     try {
-      const response = await this.#fetch(target, {
+      const response = await this.#fetch(url.format(target), {
         method: "POST",
         mode: data["sec-fetch-mode"],
         body,
@@ -121,16 +102,21 @@ class SmeeClient {
     queryForwarding = true,
     forward,
   }: Options) {
-    validateURL(target);
-    validateURL(source);
-
-    this.#source = trimTrailingSlash(new URL(source).toString());
-    this.#target = trimTrailingSlash(new URL(target).toString());
+    this.#source = source;
+    this.#target = target;
     this.#logger = logger!;
     this.#fetch = fetch;
     this.#queryForwarding = queryForwarding;
     this.#maxConnectionTimeout = maxConnectionTimeout;
     this.#forward = forward;
+
+    if (
+      !validator.isURL(this.#source, {
+        require_tld: false,
+      })
+    ) {
+      throw new Error("The provided URL is invalid.");
+    }
   }
 
   static async createChannel({

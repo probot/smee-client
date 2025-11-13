@@ -17,8 +17,6 @@ interface Options {
   logger?: Pick<Console, Severity>;
   queryForwarding?: boolean;
   fetch?: any;
-  maxConnectionTimeout?: number;
-  forward?: boolean;
 }
 
 const proxyAgent = new EnvHttpProxyAgent();
@@ -30,8 +28,6 @@ class SmeeClient {
   #logger: Pick<Console, Severity>;
   #events: EventSource | null = null;
   #queryForwarding: boolean = true;
-  #maxConnectionTimeout: number | undefined;
-  #forward: boolean | undefined = undefined;
 
   #onerror: (err: ErrorEvent) => void = (err) => {
     if (this.#events?.readyState === EventSource.CLOSED) {
@@ -44,10 +40,6 @@ class SmeeClient {
   #onopen: () => void = () => {};
 
   #onmessage: (msg: MessageEvent) => Promise<void> = async (msg) => {
-    if (!this.#forward) {
-      return;
-    }
-
     const data = JSON.parse(msg.data);
 
     const target = url.parse(this.#target, true);
@@ -98,17 +90,13 @@ class SmeeClient {
     target,
     logger = console,
     fetch = undiciFetch,
-    maxConnectionTimeout,
     queryForwarding = true,
-    forward,
   }: Options) {
     this.#source = source;
     this.#target = target;
     this.#logger = logger!;
     this.#fetch = fetch;
     this.#queryForwarding = queryForwarding;
-    this.#maxConnectionTimeout = maxConnectionTimeout;
-    this.#forward = forward;
 
     if (
       !validator.isURL(this.#source, {
@@ -208,14 +196,10 @@ class SmeeClient {
     // Reconnect immediately
     (events as any).reconnectInterval = 0; // This isn't a valid property of EventSource
 
-    const establishConnection = new Promise<void>((resolve, reject) => {
+    const connected = new Promise<void>((resolve, reject) => {
       events.addEventListener("open", () => {
         this.#logger.info(`Connected to ${this.#source}`);
         events.removeEventListener("error", reject);
-
-        if (this.#forward !== false) {
-          this.#startForwarding();
-        }
         resolve();
       });
       events.addEventListener("error", reject);
@@ -237,77 +221,19 @@ class SmeeClient {
       events.onerror = this.#events_onerror;
     }
 
-    if (this.#maxConnectionTimeout !== undefined) {
-      const timeoutConnection = new Promise<void>((_, reject) => {
-        setTimeout(async () => {
-          if (events.readyState === EventSource.OPEN) {
-            // If the connection is already open, we don't need to reject
-            return;
-          }
+    this.#logger.info(`Forwarding ${this.#source} to ${this.#target}`);
 
-          this.#logger.error(
-            `Connection to ${this.#source} timed out after ${this.#maxConnectionTimeout}ms`,
-          );
-          reject(
-            new Error(
-              `Connection to ${this.#source} timed out after ${this.#maxConnectionTimeout}ms`,
-            ),
-          );
-          await this.stop();
-        }, this.#maxConnectionTimeout)?.unref();
-      });
-      await Promise.race([establishConnection, timeoutConnection]);
-    } else {
-      await establishConnection;
-    }
+    await connected;
 
     return events;
   }
 
   async stop() {
     if (this.#events) {
-      this.#stopForwarding();
       this.#events.close();
       this.#events = null as any;
-      this.#forward = undefined;
       this.#logger.info("Connection closed");
     }
-  }
-
-  #startForwarding() {
-    if (this.#forward === true) {
-      return;
-    }
-    this.#forward = true;
-    this.#logger.info(`Forwarding ${this.#source} to ${this.#target}`);
-  }
-
-  startForwarding() {
-    if (this.#forward === true) {
-      this.#logger.info(
-        `Forwarding ${this.#source} to ${this.#target} is already enabled`,
-      );
-      return;
-    }
-    this.#startForwarding();
-  }
-
-  #stopForwarding() {
-    if (this.#forward !== true) {
-      return;
-    }
-    this.#forward = false;
-    this.#logger.info(`Stopped forwarding ${this.#source} to ${this.#target}`);
-  }
-
-  stopForwarding() {
-    if (this.#forward !== true) {
-      this.#logger.info(
-        `Forwarding ${this.#source} to ${this.#target} is already disabled`,
-      );
-      return;
-    }
-    this.#stopForwarding();
   }
 }
 

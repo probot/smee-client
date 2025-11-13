@@ -35,10 +35,10 @@ const smee = new SmeeClient({
   logger: console
 })
 
-const events = smee.start()
+const events = await smee.start()
 
 // Stop forwarding events
-events.close()
+await smee.close()
 ```
 
 #### Proxy Servers

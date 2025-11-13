@@ -27,11 +27,6 @@ class SmeeClient {
   #logger: Pick<Console, Severity>;
   #events!: EventSource;
 
-<<<<<<< HEAD
-  #onerror: (err: ErrorEvent) => void = (err) => {
-    this.#logger.error("Error in connection", err);
-  };
-=======
   constructor({
     source,
     target,
@@ -42,7 +37,6 @@ class SmeeClient {
     this.#target = target;
     this.#logger = logger!;
     this.#fetch = fetch;
->>>>>>> parent of 4426ffa (feat: add new `query-forwarding` option, refactor code to allow `onopen`, `onerror` and `onmessage` overridable (#382))
 
     if (!validator.isURL(this.#source)) {
       throw new Error("The provided URL is invalid.");
@@ -127,45 +121,9 @@ class SmeeClient {
     // Reconnect immediately
     (events as any).reconnectInterval = 0; // This isn't a valid property of EventSource
 
-<<<<<<< HEAD
-    const connected = new Promise<void>((resolve, reject) => {
-      const onError = (err: ErrorEvent) => {
-        if (events.readyState === EventSource.CLOSED) {
-          this.#logger.error("Connection closed");
-        } else {
-          this.#logger.error("Error in connection", err);
-        }
-        reject(err);
-      };
-
-      events.addEventListener("open", () => {
-        this.#logger.info(`Connected to ${this.#source}`);
-        events.removeEventListener("error", onError);
-        resolve();
-      });
-      events.addEventListener("error", onError);
-    });
-
-    this.#events = events;
-
-    events.addEventListener("message", this.#onmessage.bind(this));
-    events.addEventListener("open", this.#onopen.bind(this));
-    events.addEventListener("error", this.#onerror.bind(this));
-
-    if (this.#events_onmessage) {
-      events.onmessage = this.#events_onmessage;
-    }
-    if (this.#events_onopen) {
-      events.onopen = this.#events_onopen;
-    }
-    if (this.#events_onerror) {
-      events.onerror = this.#events_onerror;
-    }
-=======
     events.addEventListener("message", this.onmessage.bind(this));
     events.addEventListener("open", this.onopen.bind(this));
     events.addEventListener("error", this.onerror.bind(this));
->>>>>>> parent of 4426ffa (feat: add new `query-forwarding` option, refactor code to allow `onopen`, `onerror` and `onmessage` overridable (#382))
 
     this.#logger.info(`Forwarding ${this.#source} to ${this.#target}`);
     this.#events = events;

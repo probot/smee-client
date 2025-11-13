@@ -15,7 +15,6 @@ interface Options {
   source: string;
   target: string;
   logger?: Pick<Console, Severity>;
-  queryForwarding?: boolean;
   fetch?: any;
 }
 
@@ -26,9 +25,9 @@ class SmeeClient {
   #target: string;
   #fetch: typeof undiciFetch;
   #logger: Pick<Console, Severity>;
-  #events: EventSource | null = null;
-  #queryForwarding: boolean = true;
+  #events!: EventSource;
 
+<<<<<<< HEAD
   #onerror: (err: ErrorEvent) => void = (err) => {
     if (this.#events?.readyState === EventSource.CLOSED) {
       this.#logger.error("Connection closed");
@@ -36,18 +35,43 @@ class SmeeClient {
       this.#logger.error("Error in connection", err);
     }
   };
+=======
+  constructor({
+    source,
+    target,
+    logger = console,
+    fetch = undiciFetch,
+  }: Options) {
+    this.#source = source;
+    this.#target = target;
+    this.#logger = logger!;
+    this.#fetch = fetch;
+>>>>>>> parent of 4426ffa (feat: add new `query-forwarding` option, refactor code to allow `onopen`, `onerror` and `onmessage` overridable (#382))
 
-  #onopen: () => void = () => {};
+    if (!validator.isURL(this.#source)) {
+      throw new Error("The provided URL is invalid.");
+    }
+  }
 
-  #onmessage: (msg: MessageEvent) => Promise<void> = async (msg) => {
+  static async createChannel({ fetch = undiciFetch } = {}) {
+    const response = await fetch("https://smee.io/new", {
+      method: "HEAD",
+      redirect: "manual",
+      dispatcher: proxyAgent,
+    });
+    const address = response.headers.get("location");
+    if (!address) {
+      throw new Error("Failed to create channel");
+    }
+    return address;
+  }
+
+  async onmessage(msg: MessageEvent) {
     const data = JSON.parse(msg.data);
 
     const target = url.parse(this.#target, true);
-
-    if (this.#queryForwarding) {
-      const mergedQuery = { ...target.query, ...data.query };
-      target.search = querystring.stringify(mergedQuery);
-    }
+    const mergedQuery = { ...target.query, ...data.query };
+    target.search = querystring.stringify(mergedQuery);
 
     delete data.query;
 
@@ -79,106 +103,17 @@ class SmeeClient {
     } catch (err) {
       this.#logger.error(err);
     }
-  };
-
-  #events_onopen: ((ev: Event) => void) | null = null;
-  #events_onmessage: ((msg: MessageEvent) => void) | null = null;
-  #events_onerror: ((ev: ErrorEvent) => void) | null = null;
-
-  constructor({
-    source,
-    target,
-    logger = console,
-    fetch = undiciFetch,
-    queryForwarding = true,
-  }: Options) {
-    this.#source = source;
-    this.#target = target;
-    this.#logger = logger!;
-    this.#fetch = fetch;
-    this.#queryForwarding = queryForwarding;
-
-    if (
-      !validator.isURL(this.#source, {
-        require_tld: false,
-      })
-    ) {
-      throw new Error("The provided URL is invalid.");
-    }
   }
 
-  static async createChannel({
-    fetch = undiciFetch,
-    newChannelUrl = "https://smee.io/new",
-  } = {}): Promise<string> {
-    const response = await fetch(newChannelUrl, {
-      method: "HEAD",
-      redirect: "manual",
-      dispatcher: proxyAgent,
-    });
-    const address = response.headers.get("location");
-    if (!address) {
-      throw new Error("Failed to create channel");
-    }
-    return address;
+  onopen() {
+    this.#logger.info("Connected", this.#events.url);
   }
 
-  get onmessage() {
-    if (this.#events === null) {
-      return this.#events_onmessage;
-    }
-    return this.#events.onmessage;
+  onerror(err: ErrorEvent) {
+    this.#logger.error(err);
   }
 
-  set onmessage(fn: ((msg: MessageEvent) => void) | null) {
-    if (typeof fn !== "function" && fn !== null) {
-      throw new TypeError("onmessage must be a function or null");
-    }
-    if (this.#events === null) {
-      this.#events_onmessage = fn;
-      return;
-    }
-    this.#events.onmessage = fn;
-  }
-
-  get onerror() {
-    if (this.#events === null) {
-      return this.#events_onerror;
-    }
-    return this.#events.onerror;
-  }
-
-  set onerror(fn: ((ev: ErrorEvent) => void) | null) {
-    if (typeof fn !== "function" && fn !== null) {
-      throw new TypeError("onerror must be a function or null");
-    }
-    if (this.#events === null) {
-      this.#events_onerror = fn;
-      return;
-    }
-
-    this.#events.onerror = fn;
-  }
-
-  get onopen() {
-    if (this.#events === null) {
-      return this.#events_onopen;
-    }
-    return this.#events.onopen;
-  }
-
-  set onopen(fn: ((ev: Event) => void) | null) {
-    if (typeof fn !== "function" && fn !== null) {
-      throw new TypeError("onopen must be a function or null");
-    }
-    if (this.#events === null) {
-      this.#events_onopen = fn;
-      return;
-    }
-    this.#events.onopen = fn;
-  }
-
-  async start(): Promise<EventSource> {
+  start() {
     const customFetch: FetchLike = (
       url: string | URL,
       options?: EventSourceFetchInit,
@@ -196,6 +131,7 @@ class SmeeClient {
     // Reconnect immediately
     (events as any).reconnectInterval = 0; // This isn't a valid property of EventSource
 
+<<<<<<< HEAD
     const connected = new Promise<void>((resolve, reject) => {
       events.addEventListener("open", () => {
         this.#logger.info(`Connected to ${this.#source}`);
@@ -220,20 +156,16 @@ class SmeeClient {
     if (this.#events_onerror) {
       events.onerror = this.#events_onerror;
     }
+=======
+    events.addEventListener("message", this.onmessage.bind(this));
+    events.addEventListener("open", this.onopen.bind(this));
+    events.addEventListener("error", this.onerror.bind(this));
+>>>>>>> parent of 4426ffa (feat: add new `query-forwarding` option, refactor code to allow `onopen`, `onerror` and `onmessage` overridable (#382))
 
     this.#logger.info(`Forwarding ${this.#source} to ${this.#target}`);
-
-    await connected;
+    this.#events = events;
 
     return events;
-  }
-
-  async stop() {
-    if (this.#events) {
-      this.#events.close();
-      this.#events = null as any;
-      this.#logger.info("Connection closed");
-    }
   }
 }
 

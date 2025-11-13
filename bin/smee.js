@@ -38,11 +38,6 @@ const { values: options } = parseArgs({
       short: "p",
       default: process.env.PORT || "3000",
     },
-    "query-forwarding": {
-      type: "boolean",
-      short: "q",
-      default: true,
-    },
   },
 });
 
@@ -50,29 +45,27 @@ if (options.help) {
   console.log(`Usage: smee [options]
 
 Options:
-  -v, --version          Display the version number
-  -u, --url <url>        URL of the webhook proxy service.
-                         Default: https://smee.io/new
-  -t, --target <target>  Full URL (including protocol and path) of the target
-                         service the events will forwarded to.
-                         Default: http://127.0.0.1:PORT/PATH
-  -p, --port <n>         Local HTTP server port. Default: 3000
-  -P, --path <path>      URL path to post proxied requests to. Default: "/"
-  -q, --query-forwarding Forward query parameters from the source URL to the
-                         target URL. Default: true
-  -h, --help             Display this help message`);
+  -v, --version         Display the version number
+  -u, --url <url>       URL of the webhook proxy service. Default: https://smee.io/new
+  -t, --target <target> Full URL (including protocol and path) of the target service the events will forwarded to.
+                        Default: http://127.0.0.1:PORT/PATH
+  -p, --port <n>        Local HTTP server port. Default: 3000
+  -P, --path <path>     URL path to post proxied requests to. Default: "/"
+  -h, --help            Display this help message`);
 } else if (options.version) {
   console.log(version);
 } else {
-  const {
-    target = `http://127.0.0.1:${options.port}${options.path}`,
-    "query-forwarding": queryForwarding,
-  } = options;
+  const { target = `http://127.0.0.1:${options.port}${options.path}` } =
+    options;
 
   async function setup() {
+<<<<<<< HEAD
     const source = options.url || (await Client.createChannel());
+=======
+    const source = options.url ?? (await Client.createChannel());
+>>>>>>> parent of 4426ffa (feat: add new `query-forwarding` option, refactor code to allow `onopen`, `onerror` and `onmessage` overridable (#382))
 
-    const client = new Client({ source, target, queryForwarding });
+    const client = new Client({ source, target });
     client.start();
   }
 

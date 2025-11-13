@@ -29,11 +29,7 @@ class SmeeClient {
 
 <<<<<<< HEAD
   #onerror: (err: ErrorEvent) => void = (err) => {
-    if (this.#events?.readyState === EventSource.CLOSED) {
-      this.#logger.error("Connection closed");
-    } else {
-      this.#logger.error("Error in connection", err);
-    }
+    this.#logger.error("Error in connection", err);
   };
 =======
   constructor({
@@ -133,12 +129,21 @@ class SmeeClient {
 
 <<<<<<< HEAD
     const connected = new Promise<void>((resolve, reject) => {
+      const onError = (err: ErrorEvent) => {
+        if (events.readyState === EventSource.CLOSED) {
+          this.#logger.error("Connection closed");
+        } else {
+          this.#logger.error("Error in connection", err);
+        }
+        reject(err);
+      };
+
       events.addEventListener("open", () => {
         this.#logger.info(`Connected to ${this.#source}`);
-        events.removeEventListener("error", reject);
+        events.removeEventListener("error", onError);
         resolve();
       });
-      events.addEventListener("error", reject);
+      events.addEventListener("error", onError);
     });
 
     this.#events = events;

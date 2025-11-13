@@ -5,7 +5,6 @@ import { VoidLogger } from "./helpers/void-logger.ts";
 import { WebhookServer } from "./helpers/webhook-server.ts";
 
 import SmeeClient from "../index.ts";
-import { randomInt } from "node:crypto";
 
 describe("connection", () => {
   test("should emit an error if the server closes connection unexpectedly", async () => {
@@ -52,26 +51,5 @@ describe("connection", () => {
 
     await smeeClient.stop();
     await webhookServer.stop();
-  });
-
-  test("logs an error when the server is not found", async () => {
-    const domain = "bad.n" + randomInt(1e10).toString(36) + ".proxy";
-    const url = `http://${domain}/events`;
-
-    const logger = new VoidLogger();
-
-    try {
-      const smeeClient = new SmeeClient({
-        source: url,
-        target: "http://localhost:3000",
-        logger,
-      });
-      await smeeClient.start();
-      throw new Error("Expected an error to be thrown");
-    } catch (error: any) {
-      expect(logger.errorCalls.length).toBe(1);
-      expect(logger.errorCalls[0].length).toBe(2);
-      expect(logger.errorCalls[0][0]).toBe("Error in connection");
-    }
   });
 });

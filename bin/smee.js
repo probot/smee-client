@@ -59,11 +59,7 @@ Options:
     options;
 
   async function setup() {
-<<<<<<< HEAD
     const source = options.url || (await Client.createChannel());
-=======
-    const source = options.url ?? (await Client.createChannel());
->>>>>>> parent of 4426ffa (feat: add new `query-forwarding` option, refactor code to allow `onopen`, `onerror` and `onmessage` overridable (#382))
 
     const client = new Client({ source, target });
     client.start();

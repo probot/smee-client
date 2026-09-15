@@ -125,7 +125,7 @@ class SmeeClient {
     validateURL(source);
 
     this.#source = trimTrailingSlash(new URL(source).toString());
-    this.#target = trimTrailingSlash(new URL(target).toString());
+    this.#target = new URL(target).toString();
     this.#logger = logger!;
     this.#fetch = fetch;
     this.#queryForwarding = queryForwarding;
